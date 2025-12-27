@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AB Testing Platform</title>
+
+  <link rel="stylesheet" href="common.css">
+
+</head>
+
+<body>
+
+  
+  <div class="home-title-wrapper">
+    <div class="home-title-card">
+      <div class="home-title-inner">
+
+        <!-- LOGO (left aligned) -->
+        <img
+          src="images/main_app_logo.png"
+          alt="pvalue"
+          class="home-logo"
+        />
+        
+        <div class="home-feedback">
+          <span>We need your feedback</span><br />
+          <a href="mailto:arizn788@gmail.com">arizn788@gmail.com</a>
+        </div>
+
+        <!-- TITLE + SUBTITLE (centered) -->
+        <div class="home-title-text">
+          <h1>A/B Testing Calculators & Experiment Analysis Platform</h1>
+          <p class="home-subtitle">
+            Design experiments, estimate required sample sizes, evaluate detectability,
+            and analyze results with statistical rigor.
+          </p>
+      </div>
+
+    </div>
+
+    </div>
+  </div>
+
+  <!-- CONSTRAINED TOOL GRID -->
+  <div class="container">
+    <div class="home-grid">
+
+      <div class="section home-card" onclick="openPhase0()">
+        <h2 class="section-title">
+          <span class="section-emoji">📋</span>
+          Validate Experiment Design
+        </h2>
+
+        <p>
+          Define metrics, hypotheses, traffic splits, power, and validate
+          experiment design before running tests.
+        </p>
+        <ul class="section-bullets">
+          <li>Make sure the experiment can actually answer your question</li>
+          <li>Find setup mistakes before you spend traffic or time</li>
+        </ul>
+
+      </div>
+
+      <div class="section home-card" onclick="openSampleSizeCalculator()">
+        <h2 class="section-title">
+          <span class="section-emoji">🔢</span>
+          Sample Size Calculator for A/B Testing
+        </h2>
+
+        <p>
+          Estimate how many users you need before running an A/B test.
+          Supports binary & continuous metrics, power, MDE, and traffic splits.
+        </p>
+        <ul class="section-bullets">
+          <li>Decide if your traffic is enough to trust the result</li>
+          <li>Avoid stopping too early and drawing the wrong conclusion</li>
+        </ul>
+
+      </div>
+
+      <div class="section home-card" onclick="openMDECalculator()">
+        <h2 class="section-title">
+          <span class="section-emoji">🎯</span>
+          Minimum Detectable Effect (MDE) Calculator
+        </h2>
+
+        <p>
+          Find the smallest effect your experiment can reliably detect
+          given your sample size, metric type, power, and test design.
+        </p>
+        <ul class="section-bullets">
+          <li>Check if a realistic improvement can be noticed at all</li>
+          <li>Understand if you need more users or more time</li>
+        </ul>
+
+      </div>
+
+      <div class="section home-card" onclick="openPhase3()">
+        <h2 class="section-title">
+          <span class="section-emoji">📊</span>
+          Analyze Experiment Results
+        </h2>
+
+        <p>
+          Analyze experiment results, compare variants against control,
+          identify winners, and get business recommendations.
+        </p>
+        <ul class="section-bullets">
+          <li>See whether the change really helped or not</li>
+          <li>Understand how confident you should be in the result</li>
+          <li>Decide what action to take next</li>
+        </ul>
+
+      </div>
+
+    </div>
+  </div>
+
+</body>
+
+
+<script>
+  function openPhase0() {
+    window.location.href = "design_validator.html";
+  }
+
+  function openSampleSizeCalculator() {
+    window.location.href = "sample_size_calculator/sample_size.html";
+  }
+
+  function openMDECalculator() {
+    window.location.href = "mde_calculator/mde.html";
+  }
+
+  function openPhase3() {
+    window.location.href = "inference.html";
+  }
+</script>
+
+
+</body>
+</html>

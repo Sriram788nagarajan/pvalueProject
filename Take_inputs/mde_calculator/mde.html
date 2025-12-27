@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <title>Minimum Detectable Effect (MDE) Calculator for A/B Testing</title>
+  <meta charset="UTF-8">
+  <meta name="description" content="Calculate the minimum detectable effect (MDE) for A/B tests. Understand whether your experiment can detect meaningful changes given sample size, power, metric type, and test design.">
+
+
+  <link rel="stylesheet" href="../common.css">
+  <link rel="stylesheet" href="./mde.css">
+</head>
+
+<body>
+  <div class="page-container">
+
+    <h1>Minimum Detectable Effect (MDE) Calculator</h1>
+
+    <p class="subtitle">
+      Determine the smallest improvement your experiment can reliably detect.
+    </p>
+
+    <!-- ================= INPUTS ================= -->
+    <div class="card">
+
+      <!-- Metric type -->
+      <div class="form-group">
+        <label>
+          Metric Type
+          <span class="tooltip-icon">?
+            <span class="tooltip-text">
+              Binary = yes/no outcomes like conversion.<br>
+              Continuous = numeric outcomes like revenue or time.
+            </span>
+          </span>
+        </label>
+        <select id="metricType">
+          <option value="binary">Binary</option>
+          <option value="continuous">Continuous</option>
+        </select>
+      </div>
+
+      <!-- Design type -->
+      <div class="form-group">
+        <label>
+          Experiment Design
+          <span class="tooltip-icon">?
+            <span class="tooltip-text">
+              Independent: each user sees one variant only.<br>
+              Paired: the same user is measured twice.
+            </span>
+          </span>
+        </label>
+        <select id="designType">
+          <option value="independent">Independent</option>
+          <option value="paired">Paired</option>
+        </select>
+      </div>
+
+      <div class="form-group hidden" id="discordanceGroup">
+        <label>
+          Discordance Rate (p01 + p10)
+          <span class="tooltip-icon">?
+            <span class="tooltip-text">
+              Used only for paired binary experiments.<br><br>
+              This represents the probability that a user's outcome
+              changes between control and test.<br><br>
+              Example: If 10% of users convert in only one variant
+              (but not both), enter 0.10.
+            </span>
+          </span>
+        </label>
+        <input
+          type="number"
+          id="discordanceRate"
+          step="0.01"
+          min="0"
+          max="1"
+          placeholder="Example: 0.10"
+        >
+        <div class="helper-text">
+          Decimal between 0 and 1. Required only for paired binary MDE.
+        </div>
+      </div>
+
+      <!-- Baseline rate (binary only) -->
+      <div class="form-group" id="baselineGroup">
+        
+      
+
+        
+        <label>
+          Baseline Conversion Rate (0–1)
+          <span class="tooltip-icon">?
+            <span class="tooltip-text">
+              Enter as a decimal.<br>
+              Example: 0.12 means 12% of users convert.
+            </span>
+          </span>
+        </label>
+        <input type="number" id="baselineRate" step="any" placeholder="Example: 0.12">
+      </div>
+
+      <!-- Standard deviation -->
+      <div class="form-group" id="stdDevGroup">
+        <label>
+          Standard Deviation
+          <span class="tooltip-icon">?
+            <span class="tooltip-text">
+              Required for continuous metrics.<br>
+              Represents natural variability of the metric.
+            </span>
+          </span>
+        </label>
+        <input type="number" id="stdDevValue" step="any" placeholder="Example: 15.4">
+      </div>
+
+      <!-- Alpha -->
+      <div class="form-group">
+            <label>
+                Significance Level (α)
+                <span class="tooltip-icon">?
+                <span class="tooltip-text">
+                    Probability of a false positive.<br><br>
+                    α = 0.05 means a 5% risk of concluding there is an effect when none exists.
+                </span>
+                </span> 
+            </label>
+            <input type="number" id="alphaValue" step="0.01" value="0.05">
+        </div>
+
+
+      <!-- Power -->
+      <div class="form-group">
+        <label>
+            Desired Power (1 − β)
+            <span class="tooltip-icon">?
+            <span class="tooltip-text">
+                Probability of detecting a real effect if it exists.<br><br>
+                Power = 0.80 means the experiment will detect the minimum effect 80% of the time.
+            </span>
+            </span>
+        </label>
+        <input type="number" id="powerValue" step="0.01" value="0.80">
+        </div>
+
+
+      <!-- Tail -->
+      <div class="form-group">
+        <label>
+            Test Direction
+            <span class="tooltip-icon">?
+            <span class="tooltip-text">
+                Two-tailed tests detect both increases and decreases.<br>
+                One-tailed tests detect improvement in one direction only.<br><br>
+                Use one-tailed only when decreases are impossible or irrelevant.
+            </span>
+            </span>
+        </label>
+        <select id="testDirection">
+            <option value="two_tailed">Two-tailed</option>
+            <option value="one_tailed">One-tailed</option>
+        </select>
+        </div>
+
+
+      <!-- ================= SAMPLE SIZES ================= -->
+      <div class="section">
+        <h2>Sample Sizes (Raw Counts)</h2>
+        <p class="subtitle">
+          Enter actual user counts. Results are computed pairwise against control.
+        </p>
+
+        <div id="variantsContainer">
+            <div class="variant-row">
+                <span class="variant-label">Control</span>
+                <input type="number" class="sample-input" min="1" placeholder="Users">
+                <span></span>
+            </div>
+        </div>
+
+
+        <button id="addVariantBtn" type="button" class="secondary-btn">
+          + Add test variant
+        </button>
+      </div>
+
+    </div>
+
+    <button id="calculateBtn" class="primary-btn">
+      Calculate MDE
+    </button>
+
+    <!-- ================= OUTPUT ================= -->
+    
+    <div id="outputSection" class="hidden">
+
+      <div class="results-header">
+        <h2 class="results-title">Results</h2>
+      </div>
+
+      <div id="mdeResultsBlock"></div>
+
+    </div>
+
+
+
+  </div>
+
+  <script src="./mde.js"></script>
+</body>
+</html>

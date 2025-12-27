@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Statistical Inference – Phase 3</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e8eef5 0%, #f5f7fa 100%);
+      padding: 30px 20px;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #2c3e50;
+      font-size: 32px;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    body > p {
+      max-width: 1400px;
+      margin: 0 auto 30px;
+      color: #5a6c7d;
+      font-size: 15px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section {
+      background: #ffffff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e1e8ed;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .section:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .section h3 {
+      border-bottom: 2px solid #4a90e2;
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+      margin-top: 0;
+      color: #34495e;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    /* Two-column grid layout */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      margin-top: 16px;
+      color: #495057;
+      font-size: 14px;
+    }
+
+    label:first-of-type {
+      margin-top: 0;
+    }
+
+    input[type="number"],
+    select {
+      width: 100%;
+      max-width: 420px;
+      padding: 10px 12px;
+      box-sizing: border-box;
+      border: 1px solid #cbd5e0;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      background: #ffffff;
+    }
+
+    input[type="number"]:focus,
+    select:focus {
+      outline: none;
+      border-color: #4a90e2;
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    input[type="radio"] {
+      width: auto;
+      margin-right: 8px;
+      cursor: pointer;
+      accent-color: #4a90e2;
+      transform: scale(1.15);
+    }
+
+    label:has(input[type="radio"]) {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: normal;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 15px;
+      cursor: pointer;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      box-shadow: 0 2px 4px rgba(74, 144, 226, 0.2);
+      margin-top: 16px;
+    }
+
+    button:hover {
+      background: #357abd;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .optional {
+      color: #6b7280;
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    .test-group {
+      border: 2px dashed #b8c5d6;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 6px;
+      background: #f8fafc;
+    }
+
+    .test-group h4 {
+      color: #2c3e50;
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    #test-groups-container {
+      margin-top: 0;
+    }
+
+    #output {
+      background: #f0f4f8;
+      padding: 15px;
+      border-radius: 5px;
+      min-height: 50px;
+      color: #4b5563;
+      font-size: 14px;
+      line-height: 1.6;
+      border: 1px solid #d1dce5;
+    }
+
+    /* Responsive design for smaller screens */
+    @media (max-width: 900px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      body {
+        padding: 20px 15px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      .section {
+        padding: 18px;
+      }
+    }
+
+
+
+        /* ================================
+      Results Card + Spacing (ADD-ONLY)
+      ================================ */
+
+    #readable-results {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin-top: 24px;
+
+      /* subtle elevation */
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+
+      /* visual separation */
+      border: 1px solid #e6eaf0;
+    }
+
+    /* Improve vertical rhythm inside results */
+    #readable-results > h3 {
+      margin-top: 0;
+      margin-bottom: 14px;
+    }
+
+    #readable-results > p {
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+
+    /* Section spacing */
+    #readable-results h4 {
+      margin-top: 22px;
+      margin-bottom: 10px;
+    }
+
+    /* Lists spacing */
+    #readable-results ul {
+      margin-top: 8px;
+      margin-bottom: 16px;
+      padding-left: 20px;
+    }
+
+    #readable-results li {
+      margin-bottom: 6px;
+    }
+
+    /* Statistical table spacing */
+    #readable-results table {
+      margin-top: 10px;
+      margin-bottom: 16px;
+    }
+
+    #readable-results table td {
+      padding: 6px 8px;
+      vertical-align: top;
+    }
+
+
+    /* ================================
+   Verdict Color Strip (Robust)
+   ================================ */
+
+    #rr-verdict {
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-weight: 700;
+      line-height: 1.4;
+      background: #f5f7fa;
+      border-left: 6px solid #cbd5e1;
+    }
+
+    /* Inconclusive */
+    #rr-verdict.verdict-inconclusive {
+      background: #fff7e6;
+      border-left-color: #f59e0b;
+      color: #92400e;
+    }
+
+    /* Statistically significant improvement */
+    #rr-verdict.verdict-win {
+      background: #ecfdf5;
+      border-left-color: #10b981;
+      color: #065f46;
+    }
+
+    /* Statistically significant decline */
+    #rr-verdict.verdict-loss {
+      background: #fef2f2;
+      border-left-color: #ef4444;
+      color: #7f1d1d;
+    }
+
+    /* No meaningful change */
+    #rr-verdict.verdict-neutral {
+      background: #f1f5f9;
+      border-left-color: #64748b;
+      color: #334155;
+    }
+
+
+
+    /* ================================
+   Statistical Details Table Polish
+   ================================ */
+
+    /* Table container */
+    #readable-results table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    /* Rows */
+    #readable-results table tr {
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    /* Zebra striping */
+    #readable-results table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    /* Cells */
+    #readable-results table td {
+      padding: 10px 12px;
+      vertical-align: middle;
+    }
+
+    /* Left column (labels) */
+    #readable-results table td:first-child {
+      width: 45%;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    /* Right column (values) */
+    #readable-results table td:last-child {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      color: #111827;
+    }
+
+    /* Remove bottom border from last row */
+    #readable-results table tr:last-child {
+      border-bottom: none;
+    }
+
+
+
+
+    /* ================================
+   Recommended Action Highlight
+   ================================ */
+
+    #rr-action {
+      margin-top: 10px;
+      padding: 14px 16px;
+
+      /* visual emphasis */
+      background: #f0fdf4;
+      border-left: 5px solid #22c55e;
+      border-radius: 6px;
+
+      /* text */
+      font-size: 15px;
+      line-height: 1.6;
+      color: #065f46;
+
+      /* subtle presence */
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.12);
+    }
+
+    /* Slightly de-emphasize header above it for contrast */
+    #readable-results h4 + #rr-action {
+      margin-top: 8px;
+    }
+
+
+
+    /* ================================
+   Action Color Variants
+   ================================ */
+
+    #rr-action {
+      margin-top: 10px;
+      padding: 14px 16px;
+      border-radius: 6px;
+      font-size: 15px;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+
+    /* Positive / Rollout */
+    #rr-action.action-positive {
+      background: #ecfdf5;
+      border-left: 5px solid #10b981;
+      color: #065f46;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.12);
+    }
+
+    /* Neutral / Continue */
+    #rr-action.action-neutral {
+      background: #fff7e6;
+      border-left: 5px solid #f59e0b;
+      color: #92400e;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.12);
+    }
+
+    /* Negative / Stop */
+    #rr-action.action-negative {
+      background: #fef2f2;
+      border-left: 5px solid #ef4444;
+      color: #7f1d1d;
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.12);
+    }
+
+
+    /* ---------- Tooltip ---------- */
+
+    .info-tooltip {
+      position: relative;
+      display: inline-block;
+      margin-left: 6px;
+      cursor: pointer;
+      color: #6b7280;
+      font-weight: normal;
+    }
+
+    .tooltip-card {
+      display: none;
+      position: absolute;
+      top: 26px;
+      left: 0;
+      width: 320px;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 12px 14px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      font-size: 13px;
+      line-height: 1.45;
+      color: #374151;
+      z-index: 1000;
+    }
+
+    .info-tooltip:hover .tooltip-card {
+      display: block;
+    }
+
+    /* ---------- Radio group spacing ---------- */
+
+    .radio-group {
+      margin-top: 10px;
+      display: flex;
+      gap: 20px;
+    }
+
+    .card-section {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  }
+
+  .section-title {
+    border-bottom: 2px solid #3b82f6;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+
+  .info-box {
+    background: #f8fafc;
+    border-left: 4px solid #3b82f6;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+
+  .input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .helper-text {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 8px;
+  }
+
+  .error-message {
+  color: #c0392b;
+  font-size: 13px;
+  margin-top: 4px;
+  }
+
+
+
+
+
+
+
+
+  </style>
+</head>
+
+<body>
+
+  <h1>Statistical Inference</h1>
+  <p>Analyze experiment results and obtain statistically valid conclusions.</p>
+
+  <div class="container">
+    <div class="grid-2">
+      <!-- Section A: Metric Type -->
+      <div class="section">
+        <h3>Metric Type</h3>
+        <label>
+          <input type="radio" name="metric_type" value="binary" checked onchange="updateInputMode()">
+          Binary (conversion rate, success/failure)
+        </label>
+        <label>
+          <input type="radio" name="metric_type" value="continuous" onchange="updateInputMode()">
+          Continuous (revenue, time, score)
+        </label>
+      </div>
+
+      <!-- Optional Settings -->
+    <div class="section" id="optional-settings-section">
+      <h3>Optional Settings</h3>
+
+      <label>Test Direction</label>
+      <select id="tail_type">
+        <option value="two_sided">Two-sided (default)</option>
+        <option value="one_sided">One-sided</option>
+      </select>
+
+      <label>Confidence Level (%)</label>
+      <input type="number" value="95" id="confidence_level">
+
+      <label class="optional">Minimum Meaningful Lift (optional)</label>
+      <input type="number" step="any" id="mde">
+    </div>
+  </div>
+
+    <!-- Data relationship -->
+    <div class="section">
+      <h3>
+        Data Relationship
+        <span class="info-tooltip">
+          ⓘ
+          <span class="tooltip-card">
+            <strong>Independent</strong><br>
+            Different users or entities are used in control and test.<br><br>
+
+            <em>Example:</em><br>
+            One group of users sees the old feature, a different group sees the new feature.<br><br>
+
+            <strong>Paired</strong><br>
+            The same users or entities are measured twice — before and after a change.<br><br>
+
+            <em>Example:</em><br>
+            Measure the same users before a feature launch and again after the launch.
+          </span>
+        </span>
+      </h3>
+
+      <div class="radio-group">
+        <label>
+          <input type="radio" name="data_relationship" value="independent" checked onchange="updateInputMode()">
+          Independent
+        </label>
+
+        <label>
+          <input type="radio" name="data_relationship" value="paired" onchange="updateInputMode()">
+          Paired
+        </label>
+      </div>
+    </div>
+
+    <!-- Paired Binary (McNemar) Section -->
+  <div id="paired-binary-section" style="display:none; margin-bottom:20px;">
+
+    <div class="section">
+
+      <h3>Paired Conversion Changes</h3>
+
+      <!-- Explanation box -->
+      <div class="info-box">
+        <strong>Why these inputs changed</strong>
+        <p style="margin-top:8px;">
+          You selected <strong>Binary</strong> and <strong>Paired</strong>.
+          This means we are measuring the <strong>same users before and after</strong> a change.
+        </p>
+
+        <p>
+          In this situation, comparing overall conversion rates is not statistically valid.
+          Instead, the analysis focuses only on users whose conversion status changed.
+        </p>
+
+        <p>
+          This method is called <strong>McNemar’s test</strong>.
+          It is the standard and statistically correct approach for paired conversion data.
+        </p>
+      </div>
+
+      <!-- Inputs -->
+      <div class="grid-2">
+
+        <div>
+          <label for="mcnemar_b">
+            Converted before, but not after
+          </label>
+          <input
+            type="number"
+            id="mcnemar_b"
+            min="0"
+            placeholder="e.g. 12"
+          />
+        </div>
+
+        <div>
+          <label for="mcnemar_c">
+            Did not convert before, but converted after
+          </label>
+          <input
+            type="number"
+            id="mcnemar_c"
+            min="0"
+            placeholder="e.g. 25"
+          />
+        </div>
+
+      </div>
+
+      <p class="helper-text">
+        Users whose conversion status did not change do not need to be entered.
+      </p>
+
+    </div>
+</div>
+
+
+
+  <!-- Control Group -->
+<div class="section" id="control-section-wrapper">
+  <h3>Control Group</h3>
+
+  <label>Sample Size (n)</label>
+  <input type="number" id="control_n">
+
+  <label id="control_value_label">Mean</label>
+  <input
+    type="number"
+    step="any"
+    id="control_mean"
+  />
+  <div id="control_value_error" class="error-message"></div>
+
+
+  <label class="optional">Standard Deviation (optional)</label>
+  <input type="number" step="any" id="control_sd">
+</div>
+
+
+
+
+    <!-- Section C: Test Groups -->
+    <div class="section" id="test-groups-wrapper">
+      <div id="test-groups-section">
+        <h3>Test Groups</h3>
+
+        <div id="test-groups-container"></div>
+
+        <button onclick="addTestGroup()">+ Add Test Group</button>
+      </div>
+    </div>
+
+    <!-- Section E: Action -->
+    <div class="section">
+      <button onclick="runInference()">Run Statistical Inference</button>
+    </div>
+
+    <!-- Section F: Output -->
+    <div class="section">
+      <h3>Results</h3>
+      <div id="output">No analysis run yet.</div>
+
+      <!-- Readable Results (ADD-ONLY, does not replace raw output) -->
+    <div id="readable-results" style="display:none; margin-top:20px; border-top:1px solid #ddd; padding-top:16px;">
+      <h3 id="rr-verdict"></h3>
+
+      <p id="rr-summary"></p>
+
+      <h4>📊 Business Impact</h4>
+      <ul id="rr-impact"></ul>
+
+      <h4>🔍 Statistical Confidence</h4>
+      <p id="rr-confidence"></p>
+
+      <h4>👉 Recommended Action</h4>
+      <p id="rr-action" style="font-weight:600;"></p>
+
+      
+
+
+      <h4>📐 Statistical Details</h4>
+
+      <table style="width:100%; border-collapse:collapse;">
+        <tr>
+          <td><strong>Test used</strong></td>
+          <td id="rr-test-used"></td>
+        </tr>
+        <tr>
+          <td><strong>Test statistic</strong></td>
+          <td id="rr-statistic"></td>
+        </tr>
+        <tr>
+          <td><strong>P-value</strong></td>
+          <td id="rr-pvalue"></td>
+        </tr>
+        <tr>
+          <td><strong>Alpha (α)</strong></td>
+          <td id="rr-alpha"></td>
+        </tr>
+        <tr>
+          <td><strong>Statistically significant?</strong></td>
+          <td id="rr-significant"></td>
+        </tr>
+        <tr>
+          <td><strong>Confidence interval</strong></td>
+          <td id="rr-ci"></td>
+        </tr>
+        <tr>
+          <td><strong>Number of comparisons</strong></td>
+          <td id="rr-comparisons"></td>
+        </tr>
+      </table>
+
+      <details style="margin-top:10px;">
+        <summary>View raw JSON (advanced)</summary>
+        <pre id="rr-raw-json"></pre>
+      </details>
+
+    </div>
+
+    </div>
+  </div>
+
+  <script>
+  const API_BASE = "https://pvalueproject.onrender.com";
+  let testGroupCount = 0;
+
+  function addTestGroup() {
+    testGroupCount++;
+
+    const container = document.getElementById("test-groups-container");
+
+    const div = document.createElement("div");
+    div.className = "test-group";
+    div.id = `test_${testGroupCount}_container`;
+
+    div.innerHTML = `
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h4>Test Group ${testGroupCount}</h4>
+        <button
+          type="button"
+          onclick="deleteTestGroup(${testGroupCount})"
+          style="
+            background: none;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            color: #9ca3af;
+            font-weight: 600;
+            padding: 4px 6px;
+            border-radius: 4px;
+          "
+          title="Delete Test Group"
+          onmouseover="this.style.background='#f3f4f6'; this.style.color='#dc2626';"
+          onmouseout="this.style.background='none'; this.style.color='#9ca3af';"
+        >
+          ✕
+        </button>
+
+      </div>
+
+      <label>Sample Size (n)</label>
+      <input type="number" id="test_${testGroupCount}_n">
+      <div id="test_${testGroupCount}_n_error" class="error-message"></div>
+
+      <label id="test_${testGroupCount}_label">Mean</label>
+      <input
+        type="number"
+        step="any"
+        id="test_${testGroupCount}_value"
+      />
+      <div id="test_${testGroupCount}_error" class="error-message"></div>
+
+      <label class="optional">Standard Deviation (optional)</label>
+      <input type="number" step="any" id="test_${testGroupCount}_sd">
+    `;
+
+
+    container.appendChild(div);
+    updateInputMode();
+  }
+
+
+
+  function deleteTestGroup(index) {
+    const groupEl = document.getElementById(`test_${index}_container`);
+    if (groupEl) {
+      groupEl.remove();
+      renumberTestGroups();
+    }
+  }
+
+  function renumberTestGroups() {
+  const containers = document.querySelectorAll(
+    "#test-groups-container .test-group"
+  );
+
+  
+
+  containers.forEach((container, newIndex) => {
+    const idx = newIndex + 1;
+
+    // Update container ID
+    container.id = `test_${idx}_container`;
+
+    // Update heading
+    const heading = container.querySelector("h4");
+    heading.innerText = `Test Group ${idx}`;
+
+    // Update delete button
+    const deleteBtn = container.querySelector("button");
+    deleteBtn.setAttribute(
+      "onclick",
+      `deleteTestGroup(${idx})`
+    );
+
+    // Update Sample Size
+    const nInput = container.querySelector('[id$="_n"]');
+    nInput.id = `test_${idx}_n`;
+
+    const nError = container.querySelector('[id$="_n_error"]');
+    nError.id = `test_${idx}_n_error`;
+
+    // Update Value input
+    const valueInput = container.querySelector('[id$="_value"]');
+    valueInput.id = `test_${idx}_value`;
+
+    const valueError = container.querySelector('[id$="_error"]');
+    valueError.id = `test_${idx}_error`;
+
+    // Update SD input
+    const sdInput = container.querySelector('[id$="_sd"]');
+    sdInput.id = `test_${idx}_sd`;
+
+    // Update label
+    const label = container.querySelector("label[id^='test_']");
+    label.id = `test_${idx}_label`;
+  });
+
+  // Update global counter
+  testGroupCount = containers.length;
+
+  // Re-apply label/type rules (binary vs continuous)
+  updateInputMode();
+}
+
+
+
+
+
+  async function runInference() {
+
+    // ---- UI Validation: Empty & Type Enforcement ----
+    const metricTypeSelected = document.querySelector(
+      'input[name="metric_type"]:checked'
+    ).value;
+
+    function validateValue(inputEl, errorEl, isBinary) {
+      const raw = inputEl.value.trim();
+      errorEl.innerText = "";
+
+      if (raw === "") {
+        errorEl.innerText = "This field cannot be empty.";
+        return false;
+      }
+
+      const num = Number(raw);
+
+      if (Number.isNaN(num)) {
+        errorEl.innerText = "Value must be numeric.";
+        return false;
+      }
+
+      if (isBinary && (!Number.isInteger(num) || num < 0)) {
+        errorEl.innerText =
+          "Number of successes must be a non-negative whole number.";
+        return false;
+      }
+
+      return true;
+    }
+
+    let valid = true;
+    const isBinaryMetric = metricTypeSelected === "binary";
+
+    // Control
+    valid &=
+      validateValue(
+        document.getElementById("control_mean"),
+        document.getElementById("control_value_error"),
+        isBinaryMetric
+      );
+
+    // ---- Variant-level validation (existence is binary) ----
+    for (let i = 1; i <= testGroupCount; i++) {
+      const container = document.getElementById(`test_${i}_container`);
+      if (!container) continue; // variant does NOT exist
+
+      const nInput = document.getElementById(`test_${i}_n`);
+      const vInput = document.getElementById(`test_${i}_value`);
+      const nError = document.getElementById(`test_${i}_n_error`);
+      const vError = document.getElementById(`test_${i}_error`);
+
+      nError.innerText = "";
+      vError.innerText = "";
+
+      if (nInput.value.trim() === "") {
+        nError.innerText = "Sample size is required.";
+        valid = false;
+      }
+
+      if (vInput.value.trim() === "") {
+        vError.innerText = "This field cannot be empty.";
+        valid = false;
+      }
+
+      // enforce type rules on value
+      valid &=
+        validateValue(
+          vInput,
+          vError,
+          isBinaryMetric
+        );
+    }
+
+
+    if (!valid) {
+      return; // STOP inference
+    }
+
+    const metricType = document.querySelector(
+      'input[name="metric_type"]:checked'
+    ).value;
+
+    const dataStructure = document.querySelector(
+      'input[name="data_relationship"]:checked'
+    )?.value || "independent";
+
+
+    let payload;
+
+    if (metricType === "binary" && dataStructure === "paired") {
+      // ---- McNemar payload (HARD OVERRIDE) ----
+      payload = {
+        metric_type: "binary",
+        data_structure: "paired",
+        mcnemar: {
+          b: Number(document.getElementById("mcnemar_b").value),
+          c: Number(document.getElementById("mcnemar_c").value)
+        },
+        settings: {
+          tail: document.getElementById("tail_type").value,
+          confidence_level:
+            Number(document.getElementById("confidence_level").value) / 100,
+          minimum_effect: document.getElementById("mde").value
+            ? Number(document.getElementById("mde").value)
+            : null
+        }
+      };
+    } else {
+      // ---- Existing payload (UNCHANGED BEHAVIOR) ----
+      payload = {
+        metric_type: metricType,
+        data_structure: dataStructure,
+        control: {
+          n: Number(document.getElementById("control_n").value),
+          value: Number(document.getElementById("control_mean").value),
+          sd: document.getElementById("control_sd").value
+            ? Number(document.getElementById("control_sd").value)
+            : null
+        },
+        tests: [],
+        settings: {
+          tail: document.getElementById("tail_type").value,
+          confidence_level:
+            Number(document.getElementById("confidence_level").value) / 100,
+          minimum_effect: document.getElementById("mde").value
+            ? Number(document.getElementById("mde").value)
+            : null
+        }
+          };
+
+      for (let i = 1; i <= testGroupCount; i++) {
+        const container = document.getElementById(`test_${i}_container`);
+        if (!container) continue; // variant does NOT exist
+
+        payload.tests.push({
+          id: `test_${i}`,
+          n: Number(document.getElementById(`test_${i}_n`).value),
+          value: Number(document.getElementById(`test_${i}_value`).value),
+          sd: document.getElementById(`test_${i}_sd`).value
+            ? Number(document.getElementById(`test_${i}_sd`).value)
+            : null
+        });
+      }
+
+
+    }
+
+    
+
+    try {
+      const response = await fetch(`${API_BASE}/api/inference/run`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+      document.getElementById("output").innerText =
+        JSON.stringify(result, null, 2);
+
+      renderReadableResult(result);
+
+      document.getElementById("output").style.display = "none";
+
+    } catch (err) {
+      document.getElementById("output").innerText =
+        "Error calling inference API.";
+    }
+  }
+
+  function updateInputMode() {
+    const metricType = document.querySelector(
+      'input[name="metric_type"]:checked'
+    )?.value;
+
+    const dataStructure = document.querySelector(
+      'input[name="data_relationship"]:checked'
+    )?.value;
+
+    const isPairedBinary =
+      metricType === "binary" && dataStructure === "paired";
+
+    document.getElementById("paired-binary-section").style.display =
+      isPairedBinary ? "block" : "none";
+
+    document.getElementById("control-section-wrapper").style.display =
+      isPairedBinary ? "none" : "block";
+
+    document.getElementById("test-groups-wrapper").style.display =
+      isPairedBinary ? "none" : "block";
+
+    /* Optional settings should be full width in McNemar mode */
+    document.getElementById("optional-settings-section").style.display = "block";
+
+    // ---- Update labels & input constraints ----
+    const isBinary = metricType === "binary";
+
+    // Control group
+    const controlLabel = document.getElementById("control_value_label");
+    const controlInput = document.getElementById("control_mean");
+
+    if (controlLabel && controlInput) {
+      if (isBinary) {
+        controlLabel.innerText = "Number of successes (conversions)";
+        controlInput.step = "1";
+      } else {
+        controlLabel.innerText = "Mean";
+        controlInput.step = "any";
+      }
+    }
+
+    // Test groups
+    for (let i = 1; i <= testGroupCount; i++) {
+      const label = document.getElementById(`test_${i}_label`);
+      const input = document.getElementById(`test_${i}_value`);
+      if (!label || !input) continue;
+
+      if (isBinary) {
+        label.innerText = "Number of successes (conversions)";
+        input.step = "1";
+      } else {
+        label.innerText = "Mean";
+        input.step = "any";
+      }
+    }
+
+  }
+
+
+  window.onload = function () {
+    addTestGroup();
+    updateInputMode();
+  };
+
+
+
+  function renderReadableResult(apiResult) {
+  if (!apiResult || !apiResult.results || apiResult.results.length === 0) {
+    document.getElementById("readable-results").style.display = "block";
+    document.getElementById("rr-verdict").innerText =
+      "⚠️ No statistical result could be computed.";
+    document.getElementById("rr-summary").innerText =
+      "The provided inputs did not allow a valid statistical test.";
+    document.getElementById("rr-action").innerText =
+      "Check inputs or collect more data before rerunning the analysis.";
+    return;
+  }
+
+  if (apiResult.results.length === 1) {
+    renderSingleVariantResult(apiResult);
+  } else {
+    renderMultiVariantResults(apiResult);
+  }
+}
+
+  function renderSingleVariantResult(apiResult) {
+    const r = apiResult.results[0];
+    const metricType = apiResult.summary.metric_type;
+    const isBinary = metricType === "binary";
+
+    const lift = r.lift_absolute;
+    const relativeLift = r.lift_relative;
+    const control = apiResult.summary.control_value;
+    const confidence = 1 - apiResult.metadata.alpha;
+
+    const impactList = document.getElementById("rr-impact");
+    const confidenceTextEl = document.getElementById("rr-confidence");
+
+    if (r.test_used === "unsupported_paired_binary") {
+      document.getElementById("rr-verdict").innerText =
+        "⚠️ Paired analysis not available for conversion rates";
+
+      document.getElementById("rr-summary").innerText =
+        r.interpretation;
+
+      impactList.innerHTML = "";
+      confidenceTextEl.innerText = "";
+
+      document.getElementById("rr-action").innerText =
+        "Use Independent data or switch to a continuous metric.";
+
+      document.getElementById("readable-results").style.display = "block";
+      return;
+    }
+
+    document.getElementById("readable-results").style.display = "block";
+
+    // Verdict
+    let verdict;
+    if (r.significant && r.lift_absolute > 0) {
+      verdict = "✅ Statistically Significant Improvement";
+    } else if (r.significant && r.lift_absolute < 0) {
+      verdict = "⚠️ Statistically Significant Decline";
+    } else if (!r.significant && r.lift_absolute > 0) {
+      verdict = "❌ Inconclusive (Positive Trend, Not Proven)";
+    } else {
+      verdict = "➖ No Meaningful Change Detected";
+    }
+
+    const verdictEl = document.getElementById("rr-verdict");
+    verdictEl.innerText = verdict;
+
+    verdictEl.classList.remove(
+      "verdict-win",
+      "verdict-loss",
+      "verdict-inconclusive",
+      "verdict-neutral"
+    );
+
+    if (r.significant && r.lift_absolute > 0) {
+      verdictEl.classList.add("verdict-win");
+    } else if (r.significant && r.lift_absolute < 0) {
+      verdictEl.classList.add("verdict-loss");
+    } else if (!r.significant && r.lift_absolute > 0) {
+      verdictEl.classList.add("verdict-inconclusive");
+    } else {
+      verdictEl.classList.add("verdict-neutral");
+    }
+
+    document.getElementById("rr-summary").innerText = isBinary
+      ? `Observed lift: ${(lift * 100).toFixed(2)} percentage points at ${(confidence * 100).toFixed(0)}% confidence.`
+      : `Observed lift: ${lift.toFixed(2)} units at ${(confidence * 100).toFixed(0)}% confidence.`;
+
+    impactList.innerHTML = isBinary
+      ? `
+        <li>Control conversion: ${(control * 100).toFixed(2)}%</li>
+        <li>Absolute lift: ${(lift * 100).toFixed(2)}%</li>
+        <li>Relative lift: ${(relativeLift * 100).toFixed(1)}%</li>
+      `
+      : `
+        <li>Control mean: ${control.toFixed(2)}</li>
+        <li>Absolute lift: ${lift.toFixed(2)} units</li>
+        ${relativeLift !== null
+          ? `<li>Relative lift: ${(relativeLift * 100).toFixed(1)}%</li>`
+          : ""}
+      `;
+
+    const ciLow = r.confidence_interval[0];
+    const ciHigh = r.confidence_interval[1];
+
+    let confidenceText = isBinary
+      ? `The true effect is likely between ${(ciLow * 100).toFixed(2)}% and ${(ciHigh * 100).toFixed(2)}%.`
+      : `The true effect is likely between ${ciLow.toFixed(2)} and ${ciHigh.toFixed(2)} units.`;
+
+    if (ciLow <= 0 && ciHigh >= 0) {
+      confidenceText += " Zero is within this range, so no effect is still plausible.";
+    }
+
+    confidenceTextEl.innerText = confidenceText;
+
+    let action;
+    if (r.significant && r.lift_absolute > 0) {
+      action = "Roll out the test variant.";
+    } else if (r.significant && r.lift_absolute < 0) {
+      action = "Stop the test and revert to control.";
+    } else if (!r.significant && r.lift_absolute > 0) {
+      action = "Run the experiment longer or collect more data.";
+    } else {
+      action = "Stop the experiment; impact appears minimal.";
+    }
+
+    const actionEl = document.getElementById("rr-action");
+    actionEl.innerText = action;
+
+    actionEl.classList.remove(
+      "action-positive",
+      "action-neutral",
+      "action-negative"
+    );
+
+    if (r.significant && r.lift_absolute > 0) {
+      actionEl.classList.add("action-positive");
+    } else if (r.significant && r.lift_absolute < 0) {
+      actionEl.classList.add("action-negative");
+    } else {
+      actionEl.classList.add("action-neutral");
+    }
+
+    document.getElementById("rr-test-used").innerText =
+      r.test_used.replaceAll("_", " ");
+
+    document.getElementById("rr-statistic").innerText =
+      r.statistic.toFixed(3);
+
+    document.getElementById("rr-pvalue").innerText =
+      r.p_value.toFixed(4) +
+      (r.p_value < apiResult.metadata.alpha ? " (below α)" : " (above α)");
+
+    document.getElementById("rr-alpha").innerText =
+      apiResult.metadata.alpha.toFixed(2);
+
+    document.getElementById("rr-significant").innerText =
+      r.significant ? "Yes" : "No";
+
+    document.getElementById("rr-ci").innerText = isBinary
+      ? `${(ciLow * 100).toFixed(2)}% to ${(ciHigh * 100).toFixed(2)}%`
+      : `${ciLow.toFixed(2)} to ${ciHigh.toFixed(2)}`;
+
+    document.getElementById("rr-comparisons").innerText =
+      apiResult.metadata.comparisons;
+
+    document.getElementById("rr-raw-json").innerText =
+      JSON.stringify(apiResult, null, 2);
+  }
+
+
+  function formatTestGroupName(testId) {
+    // test_1 -> Test Group 1
+    const parts = testId.split("_");
+    return `Test Group ${parts[1]}`;
+  }
+
+
+  function renderMultiVariantResults(apiResult) {
+    const results = apiResult.results;
+    const isBinary = apiResult.summary.metric_type === "binary";
+    const container = document.getElementById("readable-results");
+
+    container.style.display = "block";
+    const control = apiResult.summary.control_value;
+    const confidence = 1 - apiResult.metadata.alpha;
+
+    // ---------- winner selection ----------
+    const winners = results.filter(
+      r => r.significant && r.lift_absolute > 0
+    );
+
+    let winner = null;
+    if (winners.length > 0) {
+      winner = winners.reduce((best, cur) =>
+        cur.lift_absolute > best.lift_absolute ? cur : best
+      );
+    }
+
+    // ---------- verdict ----------
+    const verdictEl = document.getElementById("rr-verdict");
+    verdictEl.className = "";
+
+    if (winner) {
+      verdictEl.innerText = "✅ Statistically Significant Improvement";
+      verdictEl.classList.add("verdict-win");
+    } else {
+      verdictEl.innerText = "➖ No Variant Beats Control";
+      verdictEl.classList.add("verdict-neutral");
+    }
+
+    // ---------- summary ----------
+    document.getElementById("rr-summary").innerText =
+      `Multiple variants were tested against control at ${(confidence * 100).toFixed(0)}% confidence.`;
+
+    // ---------- business impact (ALL VARIANTS) ----------
+    const impactList = document.getElementById("rr-impact");
+    impactList.innerHTML = "";
+
+    results.forEach(r => {
+      const isWinner = winner && r.test_id === winner.test_id;
+
+      impactList.innerHTML += `
+        <li style="
+          padding:10px 12px;
+          margin-bottom:8px;
+          border-left:5px solid ${isWinner ? "#10b981" : "#cbd5e1"};
+          background:${isWinner ? "#ecfdf5" : "#f8fafc"};
+          border-radius:6px;
+        ">
+          <strong>${formatTestGroupName(r.test_id)}</strong>
+          ${isWinner ? " 🏆 WINNER" : ""}
+          <br/>
+          Lift: ${(r.lift_absolute * 100).toFixed(2)}%
+          <br/>
+          P-value: ${r.p_value.toFixed(4)}
+          <br/>
+          ${r.significant ? "Statistically significant" : "Not significant"}
+        </li>
+      `;
+    });
+
+    // ---------- confidence ----------
+    const confidenceEl = document.getElementById("rr-confidence");
+
+    if (winner) {
+      const [ciLow, ciHigh] = winner.confidence_interval;
+      confidenceEl.innerText = isBinary
+        ? `The winning variant’s true effect is likely between ${(ciLow * 100).toFixed(2)}% and ${(ciHigh * 100).toFixed(2)}%.`
+        : `The winning variant’s true effect is likely between ${ciLow.toFixed(2)} and ${ciHigh.toFixed(2)} units.`;
+    } else {
+      confidenceEl.innerText =
+        "None of the variants show a statistically reliable improvement over control.";
+    }
+
+    // ---------- recommended action ----------
+    const actionEl = document.getElementById("rr-action");
+    actionEl.className = "";
+
+    if (winner) {
+      actionEl.innerText =
+       `Roll out ${formatTestGroupName(winner.test_id)}. It shows the highest statistically significant improvement (${(winner.  lift_absolute * 100).toFixed(2)}% lift).`;
+
+      actionEl.classList.add("action-positive");
+    } else {
+      actionEl.innerText =
+        "Do not roll out any variant. Continue experimentation or collect more data.";
+      actionEl.classList.add("action-neutral");
+    }
+
+    // ---------- statistical details (winner only) ----------
+    const r = winner || results[0];
+
+    document.getElementById("rr-test-used").innerText =
+      r.test_used.replaceAll("_", " ");
+
+    document.getElementById("rr-statistic").innerText =
+      r.statistic.toFixed(3);
+
+    document.getElementById("rr-pvalue").innerText =
+      r.p_value.toFixed(4) +
+      (r.p_value < apiResult.metadata.alpha ? " (below α)" : " (above α)");
+
+    document.getElementById("rr-alpha").innerText =
+      apiResult.metadata.alpha.toFixed(2);
+
+    document.getElementById("rr-significant").innerText =
+      r.significant ? "Yes" : "No";
+
+    document.getElementById("rr-ci").innerText = isBinary
+      ? `${(r.confidence_interval[0] * 100).toFixed(2)}% to ${(r.confidence_interval[1] * 100).toFixed(2)}%`
+      : `${r.confidence_interval[0].toFixed(2)} to ${r.confidence_interval[1].toFixed(2)}`;
+
+    document.getElementById("rr-comparisons").innerText =
+      apiResult.metadata.comparisons;
+
+    // ---------- raw json ----------
+    document.getElementById("rr-raw-json").innerText =
+      JSON.stringify(apiResult, null, 2);
+
+    
+  }
+
+
+
+
+
+
+</script>
+
+
+</body>
+</html>

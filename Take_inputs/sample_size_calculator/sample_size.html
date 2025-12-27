@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sample Size Calculator for A/B Testing</title>
+
+  <!-- Match existing Phase 0.1 / Phase 3 styling -->
+
+  <link rel="stylesheet" href="../common.css">
+  <link rel="stylesheet" href="./sample_size.css">
+</head>
+
+<body>
+  <div class="page-container">
+
+    <h1>Sample Size Calculator for A/B Testing</h1>
+    <p class="subtitle">
+      Estimate how many users are required to reliably detect an improvement.
+    </p>
+
+    <!-- ================= INPUTS ================= -->
+    <div class="card">
+
+      <!-- Outcome type -->
+      <div class="form-group">
+        <label>
+          Outcome Type
+          <span class="tooltip-icon">?
+            <span class="tooltip-text">
+              Binary = yes/no outcomes like conversion.
+              Continuous = numeric values like time or revenue.
+            </span>
+          </span>
+        </label>
+        <select id="outcomeType">
+          <option value="binary">Binary (conversion)</option>
+          <option value="continuous">Continuous</option>
+        </select>
+      </div>
+
+      <!-- Experiment design -->
+      <div class="form-group">
+        <label>
+          Experiment Design
+          <span class="tooltip-icon">?
+            <span class="tooltip-text">
+              Independent: each user sees only one version.
+              Paired: the same user is measured twice.
+            </span>
+          </span>
+        </label>
+        <select id="designType">
+          <option value="independent">Independent</option>
+          <option value="paired">Paired</option>
+        </select>
+      </div>
+
+      <!-- Baseline -->
+      <div class="form-group">
+        <label>
+          Baseline Metric Value (Decimal Value)
+          <span class="tooltip-icon">?
+            <span class="tooltip-text">
+              Enter the value as a decimal.
+                <br><br>
+                Binary example:
+                0.30 means 30% conversion.
+                <br><br>
+                Continuous example:
+                45.0 means 45 units (e.g., seconds).
+            </span>
+          </span>
+        </label>
+        <input type="number" id="baselineValue" step="any"  placeholder="Example: 0.30 (30%) for Binary Metric or 45.0 for continuous Metric" />
+      </div>
+
+      <!-- MDE -->
+      <div class="form-group">
+        <label>
+          Minimum Detectable Effect (MDE) (Decimal Value)
+          <span class="tooltip-icon">?
+            <span class="tooltip-text">
+              Smallest improvement that is worth acting on.
+              Example: 0.05 means +5%.
+            </span>
+          </span>
+        </label>
+        <input type="number" id="mdeValue" step="any" />
+      </div>
+
+      <!-- Variance / SD -->
+      <div class="form-group">
+        <label>
+          Variance / Standard Deviation
+          <span class="tooltip-icon">?
+            <span class="tooltip-text">
+              For binary outcomes this is calculated automatically.
+              For continuous outcomes, enter the standard deviation.
+            </span>
+          </span>
+        </label>
+        <input type="number" id="varianceValue" step="any" disabled />
+        <div class="helper-text" id="varianceNote"></div>
+      </div>
+
+      <!-- Alpha -->
+      <div class="form-group">
+        <label>
+          Significance Level (α)
+          <span class="tooltip-icon">?
+            <span class="tooltip-text">
+              Risk of false positive. Default is 0.05.
+            </span>
+          </span>
+        </label>
+        <input type="number" id="alphaValue" step="0.01" value="0.05" />
+      </div>
+
+      <!-- Power -->
+      <div class="form-group">
+        <label>
+          Desired Power (1 − β)
+          <span class="tooltip-icon">?
+            <span class="tooltip-text">
+              Chance of detecting a real improvement. Default is 0.80.
+            </span>
+          </span>
+        </label>
+        <input type="number" id="powerValue" step="0.01" value="0.80" />
+      </div>
+
+      <!-- Test direction -->
+      <div class="form-group">
+        <label>
+          Test Direction
+          <span class="tooltip-icon">?
+            <span class="tooltip-text">
+              Two-tailed checks for increase or decrease.
+              One-tailed checks only for improvement.
+            </span>
+          </span>
+        </label>
+        <select id="testDirection">
+          <option value="two">Two-tailed</option>
+          <option value="one">One-tailed</option>
+        </select>
+      </div>
+
+      <!-- Allocation -->
+      <!-- ================= VARIANTS & ALLOCATION ================= -->
+
+        <div class="section">
+        <h2>Variants & Allocation (%)</h2>
+        <p class="subtitle">
+            Enter allocation percentages. Total must sum to 100.
+        </p>
+
+        <div id="variantsContainer">
+            <!-- Control (fixed) -->
+            <div class="variant-row">
+            <span class="variant-label">Control</span>
+            <input
+                type="number"
+                class="allocation-input"
+                value="50"
+                min="0"
+                max="100"
+            />
+            </div>
+        </div>
+
+        <button
+            id="addTreatmentBtn"
+            type="button"
+            class="secondary-btn"
+        >
+            + Add treatment
+        </button>
+        </div>
+
+    </div>
+    
+    <button id="calculateBtn" class="primary-btn">
+        Calculate Sample Size
+    </button>
+
+    <!-- ================= OUTPUT ================= -->
+  <div id="outputSection" class="hidden">
+    <div style="margin-bottom: 20px;">
+      <h2>Results</h2>
+      <p class="subtitle">
+        Based on your experiment configuration and statistical requirements.
+      </p>
+    </div>
+
+
+    <div class="card">
+      <div id="sampleSizeBlock"></div>
+    </div>
+
+    <div class="card">
+      <div id="summaryBlock"></div>
+    </div>
+
+    <div class="card">
+      <div id="explanationBlock"></div>
+    </div>
+
+    <div class="card">
+      <div id="sensitivityBlock"></div>
+    </div>
+
+    <div class="card">
+      <div id="allocationBlock"></div>
+    </div>
+
+    <div class="card">
+      <div id="integrityBlock"></div>
+    </div>
+
+  </div>
+
+
+
+
+  </div>
+
+  <script src="./sample_size.js"></script>
+</body>
+</html>

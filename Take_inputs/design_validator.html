@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Validate Experiment Design</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e8eef5 0%, #f5f7fa 100%);
+      padding: 30px 20px;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+      color: #2c3e50;
+      font-size: 32px;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+      border-bottom: 2px solid #4a90e2;
+      padding-bottom: 8px;
+      margin-bottom: 18px;
+      color: #34495e;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    form {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section {
+      background: #ffffff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e1e8ed;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .section:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Two-column grid layout */
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    /* Full-width section */
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #495057;
+      font-size: 14px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      max-width: 420px;
+      padding: 10px 12px;
+      box-sizing: border-box;
+      border: 1px solid #cbd5e0;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      background: #ffffff;
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #4a90e2;
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    }
+
+    input[type="file"] {
+      max-width: none;
+      padding: 8px;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 15px;
+      cursor: pointer;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      box-shadow: 0 2px 4px rgba(74, 144, 226, 0.2);
+    }
+
+    button:hover {
+      background: #357abd;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button[type="submit"] {
+      background: #27ae60;
+      box-shadow: 0 2px 4px rgba(39, 174, 96, 0.2);
+      margin-top: 10px;
+    }
+
+    button[type="submit"]:hover {
+      background: #229954;
+      box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+    }
+
+    .variant {
+      border: 2px dashed #b8c5d6;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 6px;
+      background: #f8fafc;
+    }
+
+    .variant h3 {
+      color: #2c3e50;
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    /* ---------- CHECKBOX STYLES ---------- */
+
+    .checkbox-group {
+      margin-top: 10px;
+    }
+
+    .assumption-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .assumption-row input[type="checkbox"] {
+      width: auto;
+      transform: scale(1.15);
+      cursor: pointer;
+      accent-color: #4a90e2;
+    }
+
+    .assumption-row label {
+      display: inline;
+      font-weight: normal;
+      margin: 0;
+      color: #495057;
+      cursor: pointer;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: auto;
+      transform: scale(1.2);
+      cursor: pointer;
+      accent-color: #4a90e2;
+    }
+
+    .checkbox-row label {
+      display: inline;
+      font-weight: 600;
+      margin: 0;
+      color: #2c3e50;
+      cursor: pointer;
+    }
+
+    /* Responsive design for smaller screens */
+    @media (max-width: 900px) {
+      .grid-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+   <!-- PHASE 0.1 experiment design intent data collection — DO NOT MODIFY STRUCTURE WITHOUT VERSIONING -->
+
+<h1>Validate Experiment Design</h1>
+
+<form id="experimentForm">
+
+  <!-- FIRST ROW: Two columns -->
+  <div class="grid-container">
+    <!-- SECTION 1 -->
+    <div class="section">
+      <h2>1. Experiment Identity</h2>
+
+      <div class="field">
+        <label>Experiment Name *</label>
+        <input type="text" id="experimentName" required>
+      </div>
+
+      <div class="field">
+        <label>Business Objective *</label>
+        <select id="businessObjective" required>
+          <option value="">Select</option>
+          <option>Conversion</option>
+          <option>Revenue</option>
+          <option>Engagement</option>
+          <option>Retention</option>
+          <option>Latency / Performance</option>
+          <option>Cost Reduction</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Metric Type *</label>
+        <select id="metricType" required>
+          <option value="">Select</option>
+          <option>Proportion</option>
+          <option>Mean</option>
+          <option>Rate / Count</option>
+          <option>Continuous (Non-normal)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section">
+      <h2>3. Data Collection</h2>
+
+      <div class="field">
+        <label>Exposure Timing *</label>
+        <select id="exposureTiming" required>
+          <option value="">Select</option>
+          <option>Parallel</option>
+          <option>Sequential (Before/After)</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Assignment Method *</label>
+        <select id="assignmentMethod" required>
+          <option value="">Select</option>
+          <option>Randomized</option>
+          <option>Rule-based</option>
+          <option>Observational</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section full-width">
+    <h2>2. Experiment Structure</h2>
+
+    <div class="field">
+      <label>Baseline Definition *</label>
+      <select id="baselineDefinition" required>
+        <option value="">Select</option>
+        <option>Explicit Control Group</option>
+        <option>Existing Production Variant (Implicit Control)</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Number of Variants (including baseline) *</label>
+      <input type="number" id="variantCount" min="2" required>
+    </div>
+
+    <button type="button" onclick="generateVariants()">Generate Variants</button>
+
+    <div id="variantsContainer"></div>
+  </div>
+
+  <!-- SECOND ROW -->
+  <div class="grid-container">
+    <!-- SECTION 4 -->
+    <div class="section">
+      <h2>4. Data Granularity</h2>
+
+      <div class="field">
+        <label>Data Type *</label>
+        <select id="dataType" required>
+          <option value="">Select</option>
+          <option>Aggregated Summary Statistics</option>
+          <option>Raw Row-level Data</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Raw Data Upload (if applicable)</label>
+        <input type="file" id="rawDataFile" accept=".csv">
+      </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section">
+      <h2>5. Assumptions Declaration</h2>
+
+      <div class="checkbox-group">
+        <div class="assumption-row">
+          <input type="checkbox" id="assumptionIndependent">
+          <label>Observations are independent</label>
+        </div>
+
+        <div class="assumption-row">
+          <input type="checkbox" id="assumptionSamePopulation">
+          <label>Same population across variants</label>
+        </div>
+
+        <div class="assumption-row">
+          <input type="checkbox" id="assumptionEqualExposure">
+          <label>Equal exposure windows</label>
+        </div>
+
+        <div class="assumption-row">
+          <input type="checkbox" id="assumptionEqualVariance">
+          <label>Equal variance assumed</label>
+        </div>
+
+        <div class="assumption-row">
+          <input type="checkbox" id="assumptionNormality">
+          <label>Normality assumed</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section">
+    <h2>6. Risk Parameters</h2>
+
+    <div class="field">
+      <label>Test Direction *</label>
+      <select id="testDirection" required>
+        <option value="">Select</option>
+        <option>One-sided (Increase)</option>
+        <option>One-sided (Decrease)</option>
+        <option>Two-sided</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Significance Level (α)</label>
+      <input type="number" id="alpha" step="any" value="0.05" min="0.001" max="0.2">
+    </div>
+
+    <div class="field">
+      <label>Minimum Detectable Effect (optional)</label>
+      <input type="text" id="mde">
+    </div>
+
+    <div class="field">
+      <label>Business Risk Preference *</label>
+      <select id="businessRiskPreference" required>
+        <option value="">Select</option>
+        <option>False positives more costly</option>
+        <option>False negatives more costly</option>
+        <option>Symmetric</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- FINAL CONFIRMATION -->
+  <div class="section">
+    <div class="checkbox-row">
+      <input type="checkbox" id="finalConfirmation" required>
+      <label>I confirm the above inputs accurately reflect this experiment</label>
+    </div>
+  </div>
+
+  <button type="submit">Continue</button>
+
+</form>
+
+<!-- ===================================================== -->
+<!-- Phase 0.3 — Experiment Design Validation (ADD ONLY) -->
+<!-- ===================================================== -->
+<div id="phase03Result" class="section" style="display:none; max-width:1400px; margin:20px auto;">
+  <h2>Phase 0.3 — Experiment Design Validation</h2>
+  <div id="phase03Status"></div>
+  <div id="phase03Details"></div>
+</div>
+
+
+<script>
+
+const API_BASE = "https://pvalueproject.onrender.com";
+
+function generateVariants() {
+  const count = document.getElementById("variantCount").value;
+  const container = document.getElementById("variantsContainer");
+  container.innerHTML = "";
+
+  for (let i = 1; i <= count; i++) {
+    const div = document.createElement("div");
+    div.className = "variant";
+    div.innerHTML = `
+      <h3>Variant ${i}</h3>
+
+      <label>Name *</label>
+      <input type="text" required>
+
+      <label>Role *</label>
+      <select required>
+        <option value="">Select</option>
+        <option>Baseline</option>
+        <option>Treatment</option>
+      </select>
+
+      <label>Sample Size (n) *</label>
+      <input type="number" min="1" required>
+
+      <div>
+        <em>Metric-specific inputs entered here (Phase 0.1 only collects)</em>
+      </div>
+    `;
+    container.appendChild(div);
+  }
+}
+
+
+// PHASE 0.2 PAYLOAD CONTRACT — DO NOT MODIFY STRUCTURE WITHOUT VERSIONING
+
+function buildExperimentPayload() {
+  /* -----------------------------
+     1. Experiment identity
+  ------------------------------ */
+  const experiment = {
+    name: document.getElementById("experimentName").value || null,
+    business_objective: document.getElementById("businessObjective").value,
+    metric_type: document.getElementById("metricType").value
+  };
+
+  /* -----------------------------
+     2. Experiment design
+  ------------------------------ */
+  const design = {
+    baseline_definition: document.getElementById("baselineDefinition").value,
+    exposure_timing: document.getElementById("exposureTiming").value,
+    assignment_method: document.getElementById("assignmentMethod").value
+  };
+
+  /* -----------------------------
+     3. Variants (dynamic)
+  ------------------------------ */
+  const variants = [];
+  const variantBlocks = document.querySelectorAll("#variantsContainer .variant");
+
+  variantBlocks.forEach((block, index) => {
+    const inputs = block.querySelectorAll("input, select");
+
+    const name = inputs[0].value;
+    const role = inputs[1].value;
+    const sampleSize = inputs[2].value;
+
+    variants.push({
+      index: index + 1,
+      name: name,
+      role: role,
+      sample_size: sampleSize ? Number(sampleSize) : null
+    });
+  });
+
+  /* -----------------------------
+     4. Data configuration
+  ------------------------------ */
+  const rawFileInput = document.getElementById("rawDataFile");
+
+  const data = {
+    granularity: document.getElementById("dataType").value,
+    raw_file_attached: rawFileInput && rawFileInput.files.length > 0
+  };
+
+  /* -----------------------------
+     5. Assumptions (checkboxes)
+  ------------------------------ */
+  const assumptions = {
+    independent: document.getElementById("assumptionIndependent").checked,
+    same_population: document.getElementById("assumptionSamePopulation").checked,
+    equal_exposure: document.getElementById("assumptionEqualExposure").checked,
+    equal_variance: document.getElementById("assumptionEqualVariance").checked,
+    normality: document.getElementById("assumptionNormality").checked
+  };
+
+  /* -----------------------------
+     6. Risk parameters
+  ------------------------------ */
+  const alphaValue = document.getElementById("alpha").value;
+
+  const risk = {
+    test_direction: document.getElementById("testDirection").value,
+    alpha: alphaValue ? Number(alphaValue) : null,
+    mde: document.getElementById("mde").value || null,
+    business_risk_preference: document.getElementById("businessRiskPreference").value
+  };
+
+  /* -----------------------------
+     7. Final confirmation
+  ------------------------------ */
+  const confirmation = document.getElementById("finalConfirmation").checked;
+
+  /* -----------------------------
+     8. Canonical payload
+  ------------------------------ */
+  return {
+    experiment,
+    design,
+    variants,
+    data,
+    assumptions,
+    risk,
+    confirmation
+  };
+}
+
+
+document.getElementById("experimentForm").addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  const phase02Payload = buildExperimentPayload();
+
+  console.log(
+  "Test Direction raw value:",
+  JSON.stringify(phase02Payload.risk.test_direction)
+  );
+
+
+  console.log("===== PHASE 0.2 PAYLOAD =====");
+  console.log(phase02Payload);
+
+  let phase03Payload;
+  try {
+    phase03Payload = buildPhase03Payload(phase02Payload);
+  } catch (err) {
+    alert(err.message);
+    return;
+  }
+
+  const response = await fetch(`${API_BASE}/api/phase0/validate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(phase03Payload)
+  });
+
+  const result = await response.json();
+  renderPhase03Result(result);
+});
+
+
+
+function inferPlannedSamplePerVariant(variants) {
+  const ns = variants
+    .map(v => Number(v.sample_size))
+    .filter(n => Number.isFinite(n) && n > 0);
+
+  if (ns.length === 0) {
+    throw new Error("Variant sample sizes are required for Phase 0.3 validation.");
+  }
+
+  // IMPORTANT:
+  // sample_size is ALREADY per-variant.
+  // DO NOT apply allocation again.
+  return Math.min(...ns);
+}
+
+
+function buildPhase03Payload(phase02Payload) {
+  // -------------------------------
+  // Metric type normalization
+  // -------------------------------
+  const metricTypeUI = phase02Payload.experiment.metric_type;
+
+  let metric_type;
+  if (metricTypeUI === "Proportion") {
+    metric_type = "proportion";
+  } else if (metricTypeUI === "Mean") {
+    metric_type = "mean";
+  } else {
+    throw new Error("Phase 0.3 supports only Proportion or Mean metrics.");
+  }
+
+  // -------------------------------
+  // Planned sample per variant
+  // (already FINAL in UI)
+  // -------------------------------
+  const plannedPerVariant =
+    inferPlannedSamplePerVariant(phase02Payload.variants);
+
+  // -------------------------------
+  // Test direction normalization
+  // UI → backend canonical contract
+  // -------------------------------
+  const testDirectionUI = String(phase02Payload.risk.test_direction).trim().toLowerCase();
+
+  let test_type;
+  if (testDirectionUI.toLowerCase().includes("two")) {
+    test_type = "two-tailed";
+  } else if (
+    testDirectionUI.toLowerCase().includes("one")
+  ) {
+    test_type = "one-tailed";
+  } else {
+    throw new Error( `Unsupported Test Direction selection: ${phase02Payload.risk.test_direction}`);
+  }
+
+  // -------------------------------
+  // Build Phase 0.3 payload
+  // -------------------------------
+  return {
+    metric_type,
+
+    // --- DESIGN-TIME ASSUMPTIONS ---
+    // (explicitly hardcoded until UI exposes them)
+    hypothesis:
+      metric_type === "proportion"
+        ? {
+            baseline_rate: 0.1,
+            expected_lift: 0.02
+          }
+        : null,
+
+    mean_metric:
+      metric_type === "mean"
+        ? {
+            baseline_mean: 100,
+            expected_delta: 5,
+            assumed_std: 20
+          }
+        : null,
+
+    statistical_plan: {
+      alpha: Number(phase02Payload.risk.alpha),
+      power: 0.8, // default until explicitly exposed in UI
+      test_type: test_type
+    },
+
+    // -------------------------------
+    // Traffic (NO re-allocation)
+    // -------------------------------
+    traffic: {
+      daily_users: plannedPerVariant, // already per-variant
+      run_days: 1,
+      allocation: 1.0
+    }
+  };
+}
+
+
+
+function renderPhase03Result(result) {
+  const container = document.getElementById("phase03Result");
+  const statusDiv = document.getElementById("phase03Status");
+  const detailsDiv = document.getElementById("phase03Details");
+
+  container.style.display = "block";
+
+  // CASE 1 — Normal Phase 0.3 response
+  if (result.status && result.verdict && result.verdict.reason) {
+    const color =
+      result.status === "VALID" ? "green" :
+      result.status === "RISKY" ? "orange" :
+      "red";
+
+    statusDiv.innerHTML = `
+      <h3 style="color:${color}">Status: ${result.status}</h3>
+      <p>${result.verdict.reason}</p>
+    `;
+
+    if (result.statistics?.status === "OK") {
+      detailsDiv.innerHTML = `
+        <hr>
+        <strong>Details</strong>
+        <ul>
+          <li>Planned sample / variant: ${result.statistics.planned_sample_per_variant}</li>
+          <li>Required sample / variant: ${result.statistics.required_sample_per_variant}</li>
+          <li>Estimated power: ${result.statistics.achieved_power}</li>
+        </ul>
+      `;
+    } else {
+      detailsDiv.innerHTML = "";
+    }
+
+    return;
+  }
+
+  // CASE 2 — FastAPI validation error (422)
+  if (result.detail) {
+    statusDiv.innerHTML = `
+      <h3 style="color:red">Validation Error</h3>
+      <ul>
+        ${result.detail.map(e => `<li>${e.msg}</li>`).join("")}
+      </ul>
+    `;
+    detailsDiv.innerHTML = "";
+    return;
+  }
+
+  // CASE 3 — Unknown failure
+  statusDiv.innerHTML = `
+    <h3 style="color:red">Validation Failed</h3>
+    <p>An unexpected error occurred.</p>
+  `;
+  detailsDiv.innerHTML = "";
+}
+
+
+
+
+</script>
+
+</body>
+</html>
