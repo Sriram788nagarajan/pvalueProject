@@ -36,8 +36,7 @@ from backend.v2.api.resume import router as resume_router
 #dashboard
 from backend.v2.api import dashboard
 
-#Phase 4
-from backend.v2.api.experiments import router as experiments_router
+
 
 #orchestration layer
 from backend.v2.api.orchestration import router as orchestration_router
@@ -127,8 +126,7 @@ app.include_router(resume_router)
 
 app.include_router(dashboard.router)
 
-## Phase 4 router
-app.include_router(experiments_router)
+
 
 ## orchestration layer router
 
