@@ -1,0 +1,492 @@
+/* =========================================================
+   EXPERIMENT WORKFLOW UI (V2)
+   Powers Phase 1, 2, 3 and future workflow steps
+   ========================================================= */
+
+
+/* -------------------------
+   Workflow Header + Stepper
+   ------------------------- */
+
+.workflow-page {
+  background:
+    radial-gradient(
+      circle at top left,
+      #eef4ff 0%,
+      #f6f9ff 35%,
+      #f8fafc 70%
+    );
+  padding-top: 96px;
+}
+
+
+
+.workflow-header {
+  max-width: 1500px;
+  margin: 0 auto 48px auto;
+  text-align: center;
+}
+
+.workflow-header h1 {
+  font-size: 28px;
+  font-weight: 650;
+  letter-spacing: -0.3px;
+}
+
+.workflow-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.step-index {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1.5px solid #c7d2fe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  background-color: #f1f5ff;
+  color: #4f46e5;
+}
+
+.step-label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.step.active {
+  color: #2563eb;
+}
+
+.step.active .step-index {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  border-color: transparent;
+  color: white;
+}
+
+/* -------------------------
+   Workflow Content Layout
+   ------------------------- */
+
+.workflow-content {
+  max-width: 1500px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2.2fr 1fr;
+  gap: 24px;
+}
+
+
+/* -------------------------
+   Main Card (Phase Inputs)
+   ------------------------- */
+
+.main-card {
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #fbfdff 100%
+  );
+  border-radius: 18px;
+  padding: 40px;
+  border: 1px solid #e3eaf3;
+  box-shadow:
+    0 32px 64px rgba(15, 23, 42, 0.10),
+    0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+
+.main-card h2 {
+  font-size: 22px;
+  font-weight: 650;
+  color: #1245b2; 
+  margin-bottom: 6px;
+  margin-top: 0px;
+  font: bold;
+}
+
+.main-card h2,
+.main-card .subtitle {
+  text-align: center;
+}
+
+
+.main-card .subtitle {
+  font-size: 14.5px;
+  color: #64748b;
+  margin-bottom: 36px; 
+}
+
+.main-card label {
+  display: block;
+  margin-bottom: 28px;
+}
+
+.main-card label small {
+  display: block;
+  font-weight: 400;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 6px;
+  margin-bottom: 14px; 
+}
+
+
+.form-actions {
+  margin-top: 24px;
+}
+
+
+/* -------------------------
+   Tips Box
+   ------------------------- */
+
+.tips-card {
+  background: linear-gradient(
+    180deg,
+    #f8fbff 0%,
+    #f3f6fb 100%
+  );
+  border-radius: 14px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+}
+
+.tips-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.tips-card ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+.tips-card li {
+  font-size: 13.5px;
+  color: #374151;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.tips-card {
+  background: linear-gradient(
+    180deg,
+    #f9fbff 0%,
+    #f4f7fc 100%
+  );
+  border-radius: 14px;
+  border: 1.5px solid #dbe3f0;
+}
+
+.tips-card li {
+  font-size: 13.25px;
+  color: #475569;
+}
+
+
+/* -------------------------
+   Footer (placeholder)
+   ------------------------- */
+
+.app-footer {
+  margin-top: 120px;
+  padding: 48px 0 32px 0;
+  background: linear-gradient(
+    180deg,
+    rgba(248, 250, 252, 0) 0%,
+    rgba(248, 250, 252, 0.6) 30%,
+    #f1f5f9 100%
+  );
+  border-top: 1px solid #e2e8f0;
+  color: #94a3b8;
+}
+
+
+.footer-columns {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  font-size: 13px;
+}
+
+
+/* -------------------------
+   Responsive Adjustments
+   ------------------------- */
+
+@media (max-width: 1000px) {
+  .workflow-content {
+    grid-template-columns: 1fr;
+  }
+
+  .tips-card {
+    order: -1;
+    padding: 20px;
+  }
+}
+
+.tips-card {
+  align-self: flex-start;
+}
+
+.tips-card {
+  background: linear-gradient(
+    180deg,
+    #f9fbff 0%,
+    #f4f7fc 100%
+  );
+  border-radius: 16px;
+  border: 2px solid #c7d2fe;
+}
+
+
+
+.main-card input,
+.main-card textarea {
+  background-color: #ffffff;
+  border: 1px solid #dbe3f0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  
+}
+
+.main-card textarea {
+  min-height: 88px;
+  resize: vertical;
+  line-height: 1.45;
+  font-family: inherit;
+}
+
+.main-card textarea {
+  width: 100%;
+  min-height: 96px;
+  max-height: 180px;
+  resize: none;
+}
+
+
+
+.main-card input:focus,
+.main-card textarea:focus {
+  outline: none;
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+
+.primary-btn {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  padding: 12px 20px;
+  font-size: 15px;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45);
+}
+
+.main-card input::placeholder,
+.main-card textarea::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.main-card input::placeholder,
+.main-card textarea::placeholder {
+  font-size: 13px;
+  letter-spacing: 0.1px;
+}
+
+
+.main-card label:last-of-type {
+  margin-bottom: 34px;
+}
+
+
+.main-card h2::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 3px;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  border-radius: 2px;
+  margin: 14px auto 0 auto;
+}
+
+
+.draft-indicator {
+  font-size: 12.5px;
+  color: #64748b;
+  text-align: center;
+  margin-top: -8px;
+  margin-bottom: 20px;
+}
+
+.next-step-hint {
+  font-size: 12.5px;
+  color: #94a3b8;
+  margin-top: 10px;
+}
+
+
+.main-card {
+  position: relative;
+}
+
+.main-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 24px;
+  bottom: 24px;
+  width: 4px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #2563eb, #4f46e5);
+  opacity: 0.15;
+}
+
+.product-identity {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+
+
+.field-success {
+  font-size: 12px;
+  color: #16a34a;
+  margin-top: 4px;
+}
+
+
+.workflow-stepper-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+
+.step-connector {
+  width: 26px;
+  height: 2px;
+  background-color: #c7d2fe;
+  border-radius: 2px;
+}
+
+
+.step.active + .step-connector {
+  background-color: #2563eb;
+}
+
+.secondary-btn {
+  background-color: #ffffff;
+  color: #475569;
+  border: 1.5px solid #dbe3f0;
+  padding: 12px 20px;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.secondary-btn:hover {
+  background-color: #f8fafc;
+}
+
+
+.danger-btn {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  padding: 12px 20px;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.danger-btn:hover {
+  background-color: #fecaca;
+}
+
+.form-actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 28px;
+  width: 420px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+}
+
+.modal h3 {
+  margin-top: 0;
+  font-size: 18px;
+}
+
+.modal p {
+  font-size: 14px;
+  color: #475569;
+  margin-bottom: 22px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.hidden {
+  display: none;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.results-table th,
+.results-table td {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 10px;
+  font-size: 14px;
+  text-align: left;
+}
+
+.results-table th {
+  color: #374151;
+  font-weight: 600;
+}

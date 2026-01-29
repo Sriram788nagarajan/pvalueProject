@@ -1,0 +1,176 @@
+
+  /* ================================
+   Pillar container (visual hierarchy)
+   ================================ */
+  .pillar-container {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 36px;
+  }
+
+  .pillar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: none;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    }
+
+.pillar-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin: 0;
+  }
+
+  /* ================================
+   PILLAR HEADER (STRUCTURAL)
+   ================================ */
+
+  .pillar-header {
+    background: linear-gradient(
+      90deg,
+      rgba(37, 99, 235, 0.08),
+      rgba(37, 99, 235, 0.02)
+    );
+    border-left: 5px solid #2563eb;
+    padding: 18px 22px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+
+   /* Pillar header should be flat, not card-like */
+.pillar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .pillar-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e40af;
+    margin: 0;
+  }
+
+
+  .pillar-toggle {
+      background: none;
+      border: none;
+      color: #2563eb;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+.pillar-toggle:hover {
+    background-color: #eef2ff;
+    color: #1d4ed8;
+  }
+
+  .pillar-toggle:active {
+    background-color: #e0e7ff;
+  }
+
+
+ /* ================================
+   Pillar toggle button (Collapse)
+   ================================ */
+
+  .pillar-toggle {
+    background: transparent;
+    border: none;
+    color: #2563eb;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .pillar-body {
+      transition: max-height 0.2s ease;
+    }
+
+
+.verdict-card {
+      border-radius: 14px;
+      padding: 20px 24px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+.verdict-status {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 14px;
+      font-size: 16px;
+      padding: 10px 16px;
+      margin-top: 14px;
+    }
+
+
+.metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+.metric-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      padding: 16px 18px;
+    }
+
+
+
+.metric-label {
+      color: #475569;
+      font-size: 14px;
+    }
+
+
+.metric-value {
+      font-size: 28px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+
+ .metric-help {
+      color: #64748b;
+      font-size: 13px;
+      margin-top: 6px;
+      line-height: 1.4;
+    }
+
+
+.explanation-list {
+      margin-top: 12px;
+      padding-left: 18px;
+    }
+
+.explanation-list li {
+      margin-bottom: 8px;
+    }
+
+
+.disclaimer {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 10px;
+    }
+
+
+

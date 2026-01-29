@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Experiments Dashboard</title>
+
+  <!-- Global theme -->
+  <link rel="stylesheet" href="/common.css">
+
+  <!-- Workflow theme (cards, typography, spacing) -->
+  <link rel="stylesheet" href="/Take_inputs/v2/experiments/experiment_workflow.css">
+
+  <!-- Dashboard-specific styles -->
+  <link rel="stylesheet" href="./dashboard.css">
+  <link rel="stylesheet" href="/Take_inputs/v2/auth/authModal.css">
+</head>
+
+<body>
+  <div id="navbar-root"></div>
+
+  <!-- =========================
+       HEADER
+       ========================= -->
+
+  <div class="dashboard-shell">
+  
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="dashboard-sidebar">
+      <div class="sidebar-card">
+
+        <!-- USER -->
+        <div class="sidebar-user">
+          <div class="user-meta">
+            <div id="sidebar-user-email" class="user-email">—</div>
+
+            <div class="user-status-row">
+              <div class="status-dot online"></div>
+              <div class="user-status">Signed in</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <!-- EXPERIMENT COUNTS -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">EXPERIMENTS</div>
+
+          <div class="sidebar-row">
+            <span>Total</span>
+            <span class="status-pill total" id="count-total">0</span>
+          </div>
+
+          <div class="sidebar-row">
+            <span>In Progress</span>
+            <span class="status-pill in-progress" id="count-in-progress">0</span>
+          </div>
+
+          <div class="sidebar-row">
+            <span>Completed</span>
+            <span class="status-pill completed" id="count-completed">0</span>
+          </div>
+
+          <div class="sidebar-row">
+            <span>Blocked</span>
+            <span class="status-pill blocked" id="count-blocked">0</span>
+          </div>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        
+
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+
+      <!-- TITLE -->
+      <div class="dashboard-title">
+        <h1 class="hero-title">Experiment Dashboard</h1>
+      </div>
+
+     
+
+      <!-- TABS -->
+      <div class="dashboard-tabs">
+        <button class="tab-btn active" data-tab="all">All Experiments</button>
+        <button class="tab-btn" data-tab="in_progress">In Progress</button>
+        <button class="tab-btn" data-tab="completed">Completed</button>
+        <button class="tab-btn" data-tab="blocked">Blocked</button>
+      </div>
+
+      <!-- LIST -->
+      <div id="experiments-list" class="experiments-list"></div>
+
+      <!-- EMPTY STATE -->
+      <div
+        id="dashboard-empty-card"
+        class="experiment-card dashboard-empty-card hidden"
+      >
+        <div class="empty-card-content">
+          <h2>No experiments yet</h2>
+
+          <p>
+            Create your first experiment to design, validate feasibility,
+            and make statistically sound decisions.
+          </p>
+
+          <button
+            class="primary-btn"
+            id="create-experiment-btn"
+          >
+            Create New Experiment
+          </button>
+
+          <div class="empty-card-hint">
+            Takes ~3 minutes · Fully guided · No data required
+          </div>
+        </div>
+      </div>
+
+    </main>
+</div>
+
+
+<script type="module">
+  import { supabase } from "../lib/supabaseClient.js";
+
+  const { data, error } = await supabase.auth.getSession();
+  const session = data?.session;
+
+  if (!session) {
+    window.location.href = "/index.html";
+  } else {
+    const el = document.getElementById("sidebar-user-email");
+    if (el) {
+      el.textContent = session.user.email;
+    }
+  }
+</script>
+
+
+
+
+<script src="/Take_inputs/auth_fetch.js"></script>
+
+ <!---- <script src="./dashboard.js"></script>-->
+ <script type="module" src="./dashboard.js"></script>
+
+ <script>
+  document.body.dataset.pageContext = "dashboard";
+</script>
+
+<script src="/Take_inputs/shared/navbar/navbar.js"></script>
+
+<script type="module">
+  import { initAuthUI } from "/Take_inputs/v2/auth/authModal.js";
+  initAuthUI();
+</script>
+
+
+<script type="module">
+  import { requireAuthThen } from "/Take_inputs/v2/auth/authModal.js";
+
+  //  DEFINE NAVBAR HANDLER (used by navbar.js)
+  window.handleCreateExperimentClick = () => {
+    requireAuthThen(() => {
+      sessionStorage.setItem("workflow_active", "1");
+      sessionStorage.removeItem("pending_experiment_id");
+
+      window.location.href =
+        "/Take_inputs/v2/experiments/create_experiment.html?mode=create";
+    });
+  };
+
+  //  EMPTY STATE BUTTON HANDLER
+  const btn = document.getElementById("create-experiment-btn");
+
+  if (btn) {
+    btn.addEventListener("click", () => {
+      window.handleCreateExperimentClick();
+    });
+  }
+</script>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!-- =========================
+     SHARED NAVBAR
+     ========================= -->
+<header class="home-navbar">
+  <div class="navbar-inner">
+    <div class="nav-left">
+    <a href="/" class="nav-logo-link" aria-label="Go to homepage">
+      <img src="/images/main_app_logo.png" class="nav-logo" />
+    </a>
+  </div>
+
+  <link
+  rel="stylesheet"
+  href="/Take_inputs/shared/navbar/navbar.css"
+/>
+
+  <nav class="nav-center">
+    <!-- PRODUCTS -->
+    <div class="nav-dropdown">
+      <button class="nav-link nav-dropdown-trigger">Products</button>
+      <div class="nav-dropdown-menu">
+        <div class="nav-product-item" data-action="dashboard">
+          <div class="nav-product-name">
+            <span>Experimentation Platform</span>
+            <span class="nav-product-arrow">›</span>
+          </div>
+          <div class="nav-product-desc">
+            Prevent false wins — and commit to accountable experiment decisions
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FREE TOOLS -->
+    <div class="nav-dropdown">
+      <button class="nav-link nav-dropdown-trigger">Free Tools</button>
+      <div class="nav-dropdown-menu">
+        <div class="nav-product-item" data-scroll="tools">
+          <div class="nav-product-name">
+            <span>Experimentation Tools</span>
+            <span class="nav-product-arrow">›</span>
+          </div>
+          <div class="nav-product-desc">
+            Tools to accentuate your experimentation
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEARN -->
+    <div class="nav-dropdown">
+      <button class="nav-link nav-dropdown-trigger">Learn</button>
+      <div class="nav-dropdown-menu">
+        <div class="nav-product-item" data-scroll="education-section">
+          <div class="nav-product-name">
+            <span>How A/B Testing Works</span>
+            <span class="nav-product-arrow">›</span>
+          </div>
+          <div class="nav-product-desc">
+            Causal inference, not dashboards
+          </div>
+        </div>
+
+        <div class="nav-product-item" data-scroll="failures-section">
+          <div class="nav-product-name">
+            <span>Why Experiments Fail</span>
+            <span class="nav-product-arrow">›</span>
+          </div>
+          <div class="nav-product-desc">
+            False wins, underpowered tests, p-hacking
+          </div>
+        </div>
+
+        <div class="nav-product-item" data-scroll="workflow">
+          <div class="nav-product-name">
+            <span>Designing Valid Experiments</span>
+            <span class="nav-product-arrow">›</span>
+          </div>
+          <div class="nav-product-desc">
+            From hypothesis to decision lock-in
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div class="nav-dropdown">
+      <button class="nav-link nav-dropdown-trigger">Pricing</button>
+      <div class="nav-dropdown-menu">
+        <div class="nav-product-item" data-scroll="pricing">
+          <div class="nav-product-name">
+            <span>Pricing Policy</span>
+            <span class="nav-product-arrow">›</span>
+          </div>
+          <div class="nav-product-desc">
+            Free access today, transparent pricing as the platform evolves
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="nav-dropdown">
+      <button class="nav-link nav-dropdown-trigger">About</button>
+      <div class="nav-dropdown-menu">
+        <div class="nav-product-item" data-scroll="about-philosophy">
+          <div class="nav-product-name">
+            <span>Platform Philosophy</span>
+            <span class="nav-product-arrow">›</span>
+          </div>
+          <div class="nav-product-desc">
+            How pvalue.net approaches decisions, not dashboards
+          </div>
+        </div>
+
+        <div class="nav-product-item" data-scroll="about-rigor">
+          <div class="nav-product-name">
+            <span>Statistical Rigor</span>
+            <span class="nav-product-arrow">›</span>
+          </div>
+          <div class="nav-product-desc">
+            Why first-principles statistics shape every tool
+          </div>
+        </div>
+
+        <div class="nav-product-item" data-scroll="about-vision">
+          <div class="nav-product-name">
+            <span>Vision</span>
+            <span class="nav-product-arrow">›</span>
+          </div>
+          <div class="nav-product-desc">
+            A data science platform for business decision systems
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="nav-right">
+    <button class="nav-secondary-btn" id="nav-dashboard-btn">
+      Dashboard
+    </button>
+
+    <button class="primary-cta" id="nav-create-exp-btn">
+      Create Experiment
+    </button>
+
+    <div id="auth-area"></div>
+  </div>
+</header>

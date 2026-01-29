@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Phase 5 — Experiment Measurement</title>
+
+  <!-- Shared styles -->
+  <link rel="stylesheet" href="../../../common.css">
+  <link rel="stylesheet" href="/Take_inputs/v2/experiments/experiment_workflow.css" />
+  <link rel="stylesheet" href="/Take_inputs/v2/auth/authModal.css">
+  
+
+  <style>
+
+    /* ================================
+      PHASE 5 HEADER + BACK BUTTON
+    ================================ */
+    .phase5-header {
+      position: relative;
+      margin-bottom: 28px;
+    }
+
+    .phase5-back-btn {
+      position: absolute;
+      left: 0;
+      top: 2px;
+      padding: 8px 16px;
+      font-size: 14px;
+      background: #dc2626;
+      color: #ffffff;
+      border: 1px solid #dc2626;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .phase5-back-btn:hover {
+      background: #b91c1c;
+    }
+ 
+    /* Phase 5 layout parity with Phase 3 */
+    .workflow-content {
+      grid-template-columns: 1fr !important;
+      max-width: none;
+      display: block !important;
+       max-width: 1400px;
+    }
+
+    
+
+    .card {
+      margin-bottom: 28px;
+    }
+
+    .locked-note {
+      font-size: 13px;
+      color: #555;
+      margin-top: 6px;
+    }
+
+    .locked-field {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    /* Phase 5 — Analysis Completion (Centered Status Banner) */
+    .completion-banner {
+      display: inline-block;          /* ⬅ shrink to content width */
+      background: #dbe4ff;
+      border-left: 4px solid #2563eb;
+      border-right: 4px solid #2563eb;
+      padding: 6px 24px;             /* ⬅ balanced horizontal padding */
+      border-radius: 10px;
+
+      margin: 20px auto 28px;         /* ⬅ center horizontally */
+      text-align: center;             /* ⬅ center text */
+
+      max-width: none;                /* ⬅ remove wide constraint */
+      width: fit-content;
+      max-width: calc(100% - 40px); /* mobile safety */
+      align-self: center;  
+    }
+
+    .completion-banner h2 {
+      margin: 0 0 4px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1e3a8a;
+    }
+
+    .completion-banner p {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1e3a8a;
+      line-height: 1.3;  
+    }
+
+
+    .pillars {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .pillar-card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .pillar-card h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #2563eb;
+    }
+
+    .finish-btn {
+      background: #111827;
+      color: #ffffff;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .finish-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 900px) {
+      .pillars {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    .pillars-wrapper {
+      min-height: 420px; /* fixed height for max 4 pillars */
+    }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 900px) {
+      .pillars {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+    /* =========================
+      Primary Finish CTA
+    ========================= */
+
+    .finish-cta {
+      background: linear-gradient(135deg, #111827, #1f2937);
+      color: #ffffff;
+      border: none;
+      padding: 18px 26px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .finish-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.25);
+    }
+
+    .finish-cta:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+    }
+
+    .finish-cta-warning {
+      font-size: 13px;
+      margin-top: 10px;
+      color: #b91c1c;          /* ⬅ red */
+      font-weight: 500;
+    }
+
+    
+
+
+    /* ============================
+      Phase 5 — Reused Decision Modal (from Phase 4)
+      ============================ */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      width: 520px;
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+
+    .modal-card h3 {
+      margin-bottom: 16px;
+      font-size: 20px;
+    }
+
+    .modal-options label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .modal-options input[type="radio"] {
+      accent-color: #2962ff;
+      width: auto;
+      flex: none;
+    }
+
+    .modal-card textarea {
+      width: 100%;
+      min-height: 96px;
+      margin-top: 16px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    .modal-warning {
+      font-size: 13.5px;
+      color: #92400e;
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 10px 12px;
+      margin-bottom: 18px;
+      border-radius: 6px;
+      line-height: 1.45;
+    }
+
+
+    #finish-section {
+      max-width: 720px;
+      margin: 48px auto 140px auto;  /* ⬅ THIS creates bottom space */
+      padding: 32px 28px;
+      border-top: 1px dashed #e5e7eb;
+      text-align: center;
+    }
+
+  /* Phase 5 inference container = inference.html container */
+  .phase5-inference-container {
+    max-width: 1400px;
+    margin: 0 auto 28px;
+  }
+
+  .phase5-inference-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+} 
+
+  /* Match inference calculator section headers */
+  .phase5-inference-container .section h3 {
+    border-bottom: 2px solid #4a90e2;
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+    margin-top: 0;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  /* Two-column layout identical to inference.html */
+  .phase5-inference-container .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .phase5-inference-container .grid-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .phase5-inference-wrapper {
+    margin-bottom: 28px; /* same vertical rhythm as cards */
+  }
+
+  /* ================================
+   Inference-style Radio Groups
+   ================================ */
+
+.radio-group {
+  margin-top: 10px;
+  display: flex;
+  gap: 20px;
+}
+
+  /* Phase 5 — Data Relationship radio alignment fix */
+  .phase5-inference-container .radio-group label {
+    display: inline-flex;        /* match inference calculator */
+    align-items: center;
+    line-height: 1.4;            /* normalize baseline */
+  }
+
+  /* Ensure radio does not sit too high */
+  .phase5-inference-container
+    .radio-group
+    input[type="radio"] {
+    transform: scale(1.05);
+    margin-top: 0;
+  }
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: normal;
+  font-size: 14px;
+  color: #495057;
+}
+
+.radio-group input[type="radio"] {
+  margin-right: 8px;
+  accent-color: #4a90e2;
+  transform: scale(1.15);
+}
+
+/* ================================
+   Tooltip (Data Relationship)
+   ================================ */
+
+  .info-tooltip {
+    position: relative;
+    display: inline-block;
+    margin-left: 6px;
+    cursor: pointer;
+    color: #6b7280;
+    font-weight: normal;
+  }
+
+  .tooltip-card {
+    display: none;
+    position: absolute;
+    top: 26px;
+    left: 0;
+    width: 320px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px 14px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    font-size: 13px;
+    line-height: 1.45;
+    color: #374151;
+    z-index: 1000;
+  }
+
+  .info-tooltip:hover .tooltip-card {
+    display: block;
+  }
+
+  /* ================================
+    Disabled (Locked) Inputs
+    ================================ */
+
+  input[disabled],
+  select[disabled] {
+    background: #f1f5f9;
+    color: #475569;
+    cursor: not-allowed;
+  }
+
+
+  /* ================================
+   Phase 5 — Metric Type Radios
+   (Override common.css safely)
+   ================================ */
+
+  /* Phase 5 — Radio label alignment (only radios) */
+  .phase5-inference-container
+    .radio-group label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.3;
+    font-weight: 500;
+  }
+
+  /* Radio input fixes */
+  .phase5-inference-container
+    input[type="radio"] {
+    width: auto !important;     /* override width: 100% */
+    margin: 0;                  /* remove browser defaults */
+    accent-color: #4a90e2;
+    transform: scale(1.1);
+    flex-shrink: 0;
+  }
+
+  /* Space between Metric Type radio options */
+  .phase5-inference-container
+    .section
+    label + label {
+    margin-top: 14px;
+  }
+ 
+  /* ================================
+   Phase 5 — Optional Settings fixes
+   ================================ */
+
+  /* ================================
+   Phase 5 — Optional Settings fixes
+   ================================ */
+
+  /* Match inference calculator input width */
+  .phase5-inference-container select,
+  .phase5-inference-container input[type="number"] {
+    width: 100%;
+    max-width: 480px;        /* ⬅ reduce left-right length */
+    padding: 10px 12px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  /* Add vertical spacing between Optional Settings fields */
+  .phase5-inference-container
+    .section
+    select {
+    margin-bottom: 18px;
+  }
+
+  .phase5-inference-container
+    .section
+    input[type="number"] {
+    margin-bottom: 18px;
+  }
+
+  /* Add vertical spacing between Optional Settings fields */
+  .phase5-inference-container
+    .section
+    select {
+    margin-bottom: 18px;
+  }
+
+  .phase5-inference-container
+    .section
+    input[type="number"] {
+    margin-bottom: 18px;
+  }
+
+  /* Phase 5 — Data Relationship section padding fix */
+  .phase5-inference-container
+    .section[data-section="data-relationship"] {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+
+  /* ================================
+   Phase 5 — Data Relationship (FINAL FIX)
+   ================================ */
+
+  /* Neutralize common.css label rules */
+  .phase5-inference-container
+    .section[data-section="data-relationship"]
+    .radio-group
+    label {
+      display: inline-flex;   /* cancel display:block */
+      align-items: center;
+      margin-bottom: 0;       /* cancel label spacing */
+      padding: 0;
+      line-height: 1.3;
+      font-weight: 500;
+    }
+
+  /* Normalize radio vertical position */
+  .phase5-inference-container
+    .section[data-section="data-relationship"]
+    .radio-group
+    input[type="radio"] {
+      margin: 0 8px 0 0;
+      transform: scale(1.1);
+    }
+
+    /* Fix Data Relationship radio vertical misalignment */
+  .phase5-inference-container
+    .radio-group
+    label + label {
+      margin-top: 0;
+    }
+
+    /* Force Run Analysis card to span full grid width */
+    .workflow-content > .card {
+      justify-self: stretch;
+    }
+
+
+    /* ==================================================
+      Phase 5 Results UI 
+      ================================================== */
+
+    .results-ui {
+      margin-top: 12px;
+    }
+
+    /* ---------- Banner ---------- */
+    .result-banner {
+      display: flex;
+      align-items: center;
+      padding: 14px 18px;
+      border-radius: 12px;
+      margin-bottom: 14px;
+      border-left: 6px solid;
+      background: #f8fafc;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+    }
+
+    .banner-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .banner-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 15px;
+    }
+
+    .banner-title {
+      font-size: 16px;
+      font-weight: 650;
+    }
+
+    /* Banner States */
+    .banner-green {
+      background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+      border-color: #10b981;
+    }
+    .banner-green .banner-icon {
+      background: #10b981;
+    }
+
+    .banner-red {
+      background: linear-gradient(135deg, #fef2f2, #fff1f2);
+      border-color: #ef4444;
+    }
+    .banner-red .banner-icon {
+      background: #ef4444;
+    }
+
+    .banner-amber {
+      background: linear-gradient(135deg, #fffbeb, #fefce8);
+      border-color: #f59e0b;
+    }
+    .banner-amber .banner-icon {
+      background: #f59e0b;
+    }
+
+    /* ---------- Summary ---------- */
+    .result-summary {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 22px;
+      color: #1f2937;
+    }
+
+    /* ---------- Cards ---------- */
+    .results-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 26px;
+    }
+
+    @media (max-width: 900px) {
+      .results-cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .result-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 20px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    }
+
+    .result-card h4 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 16px;
+      font-weight: 650;
+      display: flex;
+      align-items: center;
+      justify-content: center;  
+      gap: 8px;
+    }
+
+    .result-card.business-impact h4::before {
+      content: "💼";
+      font-size: 16px;
+    }
+
+    .result-card.stat-confidence h4::before {
+      content: "📐";
+      font-size: 16px;
+    }
+
+    .result-card.recommended-action h4::before {
+      content: "🚀";
+      font-size: 16px;
+    }
+
+    .result-card ul {
+      padding-left: 18px;
+      margin: 0;
+    }
+
+    .result-card li {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    /* ---------- Action ---------- */
+    .action-pill {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(16,185,129,0.35);
+    }
+
+    /* ---------- Details ---------- */
+    .details-card {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 26px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .details-card h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 18px;
+      font-weight: 650;
+    }
+
+    .details-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .details-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+    }
+
+    .details-table td:first-child {
+      font-weight: 600;
+      width: 42%;
+    }
+
+    /* ============================
+      Statistical Status Pills
+      ============================ */
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      padding: 4px 10px;
+      border-radius: 999px;
+
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .stat-pill.green {
+      background: #ecfdf5;
+      color: #047857;
+    }
+
+    .stat-pill.red {
+      background: #fef2f2;
+      color: #b91c1c;
+    }
+
+    /* ============================
+      Significance Indicators
+      ============================ */
+
+    .significance {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+    }
+
+    .significance.yes {
+      color: #047857;
+    }
+
+    .significance.no {
+      color: #b91c1c;
+    }
+
+    .significance-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 12px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .significance.yes .significance-icon {
+      background: #10b981;
+    }
+
+    .significance.no .significance-icon {
+      background: #ef4444;
+    }
+
+    /* ---------- Raw JSON ---------- */
+    .raw-json summary {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #2563eb;
+      cursor: pointer;
+    }
+
+    /* ==================================================
+      Results Section Header (Prominent)
+      ================================================== */
+
+    .results-header {
+      background: linear-gradient(135deg, #eef4ff, #e6efff);
+      border: 1px solid #dbe4ff;
+      border-left: 6px solid #2563eb;
+      border-radius: 14px;
+
+      padding: 22px 26px;
+      margin-bottom: 28px;
+
+      box-shadow: 0 10px 26px rgba(37, 99, 235, 0.08);
+    }
+
+    .results-header h2 {
+      margin: 0 0 8px 0;
+      font-size: 32px;
+      font-weight: 700;
+      color: #1e3a8a;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;   /* ⬅ center emoji + text */
+      gap: 10px;
+
+      text-align: center;        /* ⬅ safety for wrapping */
+    }
+
+    .results-header h2::before {
+      content: "📊";
+      font-size: 22px;
+    }
+
+    .results-locked-note {
+      margin: 0;
+      font-size: 14.5px;
+      color: #334155;
+      line-height: 1.55;
+      text-align: center; 
+    }
+
+  /* =========================
+   Phase 5 — Next Steps CTA
+   ========================= */
+
+.next-steps-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.next-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 180px;
+  padding: 12px 18px;
+
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+
+  border-radius: 10px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+/* Primary */
+.next-btn-primary {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #ffffff;
+  border: none;
+
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+}
+
+.next-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.45);
+}
+
+/* Secondary */
+.next-btn-secondary {
+  background: #f8fafc;
+  color: #1f2937;
+  border: 1px solid #cbd5e1;
+
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+}
+
+.next-btn-secondary:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .next-steps-actions {
+    flex-direction: column;
+  }
+
+  .next-btn {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+/* =========================
+   Phase 5 — Next Steps Title
+   ========================= */
+
+.next-steps-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+
+  margin: 0 0 22px 0;
+  letter-spacing: -0.01em;
+}
+
+/* =========================
+   Phase 5 — Completion Card
+   ========================= */
+
+.completion-card {
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #f8fafc 100%
+  );
+
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+
+  padding: 48px 32px;
+  text-align: center;
+
+  box-shadow:
+    0 20px 40px rgba(15, 23, 42, 0.08),
+    0 6px 18px rgba(15, 23, 42, 0.06);
+
+  animation: completionFadeUp 0.6s ease-out both;
+}
+
+/* Soft top success accent */
+.completion-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+
+  background: linear-gradient(
+    90deg,
+    #22c55e,
+    #16a34a,
+    #4ade80
+  );
+}
+
+/* Inner alignment */
+.completion-inner {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* Icon */
+.completion-icon {
+  font-size: 42px;
+  margin-bottom: 14px;
+
+  animation: popIn 0.5s ease-out both;
+}
+
+/* Title */
+.completion-title {
+  margin: 0 0 10px 0;
+
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+
+  color: #0f172a;
+}
+
+/* Subtitle */
+.completion-subtitle {
+  margin: 0;
+
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: #475569;
+}
+
+/* =========================
+   Animations
+   ========================= */
+
+@keyframes completionFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+</style>
+</head>
+
+<body class="workflow-page">
+
+<!-- SHARED NAVBAR -->
+<div id="navbar-root"></div>
+
+<!-- Workflow Header -->
+<div class="workflow-header">
+  <h1>Post Experiment Measurement</h1>
+
+  <div class="workflow-stepper-wrapper">
+    <div class="workflow-stepper">
+
+      <div class="step completed">
+        <span class="step-index">1</span>
+        <span class="step-label">Setup</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step completed">
+        <span class="step-index">2</span>
+        <span class="step-label">Define Experiment</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step completed">
+        <span class="step-index">3</span>
+        <span class="step-label">Design Feasibility</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step completed">
+        <span class="step-index">4</span>
+        <span class="step-label">Implementation Period</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step active">
+        <span class="step-index">5</span>
+        <span class="step-label">Experiment Measurement</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ========================= -->
+<!-- COMPLETION BANNER (TOP) -->
+<!-- ========================= -->
+<div class="completion-banner" id="completion-banner" style="display:none;">
+  <p>You have reached the final step of this experiment.</p>
+</div>
+
+<div class="workflow-content">
+
+  <div class="phase5-header">
+    <button
+      id="phase5-back-btn"
+      type="button"
+      class="phase5-back-btn"
+    >
+      ◄ Back
+    </button>
+  </div>
+
+  <!-- Inference calculator (exact clone of inference.html layout) -->
+  <div class="phase5-inference-wrapper">
+    <div id="phase5-inference-root" class="phase5-inference-container"></div>
+  </div>
+
+    <!-- ========================= -->
+    <!-- RUN ANALYSIS CTA -->
+    <!-- ========================= -->
+    <div class="card">
+      <button id="run-analysis-btn" class="finish-btn">
+        Run Experiment Analysis
+      </button>
+    </div>
+
+    
+
+    <!-- ========================= -->
+    <!-- RESULTS -->
+    <!-- ========================= -->
+    <div class="card" id="results-section" style="display:none;">
+
+    <!-- Results Header -->
+    <div class="results-header">
+      <h2>Results</h2>
+
+      <p class="results-locked-note">
+        Results are computed using the committed experiment configuration and are locked
+        to preserve integrity.
+      </p>
+    </div>
+
+    <!-- Reused inference readable renderer -->
+  <div id="readable-results" class="results-ui" style="display:none;">
+
+  <!-- =========================
+       TOP RESULT BANNER
+       ========================= -->
+  <div id="result-banner" class="result-banner">
+    <div class="banner-left">
+      <span class="banner-icon">✓</span>
+      <span id="rr-verdict" class="banner-title"></span>
+    </div>
+  </div>
+
+  <p id="rr-summary" class="result-summary"></p>
+
+  <!-- =========================
+       INSIGHT CARDS
+       ========================= -->
+  <div class="results-cards">
+
+    <div class="result-card business-impact">
+      <h4>Business Impact</h4>
+      <ul id="rr-impact"></ul>
+    </div>
+
+    <div class="result-card stat-confidence">
+      <h4>Statistical Confidence</h4>
+      <p id="rr-confidence"></p>
+    </div>
+
+    <div class="result-card action-card recommended-action">
+      <h4>Recommended Action</h4>
+      <div id="rr-action" class="action-pill"></div>
+    </div>
+
+  </div>
+
+  <!-- =========================
+       DETAILED RESULTS
+       ========================= -->
+  <div class="details-card">
+    <h3>Detailed Statistical Results</h3>
+
+    <table class="details-table">
+      <tr><td>Test used</td><td id="rr-test-used"></td></tr>
+      <tr><td>Test statistic</td><td id="rr-statistic"></td></tr>
+      <tr><td>P-value</td><td id="rr-pvalue"></td></tr>
+      <tr><td>Alpha (α)</td><td id="rr-alpha"></td></tr>
+      <tr><td>Statistically significant?</td><td id="rr-significant"></td></tr>
+      <tr><td>Confidence interval</td><td id="rr-ci"></td></tr>
+      <tr><td>Number of comparisons</td><td id="rr-comparisons"></td></tr>
+    </table>
+
+    <details class="raw-json">
+      <summary>View raw JSON (advanced)</summary>
+      <pre id="rr-raw-json"></pre>
+    </details>
+  </div>
+
+</div>
+
+
+  
+    </div>
+
+
+
+    <!-- ========================= -->
+    <!-- FINISH EXPERIMENT -->
+    <!-- ========================= -->
+    <div class="card" id="finish-section" style="display:none; text-align:center;">
+      <h3>Finish Experiment</h3>
+
+      <p class="locked-note">
+        This action formally closes the experiment and locks all results.
+      </p>
+
+      <button
+        id="finish-experiment-btn"
+        class="finish-cta"
+      >
+        Finish Experiment 🏁
+      </button>
+
+      <div class="finish-cta-warning">
+        This cannot be undone.
+      </div>
+    </div>
+
+    <!-- ========================= -->
+    <!-- NEXT STEPS -->
+    <!-- ========================= -->
+
+    <div class="card completion-card" id="completion-message" style="display:none;">
+      <div class="completion-inner">
+        <div class="completion-icon">🎉</div>
+
+        <h2 class="completion-title">Experiment Completed</h2>
+
+        <p class="completion-subtitle">
+          This experiment is now closed and all results are permanently locked.
+        </p>
+      </div>
+    </div>
+
+    <div class="card" id="next-steps-section" style="display:none;">
+      <h3 class="next-steps-title">What would you like to do next?</h3>
+
+      <div class="next-steps-actions">
+        <a
+          href="/Take_inputs/v2/dashboard/dashboard.html"
+          class="next-btn next-btn-primary"
+        >
+          Go to Dashboard
+        </a>
+
+        <a
+          href="/"
+          class="next-btn next-btn-secondary"
+        >
+          Go to Home
+        </a>
+      </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- FINAL DECISION MODAL -->
+    <!-- ========================= -->
+    <div id="final-decision-modal-placeholder">
+      <!-- Modal cloned from Phase 4 -->
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+  window.API_BASE =
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+      ? "http://127.0.0.1:8000"
+      : "https://pvalueproject.onrender.com";
+</script>
+
+
+<script type="module" src="./phase5_inference_analysis.js"></script>
+
+<!-- Phase 5 Final Decision Modal -->
+<div id="phase5DecisionModal" class="modal-backdrop" style="display:none;">
+  <div class="modal-card">
+
+    <h3>What decision was taken?</h3>
+
+    <p class="modal-warning">
+      This step cannot be skipped. A decision must be accounted to close the experiment.
+    </p>
+
+    <div class="modal-options">
+      <label><input type="radio" name="phase5Decision" value="ship"> Ship</label>
+      <label><input type="radio" name="phase5Decision" value="rollback"> Rollback</label>
+      <label><input type="radio" name="phase5Decision" value="iterate"> Iterate</label>
+      <label><input type="radio" name="phase5Decision" value="hold"> Hold</label>
+      <label><input type="radio" name="phase5Decision" value="abandon"> Abandon</label>
+    </div>
+
+    <textarea
+      id="phase5Notes"
+      placeholder="Optional notes (context, reasoning, approvals)"
+    ></textarea>
+
+    <div class="actions">
+      <button class="secondary" onclick="closeDecisionModal()">
+        Cancel
+      </button>
+
+      <button
+        class="danger"
+        id="confirmPhase5DecisionBtn"
+        disabled
+      >
+        Confirm decision
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- =========================
+     SHARED NAVBAR (PHASE 5)
+     ========================= -->
+
+<script>
+  document.body.dataset.pageContext = "experiment";
+</script>
+
+<script>
+  // ==================================================
+  // GLOBAL NAVBAR HANDLER — DASHBOARD
+  // ==================================================
+  window.handleDashboardClick = function () {
+    // Exit workflow cleanly
+    sessionStorage.removeItem("workflow_active");
+
+    // Root-relative navigation (safe from deep paths)
+    window.location.href = "/Take_inputs/v2/dashboard/dashboard.html";
+  };
+</script>
+
+<!-- Navbar must load before auth UI -->
+<script src="/Take_inputs/shared/navbar/navbar.js"></script>
+
+<script type="module">
+  import { initAuthUI } from "/Take_inputs/v2/auth/authModal.js";
+  initAuthUI();
+</script>
+
+<script type="module">
+  import { enforceOrchestration } from "/Take_inputs/v2/orchestration/common_orchestration_guard.js";
+  enforceOrchestration("phase5_inference_analysis");
+</script>
+
+</body>
+</html>

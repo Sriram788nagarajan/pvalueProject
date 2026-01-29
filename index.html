@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AB Testing Platform</title>
+  <title>pvalue — A/B Testing Platform</title>
 
   <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="Take_inputs/v2/auth/authModal.css">
 
-  
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-0S008YMM6L"></script>
   <script>
@@ -15,138 +15,597 @@
     gtag('js', new Date());
     gtag('config', 'G-0S008YMM6L');
   </script>
-
 </head>
 
 <body>
 
-  
-  <div class="home-title-wrapper">
-    <div class="home-title-card">
-      <div class="home-title-inner">
 
-        <!-- LOGO (left aligned) -->
-        <img
-          src="images/main_app_logo.png"
-          alt="pvalue"
-          class="home-logo"
-        />
-        
-        <div class="home-feedback">
-          <span>We need your feedback</span><br />
-          <a href="mailto:arizn788@gmail.com">arizn788@gmail.com</a>
+
+  <div id="navbar-root"></div>
+
+<!-- =========================
+     HERO
+     ========================= -->
+<section class="hero-section reveal hero-with-bg">
+
+  <!-- Background slideshow -->
+  <div class="hero-bg">
+    <div class="hero-bg-slide active"
+         style="background-image: url('images/hero_bg_1.jpg');"></div>     
+    <div class="hero-bg-slide"
+         style="background-image: url('images/hero_bg_2.jpg');"></div>
+  
+  </div>
+
+  <!-- Overlay to protect readability -->
+  <div class="hero-overlay"></div>
+
+  <!-- Foreground content (unchanged) -->
+  <div class="hero-content">
+    <h1>
+      Statistically rigorous A/B testing.<br />
+      From experiment design to confident decisions.
+      
+    </h1>
+
+    <p class="hero-subtitle">
+      Plan valid experiments, assess feasibility before you ship,
+      and interpret results with statistical confidence — all in one experimentation platform.
+    </p>
+
+    <div class="hero-cta">
+      <button class="primary-cta" onclick="handleCreateExperimentClick()">Create Experiment</button>
+      <button
+        class="secondary-btn"
+        onclick="document.getElementById('tools').scrollIntoView({ behavior: 'smooth' })">
+        Explore Free Tools
+      </button>
+    </div>
+
+    <div class="hero-trust">
+      Built for data-driven teams · Grounded in first-principles statistics · Privacy-first by design
+    </div>
+  </div>
+</section>
+
+
+<!-- =========================
+     WORKFLOW
+     ========================= -->
+<section id="workflow" class="workflow-section reveal">
+   <h2 class="workflow-heading">
+    A complete experimentation workflow
+  </h2>
+
+  <div class="workflow-grid">
+    <div class="workflow-card">
+      <div class="workflow-bg"></div>
+      
+
+      <span class="step-badge">1</span>
+      <h3>Design experiments</h3>
+      <div class="workflow-icon">🧩</div>
+      <p>Define metrics, hypotheses, traffic splits, and assumptions.</p>
+    </div>
+
+    <div class="workflow-card">
+      <div class="workflow-bg"></div>
+      
+
+      <span class="step-badge">2</span>
+      <h3>Validate feasibility</h3>
+      <div class="workflow-icon">📐</div>
+      <p>Understand sample size, MDE, and detectability.</p>
+    </div>
+
+    <div class="workflow-card">
+      <div class="workflow-bg"></div>
+      
+
+      <span class="step-badge">3</span>
+      <h3>Analyze & decide</h3>
+      <div class="workflow-icon">📊</div>
+      <p>Compare variants and get statistically sound guidance.</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     WHAT IS AB TESTING (REBUILT)
+     ========================= -->
+<section class="education-section reveal ab-explainer">
+   <!-- Section heading -->
+    <h2 class="workflow-heading">
+      What is A/B testing?
+    </h2>
+  <div class="ab-explainer-grid">
+
+    <div class="ab-explainer-text ab-definition-card">
+  
+
+  <div class="ab-rigor-badge">
+    Causal inference · Randomized experiments
+  </div>
+
+  <p class="ab-lead">
+    A/B testing is a <strong>causal inference method</strong> that measures
+    the true impact of a change by randomly assigning users to variants.
+  </p>
+
+  <p>
+    Unlike observational analytics, A/B tests isolate cause and effect —
+    allowing teams to make decisions under uncertainty with quantified risk.
+  </p>
+
+  <ul class="ab-principles">
+    <li><strong>Randomization</strong> controls for confounders</li>
+    <li><strong>Sample size</strong> determines decision reliability</li>
+    <li><strong>Inference</strong> separates signal from noise</li>
+  </ul>
+
+  <a class="learn-link">
+    Learn how to design statistically valid experiments →
+  </a>
+</div>
+
+
+    <!-- RIGHT: Structured visual logic -->
+    <div class="ab-explainer-visual">
+
+      <div class="ab-logic-card">
+        <span class="ab-step">1</span>
+        <div>
+          <strong>Change introduced</strong>
+          <p>Variant A vs Variant B</p>
+        </div>
+      </div>
+
+      <div class="ab-logic-card">
+        <span class="ab-step">2</span>
+        <div>
+          <strong>Users randomized</strong>
+          <p>Bias and selection effects removed</p>
+        </div>
+      </div>
+
+      <div class="ab-logic-card">
+        <span class="ab-step">3</span>
+        <div>
+          <strong>Outcomes compared</strong>
+          <p>Statistical uncertainty quantified</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- =========================
+     WHY TESTS FAIL (REBUILT)
+     ========================= -->
+<section class="failures-section reveal">
+  <h2 class="workflow-heading">
+    Why most A/B tests produce misleading results
+  </h2>
+
+  <div class="failure-grid">
+
+    <!-- Failure 1 -->
+    <div class="failure-card">
+      <h3>False confidence from small samples</h3>
+
+      <p>
+        Teams stop experiments early because results
+        <strong>appear statistically significant</strong>.
+      </p>
+
+      <p>
+        In reality, small samples inflate variance and make
+        random noise look like signal — leading to false wins
+        and costly rollouts.
+      </p>
+
+      <p class="learn-link">
+        Validate required sample size before launch →
+      </p>
+    </div>
+
+    <!-- Failure 2 -->
+    <div class="failure-card">
+      <h3>Experiments underpowered by design</h3>
+
+      <p>
+        Many teams plan tests assuming
+        <strong>unrealistic effect sizes</strong>.
+      </p>
+
+      <p>
+        If your minimum detectable effect cannot be observed
+        with available traffic, the experiment cannot succeed —
+        no matter how long it runs.
+      </p>
+
+      <p class="learn-link">
+        Check detectability and MDE upfront →
+      </p>
+    </div>
+
+    <!-- Failure 3 -->
+    <div class="failure-card">
+      <h3>Metrics chosen after results appear</h3>
+
+      <p>
+        Success criteria are often redefined once data is visible.
+      </p>
+
+      <p>
+        This breaks statistical validity, introduces bias,
+        and turns experimentation into post-hoc storytelling
+        instead of inference.
+      </p>
+
+      <p class="learn-link">
+        Lock hypotheses and metrics before testing →
+      </p>
+    </div>
+
+  </div>
+</section>
+
+
+<section id="tools" class="products-section reveal">
+
+  <h2 class="workflow-heading">
+    Experimentation tools
+  </h2>
+
+  <div class="tools-grid">
+
+    <div class="tool-tile" onclick="openPhase0()">
+      <div class="tool-icon">📋</div>
+      <div class="tool-title">Design Validator</div>
+    </div>
+
+    <div class="tool-tile" onclick="openSampleSizeCalculator()">
+      <div class="tool-icon">🔢</div>
+      <div class="tool-title">Sample Size</div>
+    </div>
+
+    <div class="tool-tile" onclick="openMDECalculator()">
+      <div class="tool-icon">🎯</div>
+      <div class="tool-title">Detectable Effect (MDE)</div>
+    </div>
+
+    <div class="tool-tile" onclick="openPhase3()">
+      <div class="tool-icon">📊</div>
+      <div class="tool-title">Result Analysis</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =========================
+     ROLES
+     ========================= -->
+<section class="roles-section reveal">
+  <h2 class="workflow-heading">
+    A/B testing for every team
+  </h2>
+
+  <div class="roles-grid">
+    <div class="role-card">
+      <h3>Product Managers</h3>
+      <ul>
+        <li>Validate hypotheses</li>
+        <li>Avoid false wins</li>
+        <li>Decide responsibly</li>
+      </ul>
+    </div>
+
+    <div class="role-card">
+      <h3>Marketers</h3>
+      <ul>
+        <li>Avoid false positives</li>
+        <li>Plan around traffic</li>
+        <li>Measure real lift</li>
+      </ul>
+    </div>
+
+    <div class="role-card">
+      <h3>Data Teams</h3>
+      <ul>
+        <li>Enforce rigor</li>
+        <li>Avoid p-hacking</li>
+        <li>Produce auditable results</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="about-section reveal">
+
+  <h2 class="workflow-heading">
+    About the platform
+  </h2>
+
+  <div class="about-card">
+
+    <div class="about-grid">
+
+      <!-- LEFT: TEXT CONTENT -->
+      <div class="about-content">
+
+        <div id="about-philosophy" class="about-block">
+          <h3>Platform philosophy</h3>
+
+          <p class="ab-lead">
+            pvalue.net is built as a data science–driven platform grounded in
+            first-principles statistics, designed to help teams make correct
+            decisions under uncertainty.
+          </p>
+
+          <p>
+            Modern analytics tools optimize for speed and presentation.
+            pvalue.net optimizes for <strong>decision correctness</strong>.
+          </p>
+
+          <p>
+            Every workflow is designed to reduce false confidence,
+            surface uncertainty early, and force explicit decision commitment.
+          </p>
         </div>
 
-        <!-- TITLE + SUBTITLE (centered) -->
-        <div class="home-title-text">
-          <h1>A/B Testing Calculators & Experiment Analysis Platform</h1>
-          <p class="home-subtitle">
-            Design experiments, estimate required sample sizes, evaluate detectability,
-            and analyze results with statistical rigor.
+        <div id="about-rigor" class="about-block">
+          <h3>Built on statistical rigor</h3>
+
+          <p class="ab-lead">
+            Statistics is not a feature in pvalue.net — it is the foundation.
           </p>
+
+          <ul class="ab-principles">
+            <li>First-principles statistical modeling</li>
+            <li>No hidden defaults or silent assumptions</li>
+            <li>Decision-oriented outputs, not vanity metrics</li>
+          </ul>
+        </div>
+
+        <div id="about-vision" class="about-block">
+          <h3>Long-term vision</h3>
+
+          <p class="ab-lead">
+            pvalue.net is being built as a data science platform for business
+            decision systems.
+          </p>
+
+          <p>
+            Today, the focus is experimentation — because experimentation
+            exposes the cost of incorrect decisions most clearly.
+          </p>
+
+          <p>
+            Over time, the platform will expand to support multiple
+            data-driven workflows grounded in statistical efficiency,
+            transparency, and accountability.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: VISUAL -->
+      <div class="about-visual">
+        <img
+          src="images/about_platform_visual.png"
+          alt="Data-driven decision systems visualization"
+        />
       </div>
 
     </div>
+
+  </div>
+
+</section>
+
+
+
+
+
+<!-- =========================
+     FINAL CTA
+     ========================= -->
+
+<!-- =========================
+     PRICING
+     ========================= -->
+<section id="pricing" class="pricing-section reveal">
+  <h2 class="workflow-heading">
+    Pricing
+  </h2>
+
+  <div class="pricing-grid">
+    <div class="pricing-card pricing-wide">
+
+      <div class="pricing-header">
+
+        <span class="pricing-badge">
+          Currently <strong>FREE</strong>
+        </span>
+
+        <h3 class="pricing-title">
+          Full access to all experimentation tools
+        </h3>
+
+        <p class="pricing-description">
+          pvalue.net is free to use while we focus on building a statistically
+          rigorous experimentation platform teams can trust.
+        </p>
+      </div>
+
+      <div class="pricing-columns">
+
+        <!-- LEFT COLUMN -->
+        <div class="pricing-column pricing-now">
+          <h4>WHAT'S AVAILABLE TODAY ?</h4>
+          <ul class="pricing-features">
+            <li>Design validation & feasibility checks</li>
+            <li>Sample size & MDE calculators</li>
+            <li>Statistical result analysis</li>
+            <li>Decision guidance grounded in inference</li>
+          </ul>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="pricing-column pricing-later">
+          <h4>PLANNED PAID CAPABILITIES :</h4>
+          <ul class="pricing-features muted">
+            <li>Experiment history & decision logs</li>
+            <li>Team collaboration & governance</li>
+            <li>Advanced validation & audit trails</li>
+            <li>Organization-level experimentation analytics</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <p class="pricing-note">
+        Free access does not mean reduced rigor or limited functionality.
+      </p>
 
     </div>
   </div>
+</section>
 
-  <!-- CONSTRAINED TOOL GRID -->
-  <div class="container">
-    <div class="home-grid">
 
-      <div class="section home-card" onclick="openPhase0()">
-        <h2 class="section-title">
-          <span class="section-emoji">📋</span>
-          Validate Experiment Design
-        </h2>
 
-        <p>
-          Define metrics, hypotheses, traffic splits, power, and validate
-          experiment design before running tests.
-        </p>
-        <ul class="section-bullets">
-          <li>Make sure the experiment can actually answer your question</li>
-          <li>Find setup mistakes before you spend traffic or time</li>
-        </ul>
+<section class="final-cta reveal">
+  <h2>Stop guessing. Move to statistically sound decisions, Now!</h2>
+  <br>
+  <button class="primary-cta" onclick="handleCreateExperimentClick()">Create Experiment</button>
+</section>
 
-      </div>
 
-      <div class="section home-card" onclick="openSampleSizeCalculator()">
-        <h2 class="section-title">
-          <span class="section-emoji">🔢</span>
-          Sample Size Calculator for A/B Testing
-        </h2>
 
-        <p>
-          Estimate how many users you need before running an A/B test.
-          Supports binary & continuous metrics, power, MDE, and traffic splits.
-        </p>
-        <ul class="section-bullets">
-          <li>Decide if your traffic is enough to trust the result</li>
-          <li>Avoid stopping too early and drawing the wrong conclusion</li>
-        </ul>
-
-      </div>
-
-      <div class="section home-card" onclick="openMDECalculator()">
-        <h2 class="section-title">
-          <span class="section-emoji">🎯</span>
-          Minimum Detectable Effect (MDE) Calculator
-        </h2>
-
-        <p>
-          Find the smallest effect your experiment can reliably detect
-          given your sample size, metric type, power, and test design.
-        </p>
-        <ul class="section-bullets">
-          <li>Check if a realistic improvement can be noticed at all</li>
-          <li>Understand if you need more users or more time</li>
-        </ul>
-
-      </div>
-
-      <div class="section home-card" onclick="openPhase3()">
-        <h2 class="section-title">
-          <span class="section-emoji">📊</span>
-          Analyze Experiment Results
-        </h2>
-
-        <p>
-          Analyze experiment results, compare variants against control,
-          identify winners, and get business recommendations.
-        </p>
-        <ul class="section-bullets">
-          <li>See whether the change really helped or not</li>
-          <li>Understand how confident you should be in the result</li>
-          <li>Decide what action to take next</li>
-        </ul>
-
-      </div>
-
-    </div>
-  </div>
-
-</body>
-
+<!-- =========================
+     SCRIPTS
+     ========================= -->
 
 <script>
-  function openPhase0() {
-    window.location.href = "design_validator.html";
-  }
-
-  function openSampleSizeCalculator() {
-    window.location.href = "sample_size_calculator/sample_size.html";
-  }
-
-  function openMDECalculator() {
-    window.location.href = "mde_calculator/mde.html";
-  }
-
-  function openPhase3() {
-    window.location.href = "inference.html";
-  }
+  window.PAGE_CONTEXT = "home";
 </script>
+
+
+<script type="module">
+  import {
+    requireAuthThen,
+    initAuthUI
+  } from "./Take_inputs/v2/auth/authModal.js";
+
+  window.handleCreateExperimentClick = () =>
+    requireAuthThen(() => {
+      window.location.href =
+        "Take_inputs/v2/experiments/create_experiment.html?mode=create";
+    });
+
+  window.handleDashboardClick = () =>
+    requireAuthThen(() => {
+      window.location.href =
+        "Take_inputs/v2/dashboard/dashboard.html";
+    });
+
+  initAuthUI();
+
+    // =========================
+  // PUBLIC TOOL NAVIGATION
+  // (No authentication)
+  // =========================
+
+  window.openPhase0 = () => {
+    window.location.href = "design_validator.html";
+  };
+
+  window.openSampleSizeCalculator = () => {
+    window.location.href = "sample_size_calculator/sample_size.html";
+  };
+
+  window.openMDECalculator = () => {
+    window.location.href = "mde_calculator/mde.html";
+  };
+
+  window.openPhase3 = () => {
+    window.location.href = "inference.html";
+  };
+
+
+  // Scroll reveal animation
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("in-view");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+  // Hero background slideshow
+  const slides = document.querySelectorAll('.hero-bg-slide');
+  let currentSlide = 0;
+
+  setInterval(() => {
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + 1) % slides.length;
+    slides[currentSlide].classList.add('active');
+  }, 10000);
+</script>
+
+<script src="/Take_inputs/shared/navbar/navbar.js"></script>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const scrollTarget = params.get("scroll");
+
+  if (scrollTarget) {
+    setTimeout(() => {
+      if (window.scrollWithOffset) {
+        window.scrollWithOffset(scrollTarget);
+      }
+    }, 80);
+}
+</script>
+
+<!-- =========================
+     AUTH MODAL
+     ========================= -->
+<div id="auth-modal" class="auth-modal hidden">
+  <div class="auth-backdrop" onclick="closeAuthModal()"></div>
+
+  <div class="auth-card">
+    <h2 id="auth-title">Sign in</h2>
+    <div id="auth-error" class="auth-error hidden"></div>
+    <button class="auth-google-btn" onclick="signInWithGoogle()">
+      Continue with Google
+    </button>
+
+    <div class="auth-divider">or</div>
+
+    <input id="auth-email" type="email" placeholder="Email" />
+    <input id="auth-password" type="password" placeholder="Password" />
+
+    <button id="auth-submit-btn" class="primary-btn" onclick="submitAuth()">
+      Continue
+    </button> 
+
+    <p class="auth-switch">
+      <span id="auth-switch-text">New user?</span>
+      <a onclick="toggleAuthMode()">Sign up</a>
+    </p>
+  </div>
+</div>
 
 
 </body>

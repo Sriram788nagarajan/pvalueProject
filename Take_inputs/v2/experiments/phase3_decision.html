@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+
+  <meta charset="UTF-8" />
+  <title>Design Decision</title>
+  <link rel="stylesheet" href="../../../common.css">
+  <link rel="stylesheet" href="/Take_inputs/v2/experiments/experiment_workflow.css">
+  <link rel="stylesheet" href="./phase3_pillars.css">
+  <link rel="stylesheet" href="/Take_inputs/v2/auth/authModal.css">
+  
+  
+  <style>
+    /* Phase 3 Decision specific styles */
+    .workflow-content {
+      grid-template-columns: 1fr !important;
+      max-width: 1200px;
+    }
+
+    .main-card .section {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      margin-bottom: 24px;
+    }
+
+    /* ================================
+       DECISION COMMITMENT BANNER
+       ================================ */
+    .decision-banner {
+      background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 70%);
+      border-radius: 18px;
+      padding: 32px 36px;
+      border: 3px solid #86efac;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12), 0 8px 20px rgba(15, 23, 42, 0.08);
+      margin-bottom: 36px;
+    }
+
+    .decision-banner.blocked {
+      background: linear-gradient(180deg, #fff5f5 0%, #ffffff 70%);
+      border-color: #fca5a5;
+    }
+
+    .decision-banner-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1e3a8a;
+      letter-spacing: -0.2px;
+      margin-bottom: 14px;
+    }
+
+    .decision-status {
+      display: inline-block;
+      font-size: 16px;
+      padding: 10px 16px;
+      margin-top: 14px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .decision-status.accepted {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .decision-status.blocked {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .decision-banner-subtitle {
+      margin-top: 14px;
+      font-size: 15px;
+      color: #334155;
+      max-width: 900px;
+      line-height: 1.6;
+    }
+
+    /* ================================
+       WHAT'S NEXT CTA SECTION
+       ================================ */
+    .whats-next-section {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 32px 40px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .whats-next-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 12px;
+    }
+
+    .whats-next-description {
+      font-size: 15px;
+      color: #475569;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .cta-button {
+      padding: 14px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .cta-button.primary {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .cta-button.primary:hover {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    }
+
+    .cta-button.secondary {
+      background: #f1f5f9;
+      color: #1e293b;
+      border: 1px solid #cbd5e0;
+    }
+
+    .cta-button.secondary:hover {
+      background: #e2e8f0;
+    }
+
+    /* ================================
+       OVERALL FEASIBILITY (CLONED)
+       ================================ */
+    .overall-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border-radius: 18px;
+      padding: 32px 36px;
+      border: 3px solid #c7d2fe;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12), 0 8px 20px rgba(15, 23, 42, 0.08);
+      margin-bottom: 36px;
+    }
+
+    .overall-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1e3a8a;
+      letter-spacing: -0.2px;
+    }
+
+    .overall-sub {
+      margin-top: 14px;
+      font-size: 15px;
+      color: #334155;
+      max-width: 900px;
+      line-height: 1.6;
+    }
+
+    .verdict-status {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .status-feasible {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-borderline {
+      background: #ffedd5;
+      color: #9a3412;
+    }
+
+    .status-not_feasible {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* Overall Feasibility Backgrounds */
+    .overall-status-not_feasible {
+      background: linear-gradient(180deg, #fff5f5 0%, #ffffff 70%);
+      border-color: #fca5a5;
+    }
+
+    .overall-status-borderline {
+      background: linear-gradient(180deg, #fffbeb 0%, #ffffff 70%);
+      border-color: #fcd34d;
+    }
+
+    .overall-status-feasible {
+      background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 70%);
+      border-color: #86efac;
+    }
+
+    /* ================================
+       PHASE 3 HEADER + BACK BUTTON
+       ================================ */
+    .phase3-header {
+      position: relative;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .phase3-back-btn {
+      position: absolute;
+      left: 0;
+      top: 2px;
+      padding: 8px 16px;
+      font-size: 14px;
+      background: #dc2626;
+      color: #ffffff;
+      border: 1px solid #dc2626;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+
+    .phase3-back-btn:hover {
+      background: #b91c1c;
+      color: #ffffff;
+    }
+
+    /* Remove card feel from main container */
+    .main-card {
+      box-shadow: none;
+      border-top: none;
+      border-right: none;
+      border-bottom: none;
+    }
+  </style>
+</head>
+
+<body class="workflow-page">
+
+<!-- SHARED NAVBAR -->
+<div id="navbar-root"></div>
+
+<div class="workflow-header">
+  <h1>Experiment Feasibility</h1>
+
+  <div class="workflow-stepper-wrapper">
+    <div class="workflow-stepper">
+
+      <div class="step completed">
+        <span class="step-index">1</span>
+        <span class="step-label">Setup</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step completed">
+        <span class="step-index">2</span>
+        <span class="step-label">Define Experiment</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step active">
+        <span class="step-index">3</span>
+        <span class="step-label">Design Feasibility</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step">
+        <span class="step-index">4</span>
+        <span class="step-label">Implementation Period</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step">
+        <span class="step-index">5</span>
+        <span class="step-label">Experiment Measurement</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="workflow-content">
+
+  <!-- MAIN CARD -->
+  <div class="main-card">
+    <div class="phase3-header">
+      <button
+        id="back-btn"
+        type="button"
+        class="phase3-back-btn"
+      >
+        ◄ Back
+      </button>
+
+      <h2>Design Decision</h2>
+      <p class="subtitle">
+        Your experiment design decision has been finalized.
+      </p>
+    </div>
+
+    <!-- ================================
+         DECISION COMMITMENT BANNER
+         ================================ -->
+    <section id="decision-banner-section" class="section">
+      <!-- Populated dynamically -->
+    </section>
+
+    <!-- ================================
+         WHAT'S NEXT CTA SECTION
+         ================================ -->
+    <section class="whats-next-section">
+      <h3 class="whats-next-title">What's the next step?</h3>
+      <p id="whats-next-description" class="whats-next-description">
+        <!-- Populated dynamically -->
+      </p>
+      <button id="cta-button" class="cta-button">
+        <!-- Populated dynamically -->
+      </button>
+    </section>
+
+    <!-- ================================
+         OVERALL FEASIBILITY (CLONE)
+         ================================ -->
+    <section id="overall-feasibility-section" class="section">
+      <!-- Populated dynamically -->
+    </section>
+
+    <!-- ================================
+         PILLAR 1: DETECTABILITY
+         ================================ -->
+    <div class="pillar-container">
+      <div class="pillar-header">
+        <h2>Detectability</h2>
+        <button class="pillar-toggle" onclick="togglePillar('detectability', this)">
+          Expand ▸
+        </button>
+      </div>
+
+      <section id="pillar-detectability" class="pillar-body">
+        <section id="verdict-section" class="section"></section>
+        <section id="metrics-section" class="section"></section>
+        <section id="baseline-sensitivity-section" class="section"></section>
+        <section id="power-curve-section" class="section"></section>
+        <section id="explanations-section" class="section"></section>
+      </section>
+    </div>
+
+    <!-- ================================
+         PILLAR 2: SAMPLE & TIME
+         ================================ -->
+    <div class="pillar-container">
+      <div class="pillar-header">
+        <h2>Sample & Time Feasibility</h2>
+        <button class="pillar-toggle" onclick="togglePillar('sample-time', this)">
+          Expand ▸
+        </button>
+      </div>
+
+      <p class="metric-help" style="margin-top: 8px;">
+        <strong>How timing is evaluated:</strong><br />
+        Planned users represent the <em>total number of users over the entire experiment duration</em>,
+        not per day. Daily traffic is derived automatically from this duration.
+      </p>
+
+      <p class="metric-help">
+        Evaluate whether this experiment can realistically reach the required sample size
+        within a reasonable timeframe.
+      </p>
+
+      <section id="pillar-sample-time" class="pillar-body" >
+        <section id="sample-time-verdict-section" class="section"></section>
+        <section id="sample-time-metrics-section" class="section"></section>
+        <section id="sample-time-table-section" class="section"></section>
+        <section id="sample-time-explanations-section" class="section"></section>
+      </section>
+    </div>
+
+    <!-- ================================
+         PILLAR 3: DECISION ROBUSTNESS
+         ================================ -->
+    <div class="pillar-container">
+      <div class="pillar-header">
+        <h2>Decision Robustness</h2>
+        <button class="pillar-toggle" onclick="togglePillar('decision-robustness', this)">
+          Expand ▸
+        </button>
+      </div>
+
+      <p class="metric-help">
+        Evaluates whether the likely outcomes of this experiment will support
+        a clear and confident decision.
+      </p>
+
+      <section id="pillar-decision-robustness" class="pillar-body">
+        <section id="decision-robustness-verdict" class="section"></section>
+        <section id="decision-robustness-risks" class="section"></section>
+        <section id="decision-robustness-guidance" class="section"></section>
+      </section>
+    </div>
+
+    <!-- ================================
+         PILLAR 4: RISK & ASSUMPTION DISCLOSURE
+         ================================ -->
+    <div class="pillar-container">
+      <div class="pillar-header">
+        <h2>Risk & Assumption Disclosure</h2>
+        <button class="pillar-toggle" onclick="togglePillar('risk-disclosure', this)">
+          Expand ▸
+        </button>
+      </div>
+
+      <p class="metric-help">
+        Explicit assumptions, approximations, and known conditions under which
+        this experiment's conclusions may no longer hold.
+      </p>
+
+      <section id="pillar-risk-disclosure" class="pillar-body" >
+        <section id="risk-assumptions" class="section"></section>
+        <section id="risk-approximations" class="section"></section>
+        <section id="risk-fragilities" class="section"></section>
+        <section id="risk-invalidations" class="section"></section>
+      </section>
+    </div>
+
+  </div> <!-- END main-card -->
+
+</div> <!-- END workflow-content -->
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="/Take_inputs/supabase_client.js"></script>
+<script src="/Take_inputs/auth_fetch.js"></script>
+
+
+
+<script src="./phase3_renderers.js"></script>
+
+<script>
+
+const API_BASE =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+    ? "http://127.0.0.1:8000"
+    : "https://pvalueproject.onrender.com";
+
+
+ 
+// ===== Experiment context =====
+const urlParams = new URLSearchParams(window.location.search);
+const experimentId = urlParams.get("id");
+
+if (!experimentId) {
+  alert("Experiment ID missing in URL.");
+  throw new Error("experimentId not found");
+}
+
+let detectabilityVerdict = null;
+let sampleTimeVerdict = null;
+
+document.addEventListener("DOMContentLoaded", loadPhase3Decision);
+
+
+
+async function loadPhase3Decision() {
+  console.time("snapshot_fetch_total");
+
+  const snapshotRes = await authFetch(
+    `${API_BASE}/v2/experiments/${experimentId}/snapshot/full`
+  );
+
+    if (!snapshotRes.ok) {
+      alert("Failed to load experiment snapshot.");
+      return;
+    }
+
+    const snapshot = await snapshotRes.json();
+
+    // ================================
+    // HARD GUARD — cannot view decision before commit
+    // ================================
+    if (snapshot.locked_version === null) {
+      window.location.replace(`phase3_feasibility.html?id=${experimentId}`);
+      return;
+    }
+
+    // ================================
+// HYDRATE VERDICTS FIRST (CRITICAL)
+// ================================
+  const phase3Results = snapshot.phase3_results || {};
+
+  // ================================
+  // STRICT VERDICT RE-HYDRATION
+  // ================================
+  detectabilityVerdict =
+    phase3Results.detectability?.result?.computed?.feasibility_verdict ?? null;
+
+  sampleTimeVerdict =
+    phase3Results.sample_time?.result?.computed?.time_feasibility_verdict ?? null;
+
+
+    console.timeEnd("snapshot_fetch_total");
+
+
+  // ============================================================
+  // RENDER (shared path — identical output)
+  // ============================================================
+    console.time("render_all");
+
+    // --------------------------------------------------
+    // 1️ Top-level decision UI
+    // --------------------------------------------------
+    renderDecisionBanner(snapshot);
+    renderWhatsNext(snapshot);
+
+    // ---- Pillars ----
+    const mwe = snapshot.design_inputs?.target_mde;
+
+    if (phase3Results.detectability) {
+      const result = phase3Results.detectability.result;
+      renderVerdict(result);
+      renderMetrics(result, mwe);
+      renderBaselineSensitivity(result);
+      renderExplanations(result);
+    }
+
+    if (phase3Results.power_grid) {
+      const gridData =
+        phase3Results.power_grid.result || phase3Results.power_grid;
+      renderPowerCurve(gridData);
+    }
+
+    if (phase3Results.sample_time) {
+      const result = phase3Results.sample_time.result;
+      renderSampleTimeVerdict(result);
+      renderSampleTimeMetrics(result);
+      renderSampleTimeTable(result);
+      renderSampleTimeExplanations(result);
+    }
+
+    if (phase3Results.decision_robustness?.result) {
+      renderDecisionRobustness(phase3Results.decision_robustness.result);
+    }
+
+    if (phase3Results.risk_disclosure?.result) {
+      renderRiskDisclosure(phase3Results.risk_disclosure.result);
+    }
+
+    // ---- THEN overall feasibility ----
+    renderOverallFeasibility();
+
+    
+
+    // --------------------------------------------------
+    // 4️ Restore UI state
+    // --------------------------------------------------
+    restorePillarStates();
+
+    console.timeEnd("render_all");
+
+  const backBtn = document.getElementById("back-btn");
+  if (backBtn) {
+    backBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      window.location.href =
+        `design_parameters.html?id=${experimentId}`;
+    });
+  }
+
+   console.timeEnd("domcontent_handler");
+  console.timeEnd("phase3_decision_total");
+}
+
+
+// ================================
+// DECISION BANNER RENDERER
+// ================================
+function renderDecisionBanner(snapshot) {
+  const decision = snapshot.decision; // "accepted" or "blocked"
+  const root = document.getElementById("decision-banner-section");
+
+  if (decision === "accepted") {
+    root.innerHTML = `
+      <div class="decision-banner">
+        <div class="decision-banner-title">Decision Finalized</div>
+        <div class="decision-status accepted">✅ ACCEPTED</div>
+        <div class="decision-banner-subtitle">
+          This experiment design has been approved and locked to preserve analytical integrity.
+        </div>
+      </div>
+    `;
+  } else if (decision === "blocked") {
+    root.innerHTML = `
+      <div class="decision-banner blocked">
+        <div class="decision-banner-title">Decision Finalized</div>
+        <div class="decision-status blocked">❌ BLOCKED</div>
+        <div class="decision-banner-subtitle">
+          This experiment has been closed and archived. It cannot be reopened.
+        </div>
+      </div>
+    `;
+  } else {
+    root.innerHTML = `
+      <div class="decision-banner">
+        <div class="decision-banner-title">Decision Status Unknown</div>
+        <div class="decision-status">⚠️ PENDING</div>
+        <div class="decision-banner-subtitle">
+          The decision status for this experiment could not be determined.
+        </div>
+      </div>
+    `;
+  }
+}
+
+// ================================
+// WHAT'S NEXT CTA RENDERER
+// ================================
+function renderWhatsNext(snapshot) {
+  const decision = snapshot.decision;
+  const descriptionEl = document.getElementById("whats-next-description");
+  const ctaButton = document.getElementById("cta-button");
+
+  if (decision === "accepted") {
+    descriptionEl.innerText =
+      "You've locked this design. The next step is to implement the experiment exactly as specified.";
+
+    ctaButton.innerText = "Proceed to Implementation";
+    ctaButton.className = "cta-button primary";
+    ctaButton.onclick = () => {
+      window.location.href = `phase4_implementation.html?id=${experimentId}`;
+    };
+  } else if (decision === "blocked") {
+    descriptionEl.innerText =
+      "This experiment was blocked and will not proceed. You can return to the home page.";
+
+    ctaButton.innerText = "Return to Home Page";
+    ctaButton.className = "cta-button secondary";
+    ctaButton.onclick = () => {
+      window.location.href = "/index.html";
+    };
+  } else {
+    descriptionEl.innerText = "Decision status is unclear.";
+    ctaButton.style.display = "none";
+  }
+}
+
+// ================================
+// OVERALL FEASIBILITY RENDERER (CLONED)
+// ================================
+function renderOverallFeasibility() {
+  const root = document.getElementById("overall-feasibility-section");
+
+  if (!detectabilityVerdict || !sampleTimeVerdict) {
+    root.innerHTML = `
+      <div class="overall-card">
+        <div class="overall-title">Overall Design Feasibility</div>
+        <div class="verdict-status" style="margin-top:8px;background:#e5e7eb;color:#374151;">
+          ⏳ INCOMPLETE
+        </div>
+        <div class="overall-sub">
+          This assessment will be finalized once all feasibility checks are completed.
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const verdicts = [detectabilityVerdict, sampleTimeVerdict];
+
+  let statusClass;
+  let label;
+  let subtitle;
+
+  if (verdicts.includes("not_feasible")) {
+    statusClass = "status-not_feasible";
+    label = "❌ HIGH RISK";
+    subtitle =
+      "One or more feasibility checks indicate that this experiment is unlikely to succeed as designed.";
+  } else if (verdicts.includes("borderline")) {
+    statusClass = "status-borderline";
+    label = "⚠️ MODERATE RISK";
+    subtitle =
+      "This experiment may succeed, but some aspects of the design pose elevated risk.";
+  } else {
+    statusClass = "status-feasible";
+    label = "✅ FEASIBLE";
+    subtitle =
+      "All evaluated feasibility checks indicate the experiment is well designed.";
+  }
+
+  root.innerHTML = `
+    <div class="overall-card overall-${statusClass}">
+      <div class="overall-title">Overall Design Feasibility</div>
+      <div class="verdict-status ${statusClass}" style="margin-top:12px;">
+        ${label}
+      </div>
+      <div class="overall-sub">
+        ${subtitle}
+      </div>
+    </div>
+  `;
+}
+
+// ================================
+// PILLAR TOGGLE WITH PERSISTENCE
+// ================================
+function togglePillar(pillarId, btn) {
+  const el = document.getElementById(`pillar-${pillarId}`);
+  const isExpanded = el.style.display !== "none";
+
+  if (isExpanded) {
+    el.style.display = "none";
+    btn.innerText = "Expand ▸";
+    localStorage.setItem(`pillar_${pillarId}_expanded`, "false");
+  } else {
+    el.style.display = "block";
+    btn.innerText = "Collapse ▾";
+    localStorage.setItem(`pillar_${pillarId}_expanded`, "true");
+  }
+}
+
+function restorePillarStates() {
+  const pillars = [
+    "detectability",
+    "sample-time",
+    "decision-robustness",
+    "risk-disclosure"
+  ];
+
+  pillars.forEach(pillarId => {
+    const isExpanded = localStorage.getItem(`pillar_${pillarId}_expanded`) === "true";
+    const el = document.getElementById(`pillar-${pillarId}`);
+    
+    // Find the button by iterating through all pillar toggles
+    const buttons = document.querySelectorAll('.pillar-toggle');
+    let btn = null;
+    buttons.forEach(b => {
+      if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(pillarId)) {
+        btn = b;
+      }
+    });
+
+    if (isExpanded && el && btn) {
+      el.style.display = "block";
+      btn.innerText = "Collapse ▾";
+    }
+  });
+}
+
+</script>
+
+<footer class="app-footer">
+  <div class="footer-columns">
+    <div>Resources</div>
+    <div>Product</div>
+    <div>Legal</div>
+    <div>Support</div>
+  </footer>
+
+
+<!-- =========================
+     SHARED NAVBAR (SAFE INSERT)
+     ========================= -->
+
+<script>
+  document.body.dataset.pageContext = "experiment";
+</script>
+
+
+<script>
+  // ==================================================
+  // GLOBAL NAVBAR HANDLER — DASHBOARD
+  // ==================================================
+  window.handleDashboardClick = function () {
+    // Exit workflow cleanly
+    sessionStorage.removeItem("workflow_active");
+
+    // Root-relative navigation (safe from deep paths)
+    window.location.href = "/Take_inputs/v2/dashboard/dashboard.html";
+  };
+</script>
+
+
+<!-- LOAD NAVBAR FIRST -->
+<script src="/Take_inputs/shared/navbar/navbar.js"></script>
+
+<!-- THEN INIT AUTH (navbar + #auth-area now exist) -->
+<script type="module">
+  import { initAuthUI } from "/Take_inputs/v2/auth/authModal.js";
+  initAuthUI();
+</script>
+
+
+<script type="module">
+  import { enforceOrchestration } from "/Take_inputs/v2/orchestration/common_orchestration_guard.js";
+  enforceOrchestration("phase3_decision");
+</script>
+
+</body>
+</html>

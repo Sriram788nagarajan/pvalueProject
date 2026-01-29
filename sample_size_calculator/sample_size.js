@@ -3,7 +3,10 @@ const baselineValue = document.getElementById("baselineValue");
 const varianceValue = document.getElementById("varianceValue");
 const varianceNote = document.getElementById("varianceNote");
 const outputSection = document.getElementById("outputSection");
-const API_BASE = "https://pvalueproject.onrender.com";
+
+const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? "http://127.0.0.1:8000"
+  : "https://pvalueproject.onrender.com";
 
 function updateVariance() {
   if (outcomeType.value === "binary") {

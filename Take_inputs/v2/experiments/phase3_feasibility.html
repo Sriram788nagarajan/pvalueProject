@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Design Feasibility Analysis</title>
+    <link rel="stylesheet" href="../../../common.css">
+    <link rel="stylesheet" href="/Take_inputs/v2/experiments/experiment_workflow.css">
+    <link rel="stylesheet" href="/Take_inputs/v2/auth/authModal.css">
+    <link rel="stylesheet" href="./phase3_pillars.css">
+    
+  <style>
+    /* Phase 3 specific — scoped, minimal, theme-consistent */
+  .workflow-content {
+  grid-template-columns: 1fr !important;
+  max-width: 1200px;
+  }
+  
+    
+    .main-card .section {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 24px;
+  }
+
+    .section h2 {
+      margin-bottom: 12px;
+    }
+
+    
+
+    
+
+    /* ================================
+   OVERALL DESIGN FEASIBILITY (HERO)
+   ================================ */
+
+  .overall-card {
+    background: linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #f8fbff 100%
+    );
+    border-radius: 18px;
+    padding: 32px 36px;
+    border: 3px solid #c7d2fe;
+    box-shadow:
+      0 20px 40px rgba(15, 23, 42, 0.12),
+      0 8px 20px rgba(15, 23, 42, 0.08);
+    margin-bottom: 36px;
+  }
+
+  .overall-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e3a8a;
+    letter-spacing: -0.2px;
+  }
+
+  .overall-card {
+    font-size: 16px;
+    padding: 10px 16px;
+    margin-top: 14px;
+  }
+
+  .overall-sub {
+    margin-top: 14px;
+    font-size: 15px;
+    color: #334155;
+    max-width: 900px;
+    line-height: 1.6;
+  }
+
+
+    .overall-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .overall-sub {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #475569;
+    }
+
+
+    .status-not_feasible {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    
+
+    
+
+    
+
+    
+
+   
+
+    
+
+    .power-curve-placeholder {
+      background: #f8fafc;
+      border: 1px dashed #cbd5f5;
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 12px;
+      color: #475569;
+    }
+
+    
+
+    .future-pillars {
+      margin-top: 48px;
+      padding: 20px 24px;
+      border-radius: 14px;
+      background: #f1f5f9;
+      color: #475569;
+      font-size: 14px;
+    }
+    .status-feasible {
+    background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-borderline {
+      background: #ffedd5;  
+      color: #9a3412;
+    }
+
+    
+
+  
+   
+
+  
+
+ 
+  
+
+  
+
+  /* Remove card feel */
+  .main-card  {
+    box-shadow: none;
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+  }
+
+  /* ================================
+   Overall Feasibility Backgrounds
+   ================================ */
+
+  /* ❌ High Risk */
+  .overall-status-not_feasible {
+    background: linear-gradient(
+      180deg,
+      #fff5f5 0%,
+      #ffffff 70%
+    );
+    border-color: #fca5a5;
+  }
+
+  /* ⚠️ Moderate Risk */
+  .overall-status-borderline {
+    background: linear-gradient(
+      180deg,
+      #fffbeb 0%,
+      #ffffff 70%
+    );
+    border-color: #fcd34d;
+  }
+
+  /* ✅ Feasible */
+  .overall-status-feasible {
+    background: linear-gradient(
+      180deg,
+      #f0fdf4 0%,
+      #ffffff 70%
+    );
+    border-color: #86efac;
+  }
+
+
+  /* ================================
+   Phase 3 Decision Bar Buttons
+   ================================ */
+
+  .phase3-decision-actions button {
+    min-width: 180px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .phase3-decision-actions .btn-primary {
+    background: #2563eb;
+    color: #ffffff;
+  }
+
+  .phase3-decision-actions .btn-primary:hover {
+    background: #1d4ed8;
+  }
+
+  .phase3-decision-actions .btn-danger {
+    background: #dc2626;
+    color: #ffffff;
+  }
+
+  .phase3-decision-actions .btn-danger:hover {
+    background: #b91c1c;
+  }
+
+  .phase3-decision-actions .btn-secondary {
+    background: #f1f5f9;
+    color: #1e293b;
+    border: 1px solid #cbd5f5;
+  }
+
+  .phase3-decision-actions .btn-secondary:hover {
+    background: #e2e8f0;
+  }
+
+  /* ================================
+   Phase 3 Header + Back Button
+   ================================ */
+
+  .phase3-header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .phase3-back-btn {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    padding: 8px 16px;
+    font-size: 14px;
+    background: #dc2626;
+    color: #ffffff;
+    border: 1px solid #dc2626;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+  }
+
+  .phase3-back-btn:hover {
+    background: #b91c1c;
+    color: #ffffff;
+  }
+
+
+  /* ================================
+    PHASE 3 LOADING OVERLAY
+  ================================ */
+
+  .phase3-loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(6px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .phase3-loading-overlay.hidden {
+    display: none;
+  }
+
+  /* ================================
+    Phase 3 Loader Animation
+  ================================ */
+
+  .loader {
+    width: 60px;
+    height: 25px;
+    border: 2px solid #1e293b;
+    box-sizing: border-box;
+    border-radius: 50%;
+    display: grid;
+    animation: phase3-loader-spin 2s infinite linear;
+  }
+
+  .loader::before,
+  .loader::after {
+    content: "";
+    grid-area: 1 / 1;
+    border: inherit;
+    border-radius: 50%;
+    animation: inherit;
+    animation-duration: 3s;
+  }
+
+  .loader::after {
+    --s: -1;
+  }
+
+  @keyframes phase3-loader-spin {
+    100% {
+      transform: rotate(calc(var(--s, 1) * 1turn));
+    }
+  }
+
+  .phase3-loader-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.phase3-loader-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+  letter-spacing: 0.2px;
+}
+
+/* ===============================
+   Modal Overlay
+=============================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+/* ===============================
+   Modal Card
+=============================== */
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 28px 32px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.modal-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.modal-card p {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* ===============================
+   Modal Overlay
+=============================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+/* ===============================
+   Modal Card
+=============================== */
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 28px 32px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.modal-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.modal-card p {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* ===============================
+   Modal Overlay
+=============================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+/* ===============================
+   Modal Card
+=============================== */
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 28px 32px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow:
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.modal-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.modal-card p {
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* ===============================
+   Modal Actions
+=============================== */
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.phase3-decision-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+
+
+  </style>
+</head>
+
+<body class="workflow-page">
+
+<!-- SHARED NAVBAR -->
+<div id="navbar-root"></div>
+
+  <div id="phase3-loading" class="phase3-loading-overlay">
+    <div class="phase3-loader-stack">
+      <div class="loader"></div>
+      <div class="phase3-loader-text">Doing stats stuff…</div>
+    </div>
+  </div>
+
+  <script>
+    // Only show loader when coming from Phase 2
+    if (!sessionStorage.getItem("phase3_loading")) {
+      const overlay = document.getElementById("phase3-loading");
+      if (overlay) overlay.classList.add("hidden");
+    } else {
+      sessionStorage.removeItem("phase3_loading");
+    }
+  </script>
+
+<div class="workflow-header">
+  <h1>Experiment Feasibility</h1>
+
+  <div class="workflow-stepper-wrapper">
+    <div class="workflow-stepper">
+
+      <div class="step completed">
+        <span class="step-index">1</span>
+        <span class="step-label">Setup</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step completed">
+        <span class="step-index">2</span>
+        <span class="step-label">Define Experiment</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step active">
+        <span class="step-index">3</span>
+        <span class="step-label">Design Feasibility</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step">
+        <span class="step-index">4</span>
+        <span class="step-label">Implementation Period</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step">
+        <span class="step-index">5</span>
+        <span class="step-label">Experiment Measurement</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div class="workflow-content">
+
+  <!-- MAIN CARD -->
+  <div class="main-card">
+    <div class="phase3-header">
+      <button
+        id="back-btn"
+        type="button"
+        class="phase3-back-btn"
+      >
+        ◄ Back
+      </button>
+
+      <h2>Design Feasibility Analysis</h2>
+      <p class="subtitle">
+        Assess whether your experiment design can reliably detect meaningful effects.
+      </p>
+    </div>
+
+
+
+  <!-- Overall Feasibility Summary -->
+  <section id="overall-feasibility-section" class="section"></section>
+
+  <!-- Phase 3 Design Commitment Bar -->
+  <section id="phase3-decision-bar" class="section" style="display:none;">
+    <div class="phase3-decision-actions" style="
+  padding:20px 24px;
+  border-radius:14px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  margin-bottom:40px;
+">
+
+  <!-- BUTTON ROW (UNCHANGED ALIGNMENT) -->
+  <div style="display:flex; gap:16px; justify-content:center;">
+    <button id="btn-redesign" class="btn-secondary" onclick="handleRedesign()">
+      Redesign Experiment
+    </button>
+
+    <button id="btn-block" class="btn-danger" onclick="handleBlock()">
+      Block Experiment
+    </button>
+
+    <button id="btn-accept" class="btn-primary" onclick="handleAccept()">
+      Accept & Lock Design
+    </button>
+  </div>
+
+  <!-- COUNTDOWN MESSAGE (BELOW BUTTONS) -->
+  <div
+    id="commit-delay-message"
+    style="
+      text-align: center;
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 10px;
+      display: none;
+    "
+  ></div>
+
+</div>
+
+  </section>
+
+
+
+  <!-- Pillar 1: Detectability -->
+<div class="pillar-container">
+
+  <div class="pillar-header">
+    <h2>Detectability</h2>
+    <button class="pillar-toggle" onclick="togglePillar('detectability', this)">
+      Collapse ▾
+    </button>
+  </div>
+
+  <section id="pillar-detectability" class="pillar-body">
+
+
+    <section id="verdict-section" class="section"></section>
+    <section id="metrics-section" class="section"></section>
+    <section id="baseline-sensitivity-section" class="section"></section>
+    <section id="power-curve-section" class="section"></section>
+    <section id="explanations-section" class="section"></section>
+
+  </section>
+</div>
+
+
+  <!-- Pillar 2: Sample & Time -->
+<div class="pillar-container">
+
+  <div class="pillar-header">
+    <h2>Sample & Time Feasibility</h2>
+    <button class="pillar-toggle" onclick="togglePillar('sample-time', this)">
+      Collapse ▾
+    </button>
+  </div>
+
+  <p class="metric-help" style="margin-top: 8px;">
+    <strong>How timing is evaluated:</strong><br />
+    Planned users represent the <em>total number of users over the entire experiment duration</em>,
+    not per day. Daily traffic is derived automatically from this duration.
+  </p>
+
+
+  <p class="metric-help">
+    Evaluate whether this experiment can realistically reach the required sample size
+    within a reasonable timeframe.
+  </p>
+
+  <section id="pillar-sample-time" class="pillar-body">
+
+  
+
+
+    <section id="sample-time-verdict-section" class="section"></section>
+    <section id="sample-time-metrics-section" class="section"></section>
+    <section id="sample-time-table-section" class="section"></section>
+    <section id="sample-time-explanations-section" class="section"></section>
+
+  </section>
+
+</div>
+
+
+  <!-- Pillar 4: Decision Robustness -->
+<div class="pillar-container">
+
+  <div class="pillar-header">
+    <h2>Decision Robustness</h2>
+    <button class="pillar-toggle" onclick="togglePillar('decision-robustness', this)">
+      Collapse ▾
+    </button>
+  </div>
+
+  <p class="metric-help">
+    Evaluates whether the likely outcomes of this experiment will support
+    a clear and confident decision.
+  </p>
+
+  <section id="pillar-decision-robustness" class="pillar-body">
+
+    <section id="decision-robustness-verdict" class="section"></section>
+    <section id="decision-robustness-risks" class="section"></section>
+    <section id="decision-robustness-guidance" class="section"></section>
+
+  </section>
+
+</div>
+
+
+<!-- Pillar 5: Risk & Assumption Disclosure -->
+<div class="pillar-container">
+
+  <div class="pillar-header">
+    <h2>Risk & Assumption Disclosure</h2>
+    <button class="pillar-toggle" onclick="togglePillar('risk-disclosure', this)">
+      Collapse ▾
+    </button>
+  </div>
+
+  <p class="metric-help">
+    Explicit assumptions, approximations, and known conditions under which
+    this experiment’s conclusions may no longer hold.
+  </p>
+
+  <section id="pillar-risk-disclosure" class="pillar-body">
+
+    <section id="risk-assumptions" class="section"></section>
+    <section id="risk-approximations" class="section"></section>
+    <section id="risk-fragilities" class="section"></section>
+    <section id="risk-invalidations" class="section"></section>
+
+  </section>
+
+</div>
+
+
+
+
+
+  
+
+  </div> <!-- END main-card -->
+
+</div> <!-- END workflow-content -->
+
+
+<script>
+  // Phase 3: allow shell to paint first, then load auth + logic
+  // window.requestIdleCallback(
+  //  () => {
+  //    import("./phase3_bootstrap.js");
+  //  },
+  //  { timeout: 1500 }
+ // );
+
+  (window.requestIdleCallback || function (cb) { setTimeout(cb, 0); })(() => {
+  import("./phase3_bootstrap.js");
+});
+</script>
+
+<!-- ===============================
+     PHASE 3 CONFIRMATION MODAL
+=============================== -->
+<div id="modal-overlay" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3 id="modal-title"></h3>
+    <p id="modal-message"></p>
+
+    <div class="modal-actions">
+      <button
+        id="modal-cancel"
+        class="btn-secondary"
+        type="button"
+      >
+        Cancel
+      </button>
+
+      <button
+        id="modal-confirm"
+        class="btn-primary"
+        type="button"
+      >
+        Confirm
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<script src="./phase3_renderers.js"></script>
+<script src="./phase3_feasibility.js"></script>
+
+<footer class="app-footer">
+  <div class="footer-columns">
+    <div>Resources</div>
+    <div>Product</div>
+    <div>Legal</div>
+    <div>Support</div>
+  </div>
+</footer>
+
+<!-- =========================
+     SHARED NAVBAR (SAFE INSERT)
+     ========================= -->
+
+<script>
+  document.body.dataset.pageContext = "experiment";
+</script>
+
+
+<script>
+  // ==================================================
+  // GLOBAL NAVBAR HANDLER — DASHBOARD
+  // ==================================================
+  window.handleDashboardClick = function () {
+    // Exit workflow cleanly
+    sessionStorage.removeItem("workflow_active");
+
+    // Root-relative navigation (safe from deep paths)
+    window.location.href = "/Take_inputs/v2/dashboard/dashboard.html";
+  };
+</script>
+
+<!-- LOAD NAVBAR FIRST -->
+<script src="/Take_inputs/shared/navbar/navbar.js"></script>
+
+<!-- THEN INIT AUTH (navbar + #auth-area now exist) -->
+<script type="module">
+  import { initAuthUI } from "/Take_inputs/v2/auth/authModal.js";
+  initAuthUI();
+</script>
+
+
+<script type="module">
+  import { enforceOrchestration } from "/Take_inputs/v2/orchestration/common_orchestration_guard.js";
+  enforceOrchestration("phase3_feasibility");
+</script>
+
+</body>
+</html>

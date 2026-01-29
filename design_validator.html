@@ -413,10 +413,10 @@
 </form>
 
 <!-- ===================================================== -->
-<!-- Phase 0.3 — Experiment Design Validation (ADD ONLY) -->
+<!-- Phase 0.3 — Experiment Design Validation (ADD ONLY)  ##const API_BASE = "https://pvalueproject.onrender.com";  --> 
 <!-- ===================================================== -->
 <div id="phase03Result" class="section" style="display:none; max-width:1400px; margin:20px auto;">
-  <h2>Phase 0.3 — Experiment Design Validation</h2>
+  <h2> Experiment Design Validation</h2>
   <div id="phase03Status"></div>
   <div id="phase03Details"></div>
 </div>
@@ -424,7 +424,12 @@
 
 <script>
 
-const API_BASE = "https://pvalueproject.onrender.com";
+const API_BASE =
+  window.API_BASE ||
+  (window.location.hostname === "localhost" ||
+   window.location.hostname === "127.0.0.1"
+    ? "http://127.0.0.1:8000"
+    : "https://pvalueproject.onrender.com");
 
 function generateVariants() {
   const count = document.getElementById("variantCount").value;
@@ -594,7 +599,7 @@ function inferPlannedSamplePerVariant(variants) {
     .filter(n => Number.isFinite(n) && n > 0);
 
   if (ns.length === 0) {
-    throw new Error("Variant sample sizes are required for Phase 0.3 validation.");
+    throw new Error("Variant sample sizes are required for Phase  validation.");
   }
 
   // IMPORTANT:
@@ -616,7 +621,7 @@ function buildPhase03Payload(phase02Payload) {
   } else if (metricTypeUI === "Mean") {
     metric_type = "mean";
   } else {
-    throw new Error("Phase 0.3 supports only Proportion or Mean metrics.");
+    throw new Error("This Phase supports only Proportion or Mean metrics.");
   }
 
   // -------------------------------

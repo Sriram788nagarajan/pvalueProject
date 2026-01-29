@@ -1,9 +1,8 @@
+from dotenv import load_dotenv
+import os
+load_dotenv()
 import sys
 from pathlib import Path
-from backend.sample_size_calculator.api import router as sample_size_router
-from backend.mde_calculator.api import router as mde_router
-
-
 
 
 # -----------------------
@@ -13,6 +12,9 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+# V1 routers
+from backend.sample_size_calculator.api import router as sample_size_router
+from backend.mde_calculator.api import router as mde_router
 from fastapi import FastAPI
 from backend.api.phase0 import router as phase0_router
 from backend.api.inference import router as inference_router
@@ -22,11 +24,47 @@ from fastapi.responses import FileResponse
 from pathlib import Path
 
 
+# V2 routers
+from backend.v2.api.experiments import router as v2_experiments_router
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
+
+#drafts
+
+from backend.v2.api.resume import router as resume_router
+
+#dashboard
+from backend.v2.api import dashboard
+
+#Phase 4
+from backend.v2.api.experiments import router as experiments_router
+
+#orchestration layer
+from backend.v2.api.orchestration import router as orchestration_router
+
+
 app = FastAPI(
     title="AB Experiment Design Validator",
     version="0.1",
     description="Phase 0.3 experiment design validation engine"
 )
+
+# Fix: Use absolute path for static files
+STATIC_DIR = Path(__file__).parent.parent / "Take_inputs"
+
+if not STATIC_DIR.exists():
+    print(f"❌ ERROR: Static directory not found at {STATIC_DIR}")
+    print(f"   Current working directory: {Path.cwd()}")
+else:
+    print(f"✅ Static directory found at {STATIC_DIR}")
+
+# Mount Take_inputs directory
+app.mount(
+    "/Take_inputs",
+    StaticFiles(directory=str(STATIC_DIR)),
+    name="static",
+)
+
 
 
 app.add_middleware(
@@ -36,7 +74,9 @@ app.add_middleware(
         "http://localhost:5500",
         "https://sriram788nagarajan.github.io",
         "https://pvalue.net",
-        "https://www.pvalue.net"
+        "https://www.pvalue.net",
+        "http://127.0.0.1:8000",
+        "http://localhost:8000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -73,6 +113,26 @@ app.include_router(
 app.include_router(
     inference_router
 )
+
+# -----------------------
+# V2 – Experiment Framework
+# -----------------------
+app.include_router(v2_experiments_router)
+
+
+
+app.include_router(resume_router)
+
+## Dashboard Router
+
+app.include_router(dashboard.router)
+
+## Phase 4 router
+app.include_router(experiments_router)
+
+## orchestration layer router
+
+app.include_router(orchestration_router)
 
 # -----------------------
 # Serve Phase 3 frontend
@@ -120,3 +180,31 @@ def serve_mde_calculator():
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+
+
+
+
+@app.get("/v2/experiments/create")
+def serve_create_experiment():
+    # Redirect to static file location
+    return RedirectResponse(url="/Take_inputs/v2/experiments/create_experiment.html")
+
+
+@app.get("/debug/static")
+def debug_static():
+    """Debug endpoint to verify static file structure"""
+    static_dir = Path(__file__).parent.parent / "Take_inputs"
+    
+    files = []
+    if static_dir.exists():
+        for file in static_dir.rglob("*"):
+            if file.is_file():
+                rel_path = file.relative_to(static_dir)
+                files.append(str(rel_path).replace("\\", "/"))
+    
+    return {
+        "static_dir": str(static_dir),
+        "exists": static_dir.exists(),
+        "files": sorted(files)[:50],
+        "total_files": len(files)
+    }

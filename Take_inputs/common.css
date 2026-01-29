@@ -1,0 +1,449 @@
+/*this is a css common for the theme of the website - used in sample_size_calculator folder and its files*/
+
+/* =========================
+   GLOBAL PAGE STYLES
+   ========================= */
+
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #e8eef5 0%, #f5f7fa 100%);
+  margin: 0;
+  padding: 20px;
+  color: #1f2937;
+}
+
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+p {
+  margin-top: 4px;
+  margin-bottom: 12px;
+  color: #4b5563;
+}
+
+/* =========================
+   CONTAINER & CARDS
+   ========================= */
+
+.page-container,
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+
+.card,
+.section {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 36px;              /* increased */
+  margin-bottom: 24px;
+  border: 1px solid #e1e8ed;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); /* slightly stronger */
+}
+
+
+/* =========================
+   FORM ELEMENTS
+   ========================= */
+
+label {
+  font-weight: 600;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  box-sizing: border-box;
+}
+
+input:disabled {
+  background-color: #f1f5f9;
+  color: #6b7280;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.helper-text {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+/* =========================
+   BUTTONS
+   ========================= */
+
+button,
+.primary-btn {
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover,
+.primary-btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* =========================
+   GRID & ROW HELPERS
+   ========================= */
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.allocation-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* =========================
+   TOOLTIP
+   ========================= */
+
+.tooltip {
+  display: inline-block;
+  margin-left: 6px;
+  cursor: pointer;
+  color: #6b7280;
+  position: relative;
+  font-weight: 600;
+}
+
+.tooltip-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  margin-left: 1px;
+  border-radius: 50%;
+  border: 1px solid #9ca3af;
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+
+.tooltip-text {
+  display: none;
+  position: absolute;
+  background-color: #111827;
+  color: #ffffff;
+  padding: 8px;
+  border-radius: 6px;
+  width: 260px;
+  font-size: 12px;
+  top: 22px;
+  left: 0;
+  z-index: 20;
+}
+
+.tooltip-icon:hover .tooltip-text {
+  display: block;
+}
+
+
+/* =========================
+   UTILITIES
+   ========================= */
+
+.hidden {
+  display: none;
+}
+
+
+/* =========================
+   OUTPUT SECTIONS
+   ========================= */
+
+#outputSection > div {
+  margin-bottom: 28px;
+}
+
+/* =========================
+   TABLES (Sensitivity)
+   ========================= */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+th, td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+th {
+  background-color: #f8fafc;
+  font-weight: 600;
+}
+
+/* =========================
+   DESIGN INTEGRITY BADGE
+   ========================= */
+
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.badge-efficient {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.badge-costly {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.badge-impractical {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+
+/* =========================
+   HOME PAGE GRID
+   ========================= */
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* Card behavior */
+.home-card {
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.home-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Blue underline like calculator sections */
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #2563eb;
+}
+
+/* Make card content breathe */
+.home-card p {
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+/* =========================
+   RESPONSIVE BEHAVIOR
+   ========================= */
+
+@media (max-width: 900px) {
+  .home-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   HOME PAGE TITLE (ANCHOR CARD — FRAMED)
+   ========================= */
+
+.home-title-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 36px 40px;
+  margin-bottom: 48px;
+
+  /* full frame */
+  border: 2px solid #0b0b0c;
+
+  /* controlled elevation */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.home-title-card h1 {
+  font-size: 32px;
+  font-weight: 650;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.4px;
+}
+
+.home-subtitle {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #475569;
+  max-width: 900px;
+}
+
+
+/* =========================
+   WIDE HOME TITLE WRAPPER
+   ========================= */
+
+.home-title-wrapper {
+  max-width: 2400px;          /* wider than tool grid */
+  margin: 24px auto 0 auto;   /* center on page */
+  padding: 0 20px;            /* side breathing room */
+}
+
+.home-title-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 1px 1px;
+  margin-bottom: 48px;
+
+  /* full frame */
+  border: 2px solid #2563eb;
+
+  /* elevation */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.home-title-card h1 {
+  font-size: 32px;
+  font-weight: 650;
+  margin: 0 0 10px 0;
+  letter-spacing: -0.4px;
+}
+
+.home-subtitle {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #475569;
+  max-width: 1000px;
+}
+
+.home-title-inner {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.home-logo {
+  height: 220px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.home-title-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  max-width: 1100px;
+}
+
+.home-title-card {
+  padding: 1px !important;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-emoji {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* =========================
+   HOME TITLE FEEDBACK (anchored)
+   ========================= */
+
+.home-feedback {
+  margin-left: auto;
+  margin-right: 12px;
+  padding-left: 14px;
+  border-left: 1px solid #1d1d22;
+
+  text-align: right;
+  font-size: 13px;
+  color: #6b7280;
+  line-height: 1.45;
+
+  opacity: 0.9;
+}
+
+.home-feedback a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.home-feedback a:hover {
+  text-decoration: underline;
+}
+
+
+.create-experiment-cta {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.primary-cta {
+  background-color: #2d6cdf;
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.primary-cta:hover {
+  background-color: #1f56c0;
+}
+
+.cta-subtext {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #555;
+}

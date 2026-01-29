@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Design Parameters</title>
+  <link rel="stylesheet" href="../../../common.css">
+  <link rel="stylesheet" href="./experiment_workflow.css">
+  <link rel="stylesheet" href="/Take_inputs/v2/auth/authModal.css">
+
+  <style>
+    /* Read-only notification banner */
+    .readonly-banner {
+      width: calc(100% - 40px);
+      max-width: calc(1400px - 40px);
+      margin: 0 auto 20px auto;
+      padding: 10px 16px;
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      border-left: 4px solid #f59e0b;
+      border-radius: 6px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #92400e;
+      font-weight: 600;
+    }
+
+    .readonly-banner.visible {
+      display: flex;
+    }
+
+    .readonly-banner-icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    /* Repositioned back button */
+    .back-btn-top {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 8px 16px;
+      font-size: 14px;
+      background: #dc2626;
+      color: #ffffff;
+      border: 1px solid #dc2626;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+
+    .back-btn-top:hover {
+      background: #b91c1c;
+      color: #ffffff;
+    }
+
+    .main-card {
+      position: relative;
+    }
+
+    .readonly-banner-text {
+      line-height: 1.3;
+    }
+    
+    /* Confirmation modal styles */
+    .confirm-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .confirm-modal.hidden {
+      display: none;
+    }
+
+    .confirm-modal-content {
+      background: white;
+      padding: 32px;
+      border-radius: 16px;
+      width: 520px;
+      max-width: 90%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      text-align: center;
+    }
+    
+    .confirm-modal-content h3 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .confirm-modal-content p {
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .modal-actions .secondary-btn {
+      opacity: 0.85;
+    }
+
+    
+
+  </style>
+
+</head>
+
+<body class="workflow-page">
+
+  <!-- SHARED NAVBAR -->
+  <div id="navbar-root"></div>
+
+  
+
+<div class="workflow-header">
+  <h1>Design New Experiment</h1>
+  <div class="workflow-stepper-wrapper">
+    <div class="workflow-stepper">
+
+      <div class="step completed">
+        <span class="step-index">1</span>
+        <span class="step-label">Setup</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step active">
+        <span class="step-index">2</span>
+        <span class="step-label">Define Experiment</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step">
+        <span class="step-index">3</span>
+        <span class="step-label">Design Feasibility</span>
+      </div>
+
+      
+
+      <span class="step-connector"></span>
+
+      <div class="step">
+        <span class="step-index">4</span>
+        <span class="step-label">Implementation Period</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step">
+        <span class="step-index">5</span>
+        <span class="step-label">Experiment Measurement</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- READ-ONLY NOTIFICATION BANNER -->
+  <div class="readonly-banner" id="readonly-banner">
+    <div class="readonly-banner-icon">🔒</div>
+    <div class="readonly-banner-content">
+      <p class="readonly-banner-title">Read-Only Mode:</p>
+      <p class="readonly-banner-text">
+        You have already ACCEPTED or BLOCKED this design. Parameters are locked and cannot be edited.
+      </p>
+    </div>
+  </div>
+
+<div class="workflow-content">
+
+  
+
+  <div class="main-card">
+    <h2>Set Statistical Design</h2>
+    <p class="subtitle">
+      Define traffic, confidence, and assumptions required to evaluate feasibility.
+    </p>
+
+    <form id="design-form">
+      <!-- Back button repositioned to top-left -->
+      <button type="button" class="secondary-btn back-btn-top" id="back-btn">
+        ◄ Back
+      </button>
+
+      <label>
+        Design type
+        <small>Independent or paired experiment design.</small>
+        <select id="design_type">
+          <option value="independent">Independent</option>
+          <option value="paired">Paired</option>
+        </select>
+      </label>
+
+      <label>
+        Test direction
+        <small>Two-sided is recommended unless direction is guaranteed.</small>
+        <select id="test_direction">
+          <option value="two_tailed">Two-sided</option>
+          <option value="one_tailed">One-sided</option>
+        </select>
+      </label>
+
+      <div class="grid-2">
+        <label>
+          Planned users — Control
+          <input type="number" id="n_control" min="1" required />
+        </label>
+
+        <label>
+          Planned users — Test
+          <input type="number" id="n_test" min="1" required />
+        </label>
+      </div>
+
+      <label>
+        Planned experiment duration (days)
+        <small>
+          Expected runtime of the experiment.
+          If left empty, 30 days will be assumed.
+        </small>
+        <input
+          type="number"
+          id="duration_days"
+          min="1"
+          placeholder="30"
+        />
+      </label>
+
+      <label>
+        Baseline conversion rate (binary only)
+        <small>Example: 0.05 means 5% conversion.</small>
+        <input type="number" id="baseline" step="0.001" min="0" max="1" />
+      </label>
+
+      <label>
+        Minimum Worthwhile Effect (MWE)
+        <small>
+          The smallest change that would justify acting on this experiment if it were detected with high confidence.
+          <br><br>
+          Effects smaller than this, even if statistically significant, would not meaningfully impact the business.
+          <br>
+          Example: <code>0.005</code> = 0.5 percentage points.
+        </small>
+        <input
+          type="number"
+          id="target_mde"
+          step="0.0001"
+          min="0.0001"
+          required
+        />
+      </label>
+
+      <label>
+        Standard deviation (continuous only)
+        <small>Use historical data if available.</small>
+        <input type="number" id="std_dev" step="0.01" min="0" />
+      </label>
+
+      <div class="grid-2">
+        <label>
+          Confidence level
+          <input type="number" id="confidence" value="0.95" step="0.01" min="0.8" max="0.99" />
+        </label>
+
+        <label>
+          Target power
+          <input type="number" id="power" value="0.8" step="0.05" min="0.5" max="0.95" />
+        </label>
+      </div>
+
+      <div class="form-actions">
+        
+
+        <button type="submit" class="primary-btn" disabled>
+          Continue
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <div class="tips-card">
+    <h3>Tips for Setting Design Parameters</h3>
+    <ul>
+      <li>
+        <strong>Choose Independent vs Paired carefully:</strong>
+        Use independent designs for most A/B tests. Paired designs are only appropriate
+        when the same user is measured before and after a change.
+      </li>
+
+      <li>
+        <strong>Be realistic about planned traffic:</strong>
+        Enter the number of users you are confident will actually be exposed during the test,
+        not optimistic projections.
+      </li>
+
+      <li>
+        <strong>Baseline matters for conversion metrics:</strong>
+        If you know your historical conversion rate, include it.
+        Even a rough estimate is better than assuming nothing.
+      </li>
+
+      <li>
+        <strong>Only enter standard deviation for continuous metrics:</strong>
+        Skip this for binary metrics like conversion rate.
+        Use recent production data if available.
+      </li>
+
+      <li>
+        <strong>Default confidence and power are usually sufficient:</strong>
+        95% confidence and 80% power are industry standards.
+        Increase them only if the decision is very high risk.
+      </li>
+
+      <li>
+        <strong>Two-sided tests are safer by default:</strong>
+        Use one-sided tests only if negative effects are truly impossible
+        or irrelevant to the business.
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+<div id="confirm-modal" class="confirm-modal hidden">
+  <div class="confirm-modal-content">
+    <h3>Proceed to Design Analysis?</h3>
+    <p>
+      We're about to analyze whether your experiment design can reliably detect
+      meaningful effects.
+    </p>
+    <p>
+      After this step, <strong>your design parameters will be locked and cannot be edited or reversed</strong>
+      to ensure analytical consistency.
+    </p>
+
+    <div class="modal-actions">
+      <button id="cancel-analysis" class="secondary-btn">
+        Edit Design
+      </button>
+      <button id="confirm-analysis" class="primary-btn">
+        Lock Design & Analyze
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="/Take_inputs/supabase_client.js"></script>
+<script src="/Take_inputs/auth_fetch.js"></script>
+<script src="/Take_inputs/v2/experiments/draft_store.js"></script>
+
+
+<script>
+  if (typeof authFetch !== "function") {
+  throw new Error("authFetch not initialized");
+}
+
+  const API_BASE =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+    ? "http://127.0.0.1:8000"
+    : "https://pvalueproject.onrender.com";
+
+  const params = new URLSearchParams(window.location.search);
+  const experimentId = params.get("id");
+  let __snapshotReady = false;
+
+  function resolveMetricType(experimentId, snapshot) {
+  // 1️⃣ Forward contract from Define Experiment (authoritative)
+  const contractRaw = sessionStorage.getItem(`definition_contract_${experimentId}`);
+  if (contractRaw) {
+    try {
+      const contract = JSON.parse(contractRaw);
+      if (contract.metric_type) {
+        return contract.metric_type;
+      }
+    } catch {}
+  }
+
+  // 2️⃣ Backend snapshot fallback
+  if (snapshot?.metric_type) {
+    return snapshot.metric_type;
+  }
+
+  return null;
+}
+
+
+  if (!experimentId || experimentId === 'null' || experimentId === 'undefined') {
+    alert("Experiment ID missing. Redirecting to create experiment page.");
+    window.location.href = "create_experiment.html?mode=create";
+    throw new Error("Missing experimentId");
+  }
+
+  // ============================================
+  // READ-ONLY BANNER
+  // ============================================
+  
+  function showReadOnlyBanner() {
+    const banner = document.getElementById("readonly-banner");
+    if (banner) {
+      banner.classList.add("visible");
+    }
+  }
+
+  // ============================================
+  // HYDRATION
+  // ============================================
+  
+  async function hydrateDesignFromSnapshot() {
+    try {
+
+      
+      const snapshotRes = await authFetch(
+         `${API_BASE}/v2/experiments/${experimentId}/snapshot/full`,
+        { allow404: true }
+      );
+
+      // Snapshot may not exist yet — valid state
+      if (snapshotRes.status === 404) {
+        return {};
+      }
+
+      if (!snapshotRes.ok) {
+        console.error("Failed to load experiment snapshot");
+        return null;
+      }
+
+      const snapshot = await snapshotRes.json();
+
+      
+
+      const design = snapshot.draft_inputs?.design_parameters || snapshot.design_inputs;
+
+
+      if (design) {
+        const map = {
+          design_type: design.design_type,
+          test_direction: design.test_direction,
+          n_control: design.planned_traffic?.control,
+          n_test: design.planned_traffic?.test,
+          duration_days: design.duration_days,
+          baseline: design.baseline?.value,
+          target_mde: design.target_mde,
+          std_dev: design.std_dev,
+          confidence: design.alpha !== undefined ? 1 - design.alpha : null,
+          power: design.power
+        };
+
+        Object.entries(map).forEach(([id, value]) => {
+          const el = document.getElementById(id);
+          if (el && value !== null && value !== undefined) {
+            el.value = value;
+          }
+        });
+        
+      }
+
+      // Show banner and lock form if Phase 3 committed
+      if (snapshot.locked_version !== null) {
+        showReadOnlyBanner();
+        lockForm();
+      }
+
+      if (snapshot.locked_version === null) {
+          markDesignViewOnce(experimentId);
+        }
+
+      return snapshot;
+      
+    } catch (error) {
+      console.error("Hydration error:", error);
+      return null;
+    }
+    
+  }
+
+  // ============================================
+  // FORM LOCK
+  // ============================================
+  
+  function lockForm() {
+    document
+      .querySelectorAll("#design-form input, #design-form select")
+      .forEach(el => (el.disabled = true));
+
+    const primaryBtn = document.querySelector(".primary-btn");
+    if (primaryBtn) {
+      primaryBtn.textContent = "Continue (Read-Only)";
+      primaryBtn.dataset.readonly = "true";
+    }
+  }
+
+  // ============================================
+  // AUTOSAVE
+  // ============================================
+  
+  let designViewMarked = false;
+
+  let __autosaveTimer = null;
+  let __isSubmitting = false;
+
+  async function markDesignViewOnce(experimentId) {
+    if (designViewMarked) return;
+    designViewMarked = true;
+
+    try {
+      const snapRes = await authFetch(
+        `${API_BASE}/v2/experiments/${experimentId}/snapshot`
+      );
+      
+      if (!snapRes.ok) return;
+
+      const snapshot = await snapRes.json();
+
+      if (snapshot.locked_version !== null) return;
+
+      await authFetch(
+         `${API_BASE}/v2/experiments/${experimentId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            current_view: "design_parameters"
+          })
+        }
+      );
+    } catch (error) {
+      console.error("Failed to mark design view:", error);
+    }
+  }
+
+  
+
+
+
+
+  // ============================================
+  // EVENT LISTENERS
+  // ============================================
+  
+  if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initDesignParametersPage);
+} else {
+  initDesignParametersPage();
+}
+
+async function initDesignParametersPage() {
+    //  Shell-first: page is already visible here
+
+  // Back button (cheap, keep synchronous)
+  const backBtn = document.getElementById("back-btn");
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      sessionStorage.setItem("workflow_active", "1");
+      window.location.href = `define_experiment.html?id=${experimentId}`;
+    });
+  }
+
+  // ================================
+  // PHASE 3 DRAFT AUTOSAVE (CLIENT)
+  // ================================
+  [
+    "design_type",
+    "test_direction",
+    "n_control",
+    "n_test",
+    "duration_days",
+    "baseline",
+    "target_mde",
+    "std_dev",
+    "confidence",
+    "power"
+  ].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.addEventListener("input", () => {
+      DraftStore.save(experimentId, d => ({
+        ...d,
+        phase: 3,
+        phase3: {
+          design_type: document.getElementById("design_type").value,
+          test_direction: document.getElementById("test_direction").value,
+          n_control: document.getElementById("n_control").value,
+          n_test: document.getElementById("n_test").value,
+          duration_days: document.getElementById("duration_days").value,
+          baseline: document.getElementById("baseline").value,
+          target_mde: document.getElementById("target_mde").value,
+          std_dev: document.getElementById("std_dev").value,
+          confidence: document.getElementById("confidence").value,
+          power: document.getElementById("power").value
+        }
+      }));
+    });
+  });
+
+  const form = document.getElementById("design-form");
+  const modal = document.getElementById("confirm-modal");
+  const cancelBtn = document.getElementById("cancel-analysis");
+  const confirmBtn = document.getElementById("confirm-analysis");
+
+  if (!modal || !cancelBtn || !confirmBtn) {
+    console.error("Modal elements not found in DOM");
+    return;
+  }
+
+  //  DEFER EVERYTHING EXPENSIVE
+  const defer = window.requestIdleCallback || ((fn) => setTimeout(fn, 0));
+  defer(async () => {
+    // Performance logging (non-blocking)
+    const navTiming = performance.getEntriesByType('navigation')[0];
+    
+
+
+    // ================================
+    // PHASE 3 DRAFT HYDRATION (CLIENT)
+    // ================================
+    const phase3Draft = DraftStore.load(experimentId)?.phase3;
+
+    if (phase3Draft) {
+      const map = {
+        design_type: phase3Draft.design_type,
+        test_direction: phase3Draft.test_direction,
+        n_control: phase3Draft.n_control,
+        n_test: phase3Draft.n_test,
+        duration_days: phase3Draft.duration_days,
+        baseline: phase3Draft.baseline,
+        target_mde: phase3Draft.target_mde,
+        std_dev: phase3Draft.std_dev,
+        confidence: phase3Draft.confidence,
+        power: phase3Draft.power
+      };
+
+      Object.entries(map).forEach(([id, value]) => {
+        const el = document.getElementById(id);
+        if (el && value !== undefined && value !== null) {
+          el.value = value;
+        }
+      });
+    }
+
+    // Hydration (network)
+    window.__experimentSnapshot =
+    (await hydrateDesignFromSnapshot()) || {};
+
+  __snapshotReady = true;
+
+    // Enable submit only when safe
+    const submitBtn = document.querySelector(".primary-btn");
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = "";
+    }
+
+   
+  });
+
+  // ==============================
+  // FORM SUBMIT (UNCHANGED)
+  // ==============================
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    __isSubmitting = true;
+
+      
+
+    const submitBtn = e.submitter || document.querySelector('.primary-btn');
+    const originalText = submitBtn.textContent;
+
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = "0.6";
+    submitBtn.style.cursor = "wait";
+    submitBtn.textContent = "Saving...";
+    document.body.style.cursor = "wait";
+
+    try {
+
+      // 🔥 SHOW PHASE 2 LOADER IMMEDIATELY
+const phase2Overlay = document.getElementById("phase2-loading");
+if (phase2Overlay) phase2Overlay.classList.remove("hidden");
+
+
+const metricType = resolveMetricType(
+  experimentId,
+  window.__experimentSnapshot
+);
+
+if (!metricType) {
+  throw new Error("metric_type missing");
+}
+
+const payload = {
+  metric_type: metricType,
+  primary_metric: window.__experimentSnapshot.primary_metric ?? null,
+  target_mde: Number(document.getElementById("target_mde").value),
+  design_type: document.getElementById("design_type").value,
+  test_direction: document.getElementById("test_direction").value,
+  planned_traffic: {
+    control: Number(document.getElementById("n_control").value),
+    test: Number(document.getElementById("n_test").value)
+  },
+  baseline: document.getElementById("baseline").value
+    ? { value: Number(document.getElementById("baseline").value) }
+    : null,
+  std_dev: document.getElementById("std_dev").value
+    ? Number(document.getElementById("std_dev").value)
+    : null,
+  alpha: 1 - Number(document.getElementById("confidence").value),
+  power: Number(document.getElementById("power").value),
+  duration_days: document.getElementById("duration_days").value
+    ? Number(document.getElementById("duration_days").value)
+    : null
+};
+
+// Tell Phase 3 to keep loader visible
+sessionStorage.setItem("phase3_loading", "1");
+
+
+
+// 🔒 HARD COMMIT — REQUIRED FOR PHASE 3
+const res = await authFetch(
+  `${API_BASE}/v2/experiments/${experimentId}/design`,
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }
+);
+
+if (!res.ok) {
+  throw new Error("Design commit failed");
+}
+
+//  Phase 3 committed — clear local draft
+DraftStore.clearPhase(experimentId, "phase3");
+
+// Navigate only after commit is durable
+window.location.href = `phase3_feasibility.html?id=${experimentId}`;
+
+    } catch (err) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalText;
+    document.body.style.cursor = "default";
+    __isSubmitting = false;
+    alert("Failed to save design parameters.");
+}
+  });
+
+    cancelBtn.onclick = () => {
+      modal.classList.add("hidden");
+    };
+
+    confirmBtn.onclick = async () => {
+      modal.classList.add("hidden");
+      form.dispatchEvent(new Event('submit', { cancelable: true }));
+    };
+};
+
+</script>
+
+<!-- Phase 2 loading overlay (shows immediately on Continue) -->
+<div id="phase2-loading" class="phase3-loading-overlay hidden">
+  <div class="phase3-loader-stack">
+    <div class="loader"></div>
+    <div class="phase3-loader-text">Saving design…</div>
+  </div>
+</div>
+
+<script>
+  document.body.dataset.pageContext = "experiment";
+</script>
+
+<script>
+  // ==================================================
+  // GLOBAL NAVBAR HANDLER — DASHBOARD
+  // ==================================================
+  window.handleDashboardClick = function () {
+    // Clear workflow state to allow clean dashboard entry
+    sessionStorage.removeItem("workflow_active");
+
+    // Navigate to dashboard (ROOT-RELATIVE)
+    window.location.href = "/Take_inputs/v2/dashboard/dashboard.html";
+  };
+</script>
+
+<script src="/Take_inputs/shared/navbar/navbar.js"></script>
+  
+<script type="module">
+  import { initAuthUI } from "/Take_inputs/v2/auth/authModal.js";
+  initAuthUI();
+</script>
+
+</body>
+</html>

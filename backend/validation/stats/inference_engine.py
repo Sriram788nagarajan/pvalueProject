@@ -187,8 +187,8 @@ def run_inference(payload):
             "test_used": test_used,
             "lift_absolute": to_python(lift),
             "lift_relative": (
-                to_python(lift / control.value)
-                if control.value != 0 else None
+                to_python(lift / (control.value / control.n))
+                if control.value and control.n else None
             ),
             "confidence_interval": [
                 to_python(ci[0]),

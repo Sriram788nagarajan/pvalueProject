@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  
+  <title>Define Experiment</title>
+  <link rel="stylesheet" href="../../../common.css">
+  <link rel="stylesheet" href="./experiment_workflow.css">
+  <link rel="stylesheet" href="/Take_inputs/v2/auth/authModal.css">
+  
+  <style>
+    /* Read-only notification banner */
+    /* Read-only notification banner */
+    .readonly-banner {
+      width: calc(100% - 40px);
+      max-width: calc(1400px - 40px);
+      margin: 0 auto 20px auto;
+      padding: 10px 16px;
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      border-left: 4px solid #f59e0b;
+      border-radius: 6px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #92400e;
+      font-weight: 600;
+    }
+
+    .readonly-banner.visible {
+      display: flex;
+    }
+
+    .readonly-banner-icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .readonly-banner-text {
+      line-height: 1.3;
+    }
+        
+    /* Repositioned back button */
+    .back-btn-top {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      padding: 8px 16px;
+      font-size: 14px;
+      background: #dc2626;
+      color: #ffffff;
+      border: 1px solid #dc2626;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+    }
+
+    .back-btn-top:hover {
+      background: #b91c1c;
+      color: #ffffff;
+    }
+
+    .main-card {
+      position: relative;
+    }
+    
+    
+    
+    
+  </style>
+</head>
+<body class="workflow-page">
+
+  <!-- SHARED NAVBAR -->
+  <div id="navbar-root"></div>
+
+  <div class="workflow-header">
+    <h1>Define New Experiment</h1>
+
+    <div class="workflow-stepper-wrapper">
+      <div class="workflow-stepper">
+
+        <div class="step completed">
+          <span class="step-index">1</span>
+          <span class="step-label">Setup</span>
+        </div>
+
+        <span class="step-connector"></span>
+
+        <div class="step active">
+          <span class="step-index">2</span>
+          <span class="step-label">Define Experiment</span>
+        </div>
+
+        <span class="step-connector"></span>
+
+        <div class="step">
+          <span class="step-index">3</span>
+          <span class="step-label">Design Feasibility</span>
+        </div>
+
+        <span class="step-connector"></span>
+
+        <div class="step">
+          <span class="step-index">4</span>
+          <span class="step-label">Implementation Period</span>
+        </div>
+
+        <span class="step-connector"></span>
+
+        <div class="step">
+          <span class="step-index">5</span>
+          <span class="step-label">Experiment Measurement</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- READ-ONLY NOTIFICATION BANNER -->
+    <div class="readonly-banner" id="readonly-banner">
+      <div class="readonly-banner-icon">🔒</div>
+      <div class="readonly-banner-content">
+        <p class="readonly-banner-title">Read-Only Mode</p>
+        <p class="readonly-banner-text">
+          You have already ACCEPTED or BLOCKED this design. Parameters are locked and cannot be edited.
+        </p>
+      </div>
+    </div>
+
+  <div class="workflow-content">
+
+    
+
+    <!-- MAIN CARD -->
+    <div class="main-card">
+
+      <h2>Define Your Experiment</h2>
+      <p class="subtitle">
+        Clearly describe what you are testing and how success will be measured.
+      </p>
+
+      <form id="define-form">
+
+
+        <!-- Back button repositioned to top-left -->
+        <button type="button" class="secondary-btn back-btn-top" id="back-btn">
+          ◄ Back
+        </button>
+
+        <!-- Hypothesis Statement -->
+        <label>
+          Hypothesis Statement
+          <small>
+            Describe what change you expect and why. This is used for clarity and future reference.
+          </small>
+          <textarea
+            id="hypothesis"
+            placeholder="Changing the signup button color to green will increase signups."
+            required
+          ></textarea>
+        </label>
+
+        <!-- Hypothesis Direction -->
+        <label>
+          Hypothesis Direction
+          <small>
+            Choose "No specific direction" if you want to detect any meaningful change, whether positive or negative.
+          </small>
+          <select id="hypothesis_direction" required>
+            <option value="increase">Increase</option>
+            <option value="decrease">Decrease</option>
+            <option value="no_change">No specific direction</option>
+          </select>
+        </label>
+
+        <!-- Primary Metric Name -->
+        <label>
+          Primary Metric Name
+          <small>
+            The main metric you will use to judge success.
+          </small>
+          <input
+            type="text"
+            id="primary_metric_name"
+            placeholder="Signup conversion rate"
+            required
+          />
+        </label>
+
+        <!-- Metric Type -->
+        <label>
+          Metric Type
+          <small>
+            Select whether this metric is a conversion (binary) or a numeric value (continuous).
+          </small>
+          <select id="metric_type" required>
+            <option value="binary">Binary (e.g., conversion)</option>
+            <option value="continuous">Continuous (e.g., revenue, time)</option>
+          </select>
+        </label>
+
+        <!-- Metric Direction -->
+        <label>
+          Metric Direction
+          <small>
+            Indicate whether higher or lower values are better for this metric.
+          </small>
+          <select id="metric_direction" required>
+            <option value="increase">Higher is better</option>
+            <option value="decrease">Lower is better</option>
+          </select>
+        </label>
+
+        <div class="form-actions">
+
+
+          <button type="submit" class="primary-btn">
+            Continue
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+
+    <!-- TIPS -->
+    <div class="tips-card">
+      <h3>Tips for Defining Experiments</h3>
+      <ul>
+        <li>Keep your hypothesis focused on one clear change.</li>
+        <li>Avoid vague outcomes like "improve engagement".</li>
+        <li>Choose a metric that directly reflects your objective.</li>
+        <li>This definition will guide all later decisions.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-columns">
+      <div>Resources</div>
+      <div>Product</div>
+      <div>Legal</div>
+      <div>Support</div>
+    </div>
+  </footer>
+
+  
+
+
+<!-- Load Supabase bundle FIRST (will be cached by browser) -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="/Take_inputs/supabase_client.js"></script>
+<script src="/Take_inputs/auth_fetch.js"></script>
+<script src="/Take_inputs/v2/experiments/draft_store.js"></script>
+
+
+
+
+<script>
+
+  const API_BASE =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+    ? "http://127.0.0.1:8000"
+    : "https://pvalueproject.onrender.com";
+
+
+/* =========================================================
+   BOOTSTRAP
+========================================================= */
+requestAnimationFrame(() => {
+  setTimeout(initDefineExperiment, 0);
+});
+
+
+
+
+
+
+
+
+/* =========================================================
+   MAIN INITIALIZER
+========================================================= */
+async function initDefineExperiment() {
+  const params = new URLSearchParams(window.location.search);
+  let experimentId = params.get("id");
+  const isPending = true;
+
+  try {
+    experimentId = await resolveExperimentIdStrict(experimentId, isPending);
+  } catch {
+    return; // hard stop if ID resolution fails
+  }
+
+  afterExperimentIdReady(experimentId);
+  
+}
+
+/* =========================================================
+   STRICT EXPERIMENT ID RESOLUTION (SINGLE ENTRY)
+========================================================= */
+async function resolveExperimentIdStrict(experimentId, isPending) {
+  if (experimentId && experimentId !== "null" && experimentId !== "undefined") {
+    return experimentId;
+  }
+
+  if (isPending) {
+    for (let i = 0; i < 40; i++) {
+      const pendingId = sessionStorage.getItem("pending_experiment_id");
+      if (pendingId) {
+        return pendingId;
+      }
+      await new Promise(r => setTimeout(r, 50));
+    }
+  }
+
+  alert("Experiment ID missing. Redirecting to create experiment page.");
+  window.location.href = "create_experiment.html?mode=create";
+  throw new Error("Experiment ID not resolved");
+}
+
+/* =========================================================
+   POST-ID INITIALIZATION (SINGLE, SAFE)
+========================================================= */
+function afterExperimentIdReady(experimentId) {
+  // ================================
+  // PHASE 2 DRAFT HYDRATION (CLIENT) - INSTANT
+  // ================================
+  const draft = DraftStore.load(experimentId);
+
+  if (draft?.phase2) {
+    document.getElementById("hypothesis").value =
+      draft.phase2.hypothesis || "";
+
+    document.getElementById("hypothesis_direction").value =
+      draft.phase2.hypothesis_direction || "increase";
+
+    document.getElementById("primary_metric_name").value =
+      draft.phase2.primary_metric_name || "";
+
+    document.getElementById("metric_type").value =
+      draft.phase2.metric_type || "binary";
+
+    document.getElementById("metric_direction").value =
+      draft.phase2.metric_direction || "increase";
+  }
+
+
+
+  // ================================
+  // LOCKED EXPERIMENT CHECK (ALWAYS RUN)
+  // ================================
+  const defer = window.requestIdleCallback || ((fn) => setTimeout(fn, 0));
+  defer(async () => {
+    try {
+      const res = await window.authFetch(
+         `${API_BASE}/v2/experiments/${experimentId}/snapshot/full`
+      );
+      
+      if (!res.ok) return;
+      
+      const snapshot = await res.json();
+
+     
+
+      // Check if experiment is locked (ALWAYS RUNS)
+      if (snapshot.locked_version !== null) {
+        const banner = document.getElementById("readonly-banner");
+        if (banner) banner.classList.add("visible");
+        
+        document.querySelectorAll("#define-form input, #define-form textarea, #define-form select")
+          .forEach(el => el.disabled = true);
+        
+        const submitBtn = document.querySelector(".primary-btn");
+        if (submitBtn) {
+          submitBtn.textContent = "Continue (Read-Only)";
+          submitBtn.dataset.readonly = "true";
+        }
+        
+        
+
+        
+      }
+
+      // Hydrate form fields only if no draft exists
+      if (!draft?.phase2) {
+        const definition = snapshot.definition_inputs;
+
+        if (definition) {
+          document.getElementById("hypothesis").value =
+            definition.hypothesis?.statement || "";
+
+          document.getElementById("hypothesis_direction").value =
+            definition.hypothesis?.direction || "increase";
+
+          document.getElementById("primary_metric_name").value =
+            definition.primary_metric?.name || "";
+
+          document.getElementById("metric_type").value =
+            definition.primary_metric?.type || "binary";
+
+          document.getElementById("metric_direction").value =
+            definition.primary_metric?.direction || "increase";
+
+          DraftStore.save(experimentId, d => ({
+            ...d,
+            phase: 2,
+            phase2: {
+              hypothesis: definition.hypothesis?.statement || "",
+              hypothesis_direction: definition.hypothesis?.direction || "increase",
+              primary_metric_name: definition.primary_metric?.name || "",
+              metric_type: definition.primary_metric?.type || "binary",
+              metric_direction: definition.primary_metric?.direction || "increase"
+            }
+          }));
+        }
+      }
+    } catch (error) {
+      console.error("Backend hydration failed:", error);
+    }
+  });
+  
+
+  // ================================
+  // PHASE 2 DRAFT PERSISTENCE (INPUT)
+  // ================================
+  [
+    "hypothesis",
+    "hypothesis_direction",
+    "primary_metric_name",
+    "metric_type",
+    "metric_direction"
+  ].forEach(id => {
+    document.getElementById(id).addEventListener("input", () => {
+      DraftStore.save(experimentId, d => ({
+        ...d,
+        phase: 2,
+        phase2: {
+          hypothesis: document.getElementById("hypothesis").value,
+          hypothesis_direction: document.getElementById("hypothesis_direction").value,
+          primary_metric_name: document.getElementById("primary_metric_name").value,
+          metric_type: document.getElementById("metric_type").value,
+          metric_direction: document.getElementById("metric_direction").value
+        }
+      }));
+    });
+  });
+
+  /* ---------- BACK BUTTON ---------- */
+  const backBtn = document.getElementById("back-btn");
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      sessionStorage.setItem("workflow_active", "1");
+      window.location.href = `create_experiment.html?id=${experimentId}`;
+    });
+  }
+
+  /* ---------- SUBMIT ---------- */
+  const form = document.getElementById("define-form");
+  if (!form) return;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    //  Forward contract for Phase 2 → Phase 3
+    sessionStorage.setItem(
+      `definition_contract_${experimentId}`,
+      JSON.stringify({
+        metric_type: document.getElementById("metric_type").value
+      })
+    );
+
+    //  Navigate immediately (never block UX)
+    sessionStorage.setItem("workflow_active", "1");
+    window.location.href = `design_parameters.html?id=${experimentId}`;
+
+    //  Background persistence (fire-and-forget)
+    setTimeout(() => {
+      window.authFetch(
+        `${API_BASE}/v2/experiments/${experimentId}/definition`,
+
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            hypothesis: {
+              statement: document.getElementById("hypothesis").value,
+              direction: document.getElementById("hypothesis_direction").value
+            },
+            primary_metric: {
+              name: document.getElementById("primary_metric_name").value,
+              type: document.getElementById("metric_type").value,
+              direction: document.getElementById("metric_direction").value
+            },
+            secondary_metrics: [],
+            guardrails: [],
+            variants: [
+              { id: "control", description: "Control" },
+              { id: "variant_a", description: "Variant A" }
+            ],
+            experiment_type: "ab",
+            traffic_split_type: "equal"
+          })
+        }
+      )
+      .then(() => {
+        //  Phase 2 successfully persisted — clear local draft
+        DraftStore.clearPhase(experimentId, "phase2");
+      })
+      .catch(() => {
+        // intentionally silent — recovered on resume
+      });
+    }, 0);
+  });
+}
+
+</script>
+
+<script>
+  document.body.dataset.pageContext = "experiment";
+</script>
+
+<script>
+  // ==================================================
+  // GLOBAL NAVBAR HANDLER — DASHBOARD
+  // ==================================================
+  window.handleDashboardClick = function () {
+    // Clear workflow state to allow clean dashboard entry
+    sessionStorage.removeItem("workflow_active");
+
+    // Navigate to dashboard (ROOT-RELATIVE — CORRECT)
+    window.location.href = "/Take_inputs/v2/dashboard/dashboard.html";
+  };
+</script>
+
+
+<script src="/Take_inputs/shared/navbar/navbar.js"></script>
+
+<script type="module">
+  import { initAuthUI } from "/Take_inputs/v2/auth/authModal.js";
+  initAuthUI();
+</script>
+
+<script type="module">
+  import { enforceOrchestration } from "/Take_inputs/v2/orchestration/common_orchestration_guard.js";
+  enforceOrchestration("define_experiment");
+</script>
+ 
+</body>
+</html>

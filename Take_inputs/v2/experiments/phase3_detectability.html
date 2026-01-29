@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Detectability Feasibility | pvalue.net</title>
+
+  <link rel="stylesheet" href="../../../common.css">
+  <link rel="stylesheet" href="./experiment_workflow.css">
+</head>
+<body>
+
+<!-- ================= HEADER + STEPPER ================= -->
+
+<div class="workflow-header">
+  <h1>Design Feasibility</h1>
+
+  <div class="workflow-stepper-wrapper">
+    <div class="workflow-stepper">
+
+      <div class="step completed">
+        <span class="step-index">1</span>
+        <span class="step-label">Setup</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step completed">
+        <span class="step-index">2</span>
+        <span class="step-label">Define Experiment</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step active">
+        <span class="step-index">3</span>
+        <span class="step-label">Design Feasibility</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step">
+        <span class="step-index">4</span>
+        <span class="step-label">Analyze & Decide</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ================= CONTENT ================= -->
+
+<div class="workflow-content">
+
+  <!-- MAIN CARD -->
+  <div class="main-card">
+
+    <h2>Detectability Analysis</h2>
+    <p class="subtitle">
+      Evaluate whether this experiment can detect effects that matter to your business.
+    </p>
+
+    <!-- ================= DETECTABILITY INPUTS ================= -->
+
+    <form id="detectability-form">
+
+      <label>
+        Minimum worthwhile effect
+        <small>
+          The smallest effect size that would justify acting on this experiment.
+          <br>Example: 0.005 = 0.5% absolute lift.
+        </small>
+        <input
+          type="number"
+          id="mwe"
+          step="0.0001"
+          min="0"
+          placeholder="0.005"
+          required
+        />
+      </label>
+
+      <label>
+        Effect scale
+        <small>
+          Absolute = raw change. Relative = % change from baseline.
+        </small>
+        <select id="effect_scale">
+          <option value="absolute">Absolute</option>
+          <option value="relative">Relative</option>
+        </select>
+      </label>
+
+      <label>
+        Effect direction
+        <small>
+          Restrict detection to improvements, declines, or both.
+        </small>
+        <select id="effect_direction">
+          <option value="increase_only">Increase only</option>
+          <option value="decrease_only">Decrease only</option>
+          <option value="two_sided">Two-sided</option>
+        </select>
+      </label>
+
+      <div class="form-actions">
+        <button type="submit" class="primary-btn">
+          Evaluate Detectability
+        </button>
+      </div>
+
+    </form>
+
+    <!-- ================= DETECTABILITY RESULT ================= -->
+
+    <div id="detectability-result" class="hidden">
+      <h3>Detectability Result</h3>
+      <pre id="detectability-json"></pre>
+    </div>
+
+    <!-- ================= POWER CURVE ================= -->
+
+    <hr style="margin: 40px 0;">
+
+    <h2>Power Curve</h2>
+    <p class="subtitle">
+      Visualize statistical power across different effect sizes.
+    </p>
+
+    <form id="power-grid-form">
+
+      <label>
+        Effect sizes to evaluate
+        <small>
+          Comma-separated absolute effects.
+          <br>Example: 0.002, 0.004, 0.006
+        </small>
+        <input
+          type="text"
+          id="effect_values"
+          placeholder="0.002, 0.004, 0.006"
+          required
+        />
+      </label>
+
+      <div class="form-actions">
+        <button type="submit" class="secondary-btn">
+          Compute Power Curve
+        </button>
+      </div>
+
+    </form>
+
+    <div id="power-grid-result" class="hidden">
+      <h3>Power–Effect Grid</h3>
+      <pre id="power-grid-json"></pre>
+    </div>
+
+  </div>
+
+  <!-- TIPS -->
+  <div class="tips-card">
+    <h3>How to interpret this</h3>
+    <ul>
+      <li>MDE shows what your design can reliably detect.</li>
+      <li>Compare it against what the business actually cares about.</li>
+      <li>Low power at meaningful effects indicates a risky experiment.</li>
+      <li>The power curve shows how detectability improves with larger effects.</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ================= SCRIPT ================= -->
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const experimentId = params.get("id");
+
+  if (!experimentId) {
+    alert("Experiment ID missing. Please complete previous steps.");
+    throw new Error("Missing experimentId");
+  }
+
+  // -------- Detectability --------
+  document.getElementById("detectability-form")
+    .addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const payload = {
+        minimum_worthwhile_effect: Number(
+          document.getElementById("mwe").value
+        ),
+        effect_scale: document.getElementById("effect_scale").value,
+        effect_direction_constraint:
+          document.getElementById("effect_direction").value
+      };
+
+      const res = await fetch(
+        `http://127.0.0.1:8000/v2/experiments/${experimentId}/phase3/feasibility/detectability`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        }
+      );
+
+      const data = await res.json();
+
+      document.getElementById("detectability-result").classList.remove("hidden");
+      document.getElementById("detectability-json").textContent =
+        JSON.stringify(data, null, 2);
+    });
+
+  // -------- Power Grid --------
+  document.getElementById("power-grid-form")
+    .addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const values = document.getElementById("effect_values")
+        .value
+        .split(",")
+        .map(v => Number(v.trim()))
+        .filter(v => !isNaN(v) && v > 0);
+
+      const payload = { effect_values: values };
+
+      const res = await fetch(
+        `http://127.0.0.1:8000/v2/experiments/${experimentId}/phase3/feasibility/power-grid`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        }
+      );
+
+      const data = await res.json();
+
+      document.getElementById("power-grid-result").classList.remove("hidden");
+      document.getElementById("power-grid-json").textContent =
+        JSON.stringify(data, null, 2);
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Phase 4 — Implementation & Conclusion</title>
+
+  <link rel="stylesheet" href="../../../common.css">
+  <link rel="stylesheet" href="/Take_inputs/v2/experiments/experiment_workflow.css">
+  <link rel="stylesheet" href="/Take_inputs/v2/auth/authModal.css">
+
+  <style>
+    .phase-container {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 24px;
+    }
+
+    .workflow-content {
+      display: block !important;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button.primary {
+      background: #000;
+      color: #fff !important;
+      border: none;
+      font-weight: 500;
+    }
+
+    button.secondary {
+      background: #fff;
+      border: 1px solid #ccc;
+      color: #111 !important;
+    }
+
+    button.danger {
+      background: #b00020;
+      color: #fff;
+      border: none;
+    }
+
+    .readonly {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .notice {
+      background: #f7f7f7;
+      padding: 16px;
+      border-left: 4px solid #999;
+      margin-top: 16px;
+
+    }
+
+     #step-confirm-no-analysis {
+    background: #fafafa;
+    border: 2px solid #000;
+    }
+
+/* ================================
+   Phase 4 — Visual Upgrade
+================================ */
+
+
+
+.card:hover {
+  box-shadow: 0 14px 36px rgba(0,0,0,0.08);
+}
+
+
+@keyframes cardEnter {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Guidance container */
+.guidance-wrapper {
+  background: linear-gradient(180deg, #ffffff, #fafafa);
+  padding: 28px;
+}
+
+/* Disclaimer — strong but calm */
+.disclaimer {
+  background: #fff5f5;
+  border-left: 5px solid #c62828;
+  padding: 16px 18px;
+  font-size: 14px;
+  margin-bottom: 24px;
+  border-radius: 6px;
+}
+
+/* Accordion header */
+.guidance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.guidance-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.guidance-toggle {
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+/* Accordion body with motion */
+
+.guidance-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    max-height 520ms cubic-bezier(.22,.61,.36,1),
+    opacity 320ms ease,
+    transform 320ms ease;
+}
+
+/* Expanded state */
+.guidance-content.open {
+  max-height: 1600px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Collapsed but previewing */
+.guidance-content.preview {
+  max-height: 220px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.guidance-content.open {
+  max-height: 1200px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Section blocks */
+.guidance-section {
+  margin-top: 28px;
+}
+
+.guidance-section h4 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #2962ff;
+  margin-bottom: 10px;
+}
+
+.guidance-section:not(:last-child) {
+  padding-bottom: 20px;
+  border-bottom: 1px dashed #e3e7ee;
+}
+
+.guidance-section ul {
+  padding-left: 20px;
+}
+
+.guidance-section li {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+/* Callout notes */
+.guidance-note {
+  margin-top: 12px;
+  background: #f1f3f5;
+  padding: 12px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #333;
+}
+
+
+.pulse-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.pulse-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.35), transparent 60%);
+  opacity: 0;
+  animation: pulse 2.8s ease-in-out infinite;
+}
+
+/* ============================
+   PHASE 4 VISUAL LAYER
+============================ */
+
+.phase4 .p4-surface {
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff, #fafafa);
+  box-shadow: 0 18px 42px rgba(0,0,0,0.08);
+  padding: 36px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.phase4 .p4-surface::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(180deg, #2962ff, #1e40af);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+.phase4 .p4-surface {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: phase4Enter 520ms cubic-bezier(.22,.61,.36,1) forwards;
+}
+
+@keyframes phase4Enter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================
+   Collapsed preview (fade + blur)
+========================================= */
+
+.guidance-content.preview {
+  max-height: 220px;               /* ~5–6 lines */
+  overflow: hidden;
+  position: relative;
+}
+
+/* Fade-out gradient */
+.guidance-content.preview::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 90px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0),
+    rgba(255,255,255,0.92)
+  );
+  pointer-events: none;
+}
+
+/* Subtle blur on lower content */
+.guidance-content.preview > * {
+  transition: filter 240ms ease;
+}
+
+.guidance-content.preview > *:not(:nth-child(-n+2)) {
+  filter: blur(1.2px);
+}
+
+
+
+
+
+/* ============================
+   Phase 4 Decision Modal
+============================ */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-card {
+  background: #ffffff;
+  width: 520px;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+}
+
+.modal-card h3 {
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+
+.modal-options label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.modal-options input[type="radio"] {
+  accent-color: #2962ff;
+  width: auto;
+  flex: none;
+}
+
+
+
+.modal-card textarea {
+  width: 100%;
+  min-height: 96px;
+  margin-top: 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+
+.modal-warning {
+  font-size: 13.5px;
+  color: #92400e;
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  padding: 10px 12px;
+  margin-bottom: 18px;
+  border-radius: 6px;
+  line-height: 1.45;
+}
+
+/* ================================
+   PHASE 4 HEADER + BACK BUTTON
+================================ */
+.phase4-header {
+  position: relative;
+  margin-bottom: 28px;
+}
+
+.phase4-back-btn {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  padding: 8px 16px;
+  font-size: 14px;
+  background: #dc2626;
+  color: #ffffff;
+  border: 1px solid #dc2626;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.phase4-back-btn:hover {
+  background: #b91c1c;
+  color: #ffffff;
+}
+
+/* ================================
+   Phase 4 — proceed to analysis - Point of No Return
+================================ */
+
+.no-return-card {
+  border-left: 6px solid #f97316;
+}
+
+.no-return-warning {
+  background: linear-gradient(
+    135deg,
+    #fff7ed 0%,
+    #fffbf5 100%
+  );
+
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+
+  padding: 26px 28px;
+  margin-bottom: 22px;
+
+  box-shadow:
+    0 16px 34px rgba(249, 115, 22, 0.14),
+    0 6px 14px rgba(249, 115, 22, 0.10);
+}
+
+/* Header row */
+.no-return-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.no-return-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+/* Title */
+.no-return-warning h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #7c2d12;
+}
+
+/* Intro line */
+.no-return-intro {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: #9a3412;
+}
+
+/* Bullet list */
+.no-return-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.no-return-list li {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: #7c2d12;
+  margin-bottom: 8px;
+}
+
+.no-return-list li:last-child {
+  margin-bottom: 0;
+}
+
+
+  </style>
+</head>
+
+<body class="workflow-page">
+
+<!-- SHARED NAVBAR -->
+<div id="navbar-root"></div>
+
+<div class="workflow-header">
+  <h1>Experiment Implementation Period</h1>
+
+  <div class="workflow-stepper-wrapper">
+    <div class="workflow-stepper">
+
+      <div class="step completed">
+        <span class="step-index">1</span>
+        <span class="step-label">Setup</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step completed">
+        <span class="step-index">2</span>
+        <span class="step-label">Define Experiment</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step completed">
+        <span class="step-index">3</span>
+        <span class="step-label">Design Feasibility</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step active">
+        <span class="step-index">4</span>
+        <span class="step-label">Implementation Period</span>
+      </div>
+
+      <span class="step-connector"></span>
+
+      <div class="step">
+        <span class="step-index">5</span>
+        <span class="step-label">Experiment Measurement</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="workflow-content">
+  <div class="phase-container phase4">
+
+    <div class="phase4-header">
+      <button
+        id="phase4-back-btn"
+        type="button"
+        class="phase4-back-btn"
+      >
+        ◄ Back
+      </button>
+    </div>
+
+    <br> 
+
+ 
+
+  <div class="disclaimer">
+    <strong>Important:</strong> pvalue.net does not implement experiments.
+    All implementation, rollout, and production changes are owned entirely by your team and environment.
+  </div>
+
+
+  <!-- IMPLEMENTATION GUIDANCE -->
+<div class="card guidance-wrapper p4-surface">
+
+  
+
+  <div class="guidance-header" onclick="toggleGuidance()">
+    <h2 class="section-title">Implementation guidance & industry best practices</h2>
+    <span class="guidance-toggle" id="guidanceToggleText">Show</span>
+  </div>
+
+  <div id="guidanceContent" class="guidance-content preview">
+
+    <div class="guidance-section">
+      <h4>What must NOT change</h4>
+      <ul>
+        <li>Sample size and traffic allocation</li>
+        <li>Primary metric definition</li>
+        <li>Experiment duration</li>
+        <li>Control vs test assignment logic</li>
+      </ul>
+      <div class="guidance-note">
+        Changing any of the above invalidates statistical inference.
+      </div>
+    </div>
+
+    <div class="guidance-section">
+      <h4>Randomization, stratification & contamination control</h4>
+      <ul>
+        <li>Assignment must be deterministic and stable per unit</li>
+        <li>Stratify only on pre-exposure variables (e.g. platform, region)</li>
+        <li>Never stratify on outcomes or post-exposure behavior</li>
+        <li>Avoid shared caches, state, or side effects across variants</li>
+      </ul>
+      <div class="guidance-note">
+        No amount of analysis can recover validity once randomization or isolation is violated.
+      </div>
+    </div>
+
+    <div class="guidance-section">
+      <h4>Common implementation mistakes</h4>
+      <ul>
+        <li>Early stopping based on partial results</li>
+        <li>Metric leakage across variants</li>
+        <li>Unequal exposure or delayed rollout</li>
+        <li>Changing logging or instrumentation mid-experiment</li>
+      </ul>
+    </div>
+
+    <div class="guidance-section">
+      <h4>Engineering checklist</h4>
+      <ul>
+        <li>Verify exposure counts and balance</li>
+        <li>Ensure events fire before any metric evaluation</li>
+        <li>Confirm control metrics behave as expected</li>
+        <li>Monitor for unexpected control drift</li>
+      </ul>
+    </div>
+
+    <div class="guidance-section">
+      <h4>Product checklist</h4>
+      <ul>
+        <li>Launch only when traffic is stable</li>
+        <li>Avoid peeking before planned completion</li>
+        <li>Stop only after planned sample or duration</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+  <!-- STEP 1 -->
+  <div id="step-choice" class="card p4-surface" style="border-left:6px solid #2962ff;">
+      <h3 style="font-size:22px;margin-bottom:12px;">
+        What do you want to do next?
+      </h3>
+
+      <p style="font-size:15px;color:#444;max-width:700px;">
+        You’ve completed experiment design and feasibility checks.
+        After implementation, you can either analyze results on pvalue.net
+        or close the experiment without analysis.
+      </p>
+
+      <div class="actions" style="margin-top:28px;">
+        <button class="primary pulse-primary"
+          onclick="selectPath('yes_analyze')"
+          style="padding:14px 20px;font-size:15px;">
+          Analyze results & get inference
+        </button>
+
+        <button class="secondary"
+          onclick="selectPath('no_analyze')"
+          style="padding:14px 20px;font-size:15px;">
+          Skip analysis & close experiment
+        </button>
+      </div>
+    </div>
+
+  <!-- STEP 1B — Confirm analysis (point of no return) -->
+  <div id="step-confirm-analysis" class="card no-return-card" style="display:none;">
+
+    <div class="no-return-warning">
+
+      <div class="no-return-header">
+        <span class="no-return-icon">⚠️</span>
+        <h3>This is a point of no return</h3>
+      </div>
+
+      <p class="no-return-intro">
+        Once you proceed with analysis:
+      </p>
+
+      <ul class="no-return-list">
+        <li>Phase 4 will be finalized permanently</li>
+        <li>You will not be able to close the experiment without analysis</li>
+        <li>All inference results become authoritative</li>
+      </ul>
+
+    </div>
+
+    <div class="actions">
+      <button class="danger" onclick="confirmYesAnalyze()">
+        I understand, proceed to analysis
+      </button>
+
+      <button class="secondary" onclick="goBackToChoice()">
+        Go back
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 2 (only for no-analysis path) -->
+  <div id="step-confirm-no-analysis" class="card" style="display:none;">
+    <h3>Confirm experiment completion</h3>
+
+    <p>
+      You have chosen not to analyze results.
+      Once confirmed, this experiment will be permanently closed.
+    </p>
+
+    <div class="actions">
+      <button class="danger" onclick="finalizeNoAnalysis()">
+        Confirm and close experiment
+      </button>
+
+      <button class="secondary" onclick="goBackToChoice()">
+        Go back
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================= -->
+  <!-- FINISH EXPERIMENT (Phase 4 No-Analysis) -->
+  <!-- ========================= -->
+  <div class="card" id="finish-section-phase4" style="display:none; text-align:center;">
+    <h3>Finish Experiment</h3>
+
+    <p class="locked-note">
+      This action formally closes the experiment and locks all results.
+    </p>
+
+    <button
+      id="finish-experiment-btn-phase4"
+      class="finish-cta"
+    >
+      Finish Experiment 🏁
+    </button>
+
+    <div class="finish-cta-warning">
+      This cannot be undone.
+    </div>
+  </div>
+
+  <!-- ========================= -->
+  <!-- COMPLETION MESSAGE -->
+  <!-- ========================= -->
+  <div class="card" id="completion-message-phase4" style="display:none; text-align:center;">
+    <h2 style="margin-bottom:8px;">🎉 Experiment Completed</h2>
+    <p class="locked-note">
+      This experiment is now closed and all results are permanently locked.
+    </p>
+  </div>
+
+  <div class="card" id="next-steps-section-phase4" style="display:none;">
+    <h3>Next Steps</h3>
+
+    <div class="nav-links">
+      <a href="/Take_inputs/v2/dashboard/dashboard.html">Go to Dashboard</a>
+      <a href="/index.html">Go to Home</a>
+      <a href="/Take_inputs/v2/experiments/create_experiment.html">
+        Create New Experiment
+      </a>
+    </div>
+  </div>
+
+  
+
+  </div>
+</div>
+
+<script type="module">
+
+const API_BASE =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+    ? "http://127.0.0.1:8000"
+    : "https://pvalueproject.onrender.com";
+
+  import { fetchWithAuth } from "/Take_inputs/v2/lib/authFetch.js";
+
+let experimentId =
+  new URLSearchParams(window.location.search).get("id") ||
+  sessionStorage.getItem("experiment_id");
+
+if (!experimentId) {
+  alert("Experiment ID not found. Please reopen this experiment from the dashboard.");
+  throw new Error("experiment_id missing");
+}
+
+// ================================
+// PHASE 4 SNAPSHOT HYDRATION
+// ================================
+(async function hydratePhase4() {
+  try {
+    const res = await fetchWithAuth(
+      `/v2/experiments/${experimentId}/snapshot/full`
+    );
+
+    if (!res.ok) return;
+
+    const snapshot = await res.json();
+
+    const path = snapshot.phase4_path;
+    const finalDecision = snapshot.final_decision;
+
+    // ---- CASE 1: Phase 4 not started ----
+    if (!path) {
+      // Default UI already visible (step-choice)
+      return;
+    }
+
+    // ---- CASE 2: NO ANALYSIS PATH ----
+    if (path === "no_analyze") {
+      document.getElementById("step-choice").style.display = "none";
+
+      if (!finalDecision) {
+        // User chose no-analysis but did not finalize
+        document.getElementById("finish-section-phase4").style.display = "block";
+        return;
+      }
+
+      // Finalized → completed
+      document.getElementById("completion-message-phase4").style.display = "block";
+      document.getElementById("next-steps-section-phase4").style.display = "block";
+      lockUI();
+      return;
+    }
+
+    // ---- CASE 3: YES ANALYZE PATH ----
+    if (path === "yes_analyze") {
+      // Check if user came from phase5 via back button
+      const cameFromPhase5 = sessionStorage.getItem("workflow_active");
+      
+      if (!cameFromPhase5) {
+        // External entry (dashboard) → enforce redirect
+        window.location.replace(
+          `/Take_inputs/v2/experiments/phase5_inference_analysis.html?id=${experimentId}`
+        );
+        return;
+      }
+      
+      // Back button navigation → show committed state
+      document.getElementById("step-choice").style.display = "none";
+      document.getElementById("step-confirm-analysis").style.display = "none";
+      
+      // Show read-only message card
+      const messageCard = document.createElement("div");
+      messageCard.className = "card p4-surface";
+      messageCard.style.textAlign = "center";
+      messageCard.innerHTML = `
+        <h3>✅ Analysis Path Committed</h3>
+        <p style="font-size:15px;color:#555;margin:16px 0;">
+          You have already committed to analyzing results for this experiment.
+          This decision cannot be changed.
+        </p>
+        <button 
+          class="primary pulse-primary" 
+          onclick="sessionStorage.setItem('workflow_active', '1'); window.location.href='/Take_inputs/v2/experiments/phase5_inference_analysis.html?id=${experimentId}'"
+          style="padding:14px 20px;font-size:15px;">
+          Continue to Phase 5 →
+        </button>
+      `;
+      
+      document.querySelector(".phase-container").appendChild(messageCard);
+      return;
+    }
+
+    } catch (err) {
+      console.error("Phase 4 hydration failed", err);
+    }
+})();
+
+
+
+
+// Persist for safety if it came from URL
+sessionStorage.setItem("experiment_id", experimentId);
+
+const backBtn = document.getElementById("phase4-back-btn");
+
+if (backBtn) {
+  backBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    sessionStorage.setItem("workflow_active", "1");  
+    window.location.href =
+      `/Take_inputs/v2/experiments/phase3_decision.html?id=${experimentId}`;
+  });
+}
+
+  const stepChoice = document.getElementById("step-choice");
+  const stepConfirmNo = document.getElementById("step-confirm-no-analysis");
+  
+
+
+  function selectPath(choice) {
+  //  UI FIRST — instant response
+  
+  if (document.body.classList.contains("locked")) return;
+
+  if (choice === "no_analyze") {
+    stepChoice.style.display = "none";
+    stepConfirmNo.style.display = "block";
+    stepConfirmNo.style.opacity = "1";
+    stepConfirmNo.style.pointerEvents = "auto";
+  }
+
+  if (choice === "yes_analyze") {
+  stepChoice.style.display = "none";
+  document.getElementById("step-confirm-analysis").style.display = "block";
+}
+
+  //  BACKEND ASYNC — no UI blocking
+  fetchWithAuth(`/v2/experiments/${experimentId}/phase4/select-path`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ choice }),
+}).catch(err => {
+    console.error("Phase 4 select-path failed", err);
+    alert("Failed to save decision. Please refresh.");
+  });
+}
+
+
+ function finalizeNoAnalysis() {
+    // Hide confirmation step
+    stepConfirmNo.style.display = "none";
+
+    // Show Finish Experiment section (Phase 5 parity)
+    document.getElementById("finish-section-phase4").style.display = "block";
+  }
+
+let selectedPhase4Decision = null;
+
+document.addEventListener("change", e => {
+  if (e.target.name === "phase4Decision") {
+    selectedPhase4Decision = e.target.value;
+    document.getElementById("confirmPhase4DecisionBtn").disabled = false;
+  }
+});
+
+
+document.getElementById("confirmPhase4DecisionBtn").onclick = async () => {
+  closeDecisionModal();
+
+  const notes =
+    document.getElementById("phase4Notes").value || null;
+
+  await fetchWithAuth(`/v2/experiments/${experimentId}/phase4/finalize`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      decision: selectedPhase4Decision,
+      notes,
+    }),
+  });
+
+  // Hide Finish Experiment section
+  document.getElementById("finish-section-phase4").style.display = "none";
+
+  // Show completion UI (Phase 5 parity)
+  document.getElementById("completion-message-phase4").style.display = "block";
+  document.getElementById("next-steps-section-phase4").style.display = "block";
+
+  lockUI();
+}
+
+
+  function goBackToChoice() {
+  if (document.body.classList.contains("locked")) return;
+
+  document.getElementById("step-confirm-analysis").style.display = "none";
+  stepConfirmNo.style.display = "none";
+  stepChoice.style.display = "block";
+}
+
+function toggleGuidance() {
+  const content = document.getElementById("guidanceContent");
+  const toggleText = document.getElementById("guidanceToggleText");
+
+  const isOpen = content.classList.contains("open");
+
+  if (isOpen) {
+    content.classList.remove("open");
+    content.classList.add("preview");
+    toggleText.textContent = "Show";
+  } else {
+    content.classList.add("open");
+    content.classList.remove("preview");
+    toggleText.textContent = "Hide";
+  }
+}
+
+
+  function confirmYesAnalyze() {
+  fetchWithAuth(`/v2/experiments/${experimentId}/phase4/finalize-with-analysis`, {
+    method: "POST",
+  })
+    .then(() => {
+      sessionStorage.setItem("workflow_active", "1");  
+      window.location.href =
+        `/Take_inputs/v2/experiments/phase5_inference_analysis.html?id=${experimentId}`;
+    })
+    .catch(err => {
+      console.error("Finalize with analysis failed", err);
+      alert("Failed to proceed to analysis. Please refresh.");
+    });
+}
+
+
+function openDecisionModal() {
+  document.getElementById("decisionModal").style.display = "flex";
+}
+
+function closeDecisionModal() {
+  document.getElementById("decisionModal").style.display = "none";
+}
+
+
+  function lockUI() {
+
+      document.body.classList.add("locked");
+      document.querySelectorAll(".card").forEach(el => {
+        if (
+          el.id !== "completion-message-phase4" &&
+          el.id !== "next-steps-section-phase4"
+        ) {
+          el.classList.add("readonly");
+        }
+      });
+    }
+
+  window.selectPath = selectPath;
+  window.finalizeNoAnalysis = finalizeNoAnalysis;
+  window.goBackToChoice = goBackToChoice;
+  window.confirmYesAnalyze = confirmYesAnalyze;
+  window.toggleGuidance = toggleGuidance;
+
+  // ================================
+  // Phase 4 — Finish Experiment CTA
+  // ================================
+    document.addEventListener("DOMContentLoaded", () => {
+    const finishBtnPhase4 =
+      document.getElementById("finish-experiment-btn-phase4");
+
+    if (finishBtnPhase4) {
+      finishBtnPhase4.onclick = () => {
+        openDecisionModal();
+      };
+    }
+  })
+
+</script>
+
+<!-- Phase 4 Decision Modal -->
+<div id="decisionModal" class="modal-backdrop" style="display:none;">
+  <div class="modal-card">
+
+    <h3>What decision was taken?</h3>
+
+    <p class="modal-warning">
+      This step cannot be skipped. A decision must be accounted to close the experiment.
+    </p>
+
+    <div class="modal-options">
+      <label><input type="radio" name="phase4Decision" value="ship"> Ship</label>
+      <label><input type="radio" name="phase4Decision" value="rollback"> Rollback</label>
+      <label><input type="radio" name="phase4Decision" value="iterate"> Iterate</label>
+      <label><input type="radio" name="phase4Decision" value="hold"> Hold</label>
+      <label><input type="radio" name="phase4Decision" value="abandon"> Abandon</label>
+    </div>
+
+    <textarea
+      id="phase4Notes"
+      placeholder="Optional notes (context, reasoning, approvals)"
+    ></textarea>
+
+    <div class="actions">
+      <button class="secondary-btn" onclick="closeDecisionModal()">
+        Cancel
+      </button>
+
+      <button
+        class="danger-btn"
+        id="confirmPhase4DecisionBtn"
+        disabled
+      >
+        Confirm decision
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- =========================
+     SHARED NAVBAR (SAFE INSERT)
+     ========================= -->
+
+<script>
+  document.body.dataset.pageContext = "experiment";
+</script>
+
+<script>
+  // ==================================================
+  // GLOBAL NAVBAR HANDLER — DASHBOARD
+  // ==================================================
+  window.handleDashboardClick = function () {
+    // Exit workflow cleanly
+    sessionStorage.removeItem("workflow_active");
+
+    // Root-relative navigation (safe from deep paths)
+    window.location.href = "/Take_inputs/v2/dashboard/dashboard.html";
+  };
+</script>
+
+
+<!-- LOAD NAVBAR FIRST -->
+<script src="/Take_inputs/shared/navbar/navbar.js"></script>
+
+<!-- THEN INIT AUTH (navbar + #auth-area now exist) -->
+<script type="module">
+  import { initAuthUI } from "/Take_inputs/v2/auth/authModal.js";
+  initAuthUI();
+</script>
+
+<script type="module">
+  import { enforceOrchestration } from "/Take_inputs/v2/orchestration/common_orchestration_guard.js";
+  enforceOrchestration("phase4_implementation");
+</script>
+
+
+</body>
+</html>
