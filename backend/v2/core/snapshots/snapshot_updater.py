@@ -6,6 +6,7 @@ from uuid import UUID
 
 from backend.v2.projections.dashboard_projection import project_snapshot_to_dashboard
 from backend.v2.projections.dashboard_repository import upsert_dashboard_experiment
+from backend.v2.cache.dashboard_cache import invalidate_dashboard_cache
 
 
 def _json_safe(obj):
@@ -161,4 +162,10 @@ def upsert_snapshot(snapshot: dict):
             # NEW: dashboard projection
             dashboard_row = project_snapshot_to_dashboard(snapshot)
             upsert_dashboard_experiment(cur, dashboard_row)
+
+        
         conn.commit()
+
+    
+    #  invalidate cache AFTER commit
+    invalidate_dashboard_cache(snapshot["user_id"])
