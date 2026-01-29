@@ -44,6 +44,10 @@ def apply_phase4_finalization(
     Terminal operation.
     After this, experiment is immutable.
     """
+    
+    # Preserve phase4_path (should already be "no_analyze")
+    if "phase4_path" not in snapshot:
+        snapshot["phase4_path"] = "no_analyze"
 
     snapshot["current_status"] = "completed"
     snapshot["current_phase"] = 4

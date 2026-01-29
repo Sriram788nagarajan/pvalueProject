@@ -143,6 +143,10 @@ def finalize_phase4_with_analysis(
 
     now = datetime.now(timezone.utc)
 
+    # Ensure phase4_path is set
+    if snapshot.get("phase4_path") != "yes_analyze":
+        snapshot["phase4_path"] = "yes_analyze"
+
     snapshot["current_phase"] = 5
     snapshot["current_step"] = "phase5_inference"
     snapshot["current_status"] = "analysis_pending"
