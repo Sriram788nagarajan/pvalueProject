@@ -15,12 +15,24 @@ router = APIRouter(prefix="/v2/dashboard", tags=["Dashboard"])
 
 @router.get("", response_model=DashboardExperimentListResponse)
 def list_experiments_for_dashboard(current_user = Depends(get_current_user)):
+    import time
+    start = time.time()
+    
     user_id = get_user_id_from_jwt(current_user)
+    print(f">>> DASHBOARD: User ID extracted in {(time.time() - start)*1000:.2f}ms")
+    
+    checkpoint = time.time()
     experiments = fetch_dashboard_experiments(user_id)
-
-    return {
+    print(f">>> DASHBOARD: Query took {(time.time() - checkpoint)*1000:.2f}ms")
+    print(f">>> DASHBOARD: Returned {len(experiments)} experiments")
+    
+    checkpoint = time.time()
+    result = {
         "experiments": experiments,
         "total": len(experiments),
     }
-
+    print(f">>> DASHBOARD: Serialization took {(time.time() - checkpoint)*1000:.2f}ms")
+    print(f">>> DASHBOARD: TOTAL TIME: {(time.time() - start)*1000:.2f}ms")
+    
+    return result
 
