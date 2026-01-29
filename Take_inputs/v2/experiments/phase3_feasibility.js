@@ -14,7 +14,7 @@
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
     ? "http://127.0.0.1:8000"
-    : "https://pvalueproject.onrender.com";
+    : "https://pvalueproject-new.onrender.com";
 
   let detectabilityVerdict = null;
   let sampleTimeVerdict = null;
@@ -742,3 +742,4 @@ function closeModal() {
   overlay.classList.add("hidden");
   modalConfirmCallback = null;
 }
+

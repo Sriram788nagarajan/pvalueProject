@@ -5,7 +5,7 @@ const API_BASE =
   (window.location.hostname === "localhost" ||
    window.location.hostname === "127.0.0.1"
     ? "http://127.0.0.1:8000"
-    : "https://pvalueproject.onrender.com");
+    : "https://pvalueproject-new.onrender.com");
 
 /**
  * Centralized authenticated fetch
@@ -30,3 +30,4 @@ export async function fetchWithAuth(url, options = {}) {
   },
 });
 }
+
