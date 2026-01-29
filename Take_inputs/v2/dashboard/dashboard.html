@@ -126,21 +126,29 @@
 </div>
 
 
-<script type="module">
-  import { supabase } from "../lib/supabaseClient.js";
+<!-- Load Supabase bundle FIRST (same as other v2 pages) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="/Take_inputs/supabase_client.js"></script>
+<script src="/Take_inputs/auth_fetch.js"></script>
 
-  const { data, error } = await supabase.auth.getSession();
-  const session = data?.session;
+<script>
+  // Check auth and populate user email
+  (async function() {
+    const { data, error } = await window.supabase.auth.getSession();
+    const session = data?.session;
 
-  if (!session) {
-    window.location.href = "/index.html";
-  } else {
-    const el = document.getElementById("sidebar-user-email");
-    if (el) {
-      el.textContent = session.user.email;
+    if (!session) {
+      window.location.href = "/index.html";
+    } else {
+      const el = document.getElementById("sidebar-user-email");
+      if (el) {
+        el.textContent = session.user.email;
+      }
     }
-  }
+  })();
 </script>
+
+<script src="./dashboard.js"></script>
 
 
 
