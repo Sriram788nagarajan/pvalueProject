@@ -1,4 +1,6 @@
 from backend.v2.db.connection import get_connection
+from backend.v2.projections.dashboard_projection import project_snapshot_to_dashboard
+from backend.v2.projections.dashboard_repository import upsert_dashboard_experiment
 
 
 def insert_snapshot(snapshot: dict):
@@ -62,4 +64,8 @@ def insert_snapshot(snapshot: dict):
     with get_connection() as conn:
         with conn.cursor() as cur:
             cur.execute(sql, snapshot)
+
+            # NEW: dashboard projection
+            dashboard_row = project_snapshot_to_dashboard(snapshot)
+            upsert_dashboard_experiment(cur, dashboard_row)
         conn.commit()
