@@ -476,23 +476,42 @@
   DraftStore.clearPhase("pending_experiment", "phase1");
 }
 
-  //  CREATE FIRST — GUARANTEED
-  sessionStorage.setItem("workflow_active", "1");
-  window.location.href = `define_experiment.html?id=${experimentId}`;
+  // Show loading state
+  const submitBtn = document.querySelector('.primary-btn');
+  const originalText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Creating...";
+  submitBtn.style.opacity = "0.6";
+  document.body.style.cursor = "wait";
 
-  //  PERSIST IN BACKGROUND (NON-BLOCKING)
-  authFetch(`${API_BASE}/v2/experiments/`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      experiment_id: experimentId,
-      name,
-      team,
-      goal
-    })
-  }).catch(err => {
-    console.error("Experiment creation failed:", err);
-  });
+  // PERSIST FIRST (BLOCKING)
+  (async () => {
+    try {
+      await authFetch(`${API_BASE}/v2/experiments/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          experiment_id: experimentId,
+          name,
+          team,
+          goal
+        })
+      });
+
+      // SUCCESS - navigate
+      sessionStorage.setItem("workflow_active", "1");
+      window.location.href = `define_experiment.html?id=${experimentId}`;
+
+    } catch (err) {
+      // FAILURE - restore UI
+      console.error("Experiment creation failed:", err);
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+      submitBtn.style.opacity = "1";
+      document.body.style.cursor = "default";
+      alert("Failed to create experiment. Please try again.");
+    }
+  })();
 });
 
   // ============================================
