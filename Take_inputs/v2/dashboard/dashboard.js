@@ -210,25 +210,28 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
 
 window.openExperiment = async function (experimentId) {
   try {
+    document.body.style.cursor = 'wait';
+    
     const res = await authFetch(
         `${API_BASE}/v2/orchestration/enter/${experimentId}`
       );
 
     if (!res.ok) {
+      document.body.style.cursor = 'default';
       console.error("Failed to enter experiment via orchestration");
       return;
     }
 
     const data = await res.json();
+    const { resolved_view } = data;
 
-    const { resolved_view, entry_context } = data;
+    sessionStorage.setItem("workflow_active", "1");
 
-    // (Optional future UX)
-    // entry_context.last_seen?.at
-
-    window.location.href =
-      `/Take_inputs/v2/experiments/${resolved_view}.html?id=${experimentId}`;
+    window.location.replace(
+      `/Take_inputs/v2/experiments/${resolved_view}.html?id=${experimentId}`
+    );
   } catch (err) {
+    document.body.style.cursor = 'default';
     console.error("Orchestration entry failed:", err);
   }
 };
