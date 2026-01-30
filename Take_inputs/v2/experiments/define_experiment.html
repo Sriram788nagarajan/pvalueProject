@@ -330,7 +330,7 @@ defineForm.addEventListener("submit", async (e) => {
     })
   );
 
-  const savePhase2 = (async () => {
+    async function savePhase2() {
     try {
       const checkRes = await window.authFetch(
         `${API_BASE}/v2/experiments/${experimentId}/snapshot/full`
@@ -382,15 +382,17 @@ defineForm.addEventListener("submit", async (e) => {
     } catch (err) {
       console.error("❌ PHASE 2: Save failed:", err);
     }
-  })();
+  }
 
-  await Promise.race([
-    savePhase2,
-    new Promise(r => setTimeout(r, 2000))
-  ]);
+
+
+ 
 
   sessionStorage.setItem("workflow_active", "1");
   window.location.href = `design_parameters.html?id=${experimentId}`;
+  requestAnimationFrame(() => {
+  savePhase2().catch(() => {});
+});
 });
 
 
