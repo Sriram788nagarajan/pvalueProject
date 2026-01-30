@@ -1795,6 +1795,7 @@ def complete_phase5_experiment(
     snapshot["final_notes"] = notes
     snapshot["current_status"] = "completed"
     snapshot["current_step"] = "experiment_completed"
+    snapshot["current_view"] = "experiment_completed"  # ← ADD THIS LINE
     snapshot["completed_at"] = datetime.now(timezone.utc)
     snapshot["last_updated_at"] = datetime.now(timezone.utc)
 
