@@ -387,7 +387,7 @@ defineForm.addEventListener("submit", async (e) => {
 
   sessionStorage.setItem("workflow_active", "1");
   // Fire-and-forget: dispatch request immediately
-  savePhase2().catch(() => {});
+  await savePhase2();
 
   // Navigate immediately (no await, no delay)
   sessionStorage.setItem("workflow_active", "1");
