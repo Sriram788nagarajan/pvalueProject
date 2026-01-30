@@ -468,6 +468,8 @@ function afterExperimentIdReady(experimentId) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    console.log("🔵 SUBMIT HANDLER: Started");
+
     //  Forward contract for Phase 2 → Phase 3
     sessionStorage.setItem(
       `definition_contract_${experimentId}`,
@@ -476,19 +478,29 @@ function afterExperimentIdReady(experimentId) {
       })
     );
 
+    console.log("🔵 SUBMIT HANDLER: About to navigate");
+
     //  Navigate immediately (never block UX)
     sessionStorage.setItem("workflow_active", "1");
     window.location.href = `design_parameters.html?id=${experimentId}`;
 
+    console.log("🔵 SUBMIT HANDLER: Navigation triggered (this line may not print)");
+
     //  Background persistence (fire-and-forget)
     setTimeout(async () => {
+      console.log("🟢 BACKGROUND SAVE: setTimeout started");
       try {
-        // ✅ RESILIENCE: Check if Phase 1 exists
+        //  RESILIENCE: Check if Phase 1 exists
+         console.log("🟢 BACKGROUND SAVE: About to check Phase 1 existence");
         const checkRes = await window.authFetch(
           `${API_BASE}/v2/experiments/${experimentId}/snapshot/full`
         );
+
+        console.log("🟢 BACKGROUND SAVE: Phase 1 check response:", checkRes.ok);
         
         if (!checkRes.ok) {
+
+           console.log("🟡 RESILIENCE: Phase 1 missing, creating now");
           // Phase 1 doesn't exist → create it NOW
           const phase1Data = DraftStore.load(experimentId)?.phase1 || {};
           
@@ -502,7 +514,11 @@ function afterExperimentIdReady(experimentId) {
               goal: phase1Data.goal || null
             })
           });
+
+          console.log("🟡 RESILIENCE: Phase 1 created");
         }
+
+        console.log("🟢 BACKGROUND SAVE: About to save Phase 2");
 
         // Now save Phase 2
         await window.authFetch(
@@ -532,11 +548,14 @@ function afterExperimentIdReady(experimentId) {
           }
         );
 
+        console.log("✅ BACKGROUND SAVE: Phase 2 saved successfully");
         // Phase 2 successfully persisted — clear local draft
         DraftStore.clearPhase(experimentId, "phase2");
+        console.log("✅ BACKGROUND SAVE: Draft cleared");
+
       } catch (err) {
         // Silent by design — will retry on next phase
-        console.error("Background save failed:", err);
+        console.error("❌ BACKGROUND SAVE: Failed with error:", err);
       }
     }, 0);
   });
