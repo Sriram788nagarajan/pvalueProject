@@ -389,10 +389,12 @@ defineForm.addEventListener("submit", async (e) => {
  
 
   sessionStorage.setItem("workflow_active", "1");
-  window.location.href = `design_parameters.html?id=${experimentId}`;
-  requestAnimationFrame(() => {
+  // Fire-and-forget: dispatch request immediately
   savePhase2().catch(() => {});
-});
+
+  // Navigate immediately (no await, no delay)
+  sessionStorage.setItem("workflow_active", "1");
+  window.location.href = `design_parameters.html?id=${experimentId}`;
 });
 
 
