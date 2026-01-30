@@ -125,6 +125,8 @@ def _build_phase5_observed_data(payload: dict) -> dict:
     }
 
 
+
+
 def require_phase3_action_allowed(snapshot: dict, action: str):
     #  HARD GUARANTEE: Phase 3 must be complete
     if snapshot.get("current_status") != "phase3_complete":
@@ -310,7 +312,30 @@ class DefinitionDraftUpdate(BaseModel):
 
 
 
+@router.post("/allocate")
+def allocate_experiment(
+    current_user = Depends(get_current_user),
+):
+    from backend.v2.core.snapshots.snapshot_reader import get_snapshot_by_experiment_id
+    from backend.v2.core.snapshots.snapshot_repository import insert_snapshot
+    from backend.v2.core.snapshots.snapshot_builder import build_allocated_snapshot
 
+    user_id = get_user_id_from_jwt(current_user)
+    experiment_id = uuid.uuid4()
+
+    existing = get_snapshot_by_experiment_id(experiment_id)
+    if existing:
+        return {"experiment_id": experiment_id}
+
+    snapshot = build_allocated_snapshot(
+        experiment_id=experiment_id,
+        user_id=user_id,
+        allocation_source="frontend_create",
+    )
+
+    insert_snapshot(snapshot)
+
+    return {"experiment_id": experiment_id}
 
 
 @router.post("/{experiment_id}/definition")

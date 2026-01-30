@@ -123,3 +123,35 @@ def apply_design_override_to_snapshot(snapshot, occurred_at):
     snapshot["current_status"] = "design_ready"
     snapshot["last_updated_at"] = occurred_at
     return snapshot
+
+
+def build_allocated_snapshot(*, experiment_id, user_id, allocation_source="frontend"):
+    now = datetime.now(timezone.utc)
+
+    return {
+        "experiment_id": experiment_id,
+        "user_id": user_id,
+
+        "name": None,
+        "team": None,
+        "goal": None,
+
+        "current_status": "allocated",
+        "current_phase": 1,
+        "current_step": "create_experiment",
+        "current_view": "create_experiment",
+
+        "definition_inputs": None,
+        "design_inputs": None,
+        "phase3_results": None,
+        "phase5_results": None,
+
+        "has_warnings": False,
+        "has_override": False,
+        "locked_version": None,
+
+        "allocation_source": allocation_source,
+
+        "created_at": now,
+        "last_updated_at": now,
+    }
