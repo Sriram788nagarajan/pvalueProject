@@ -206,3 +206,15 @@ def debug_static():
         "files": sorted(files)[:50],
         "total_files": len(files)
     }
+
+
+# Debug: Print all registered routes
+@app.on_event("startup")
+async def startup_debug():
+    print("=" * 80)
+    print("REGISTERED ROUTES:")
+    print("=" * 80)
+    for route in app.routes:
+        if hasattr(route, 'path') and hasattr(route, 'methods'):
+            print(f"{route.methods} {route.path}")
+    print("=" * 80)
