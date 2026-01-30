@@ -228,6 +228,9 @@ def create_experiment(request: CreateExperimentRequest, current_user = Depends(g
             existing["current_step"] = "create_experiment"
             existing["current_status"] = "metadata_created"
 
+            #  REQUIRED for dashboard_experiments NOT NULL constraint
+            existing["current_view"] = "create_experiment"
+
             existing["last_updated_at"] = datetime.now(timezone.utc)
             upsert_snapshot(existing)
 
