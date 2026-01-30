@@ -478,12 +478,25 @@
 
 }
 
-// Navigate immediately (0 latency)
+// ============================================
+// 🔬 INSTRUMENTED FOR DEBUGGING
+// ============================================
+console.log('🔵 PHASE 1: About to navigate', { 
+  experimentId, 
+  timestamp: Date.now() 
+});
+
 sessionStorage.setItem("workflow_active", "1");
 window.location.href = `define_experiment.html?id=${experimentId}`;
 
+console.log('🔵 PHASE 1: Navigation triggered (this may not print)');
+
 // Background persistence (fire-and-forget)
 requestAnimationFrame(() => {
+  console.log('🟢 PHASE 1 rAF: Callback started', { 
+    timestamp: Date.now() 
+  });
+  
   authFetch(`${API_BASE}/v2/experiments/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -493,9 +506,9 @@ requestAnimationFrame(() => {
       team,
       goal
     })
-  }).catch(() => {
-    // Silent by design — resume flow will recover
-  });
+  })
+  .then(() => console.log('✅ PHASE 1: Save succeeded'))
+  .catch(() => console.log('❌ PHASE 1: Save failed'));
 });
 
  
