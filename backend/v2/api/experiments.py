@@ -207,6 +207,30 @@ def create_experiment(request: CreateExperimentRequest, current_user = Depends(g
 
     if existing:
         require_experiment_owner(existing, user_id)
+
+        updated = False
+
+        if request.name is not None and existing.get("name") is None:
+            existing["name"] = request.name
+            updated = True
+
+        if request.team is not None and existing.get("team") is None:
+            existing["team"] = request.team
+            updated = True
+
+        if request.goal is not None and existing.get("goal") is None:
+            existing["goal"] = request.goal
+            updated = True
+
+        if updated:
+            #  Enforce Phase 1 invariants
+            existing["current_phase"] = 1
+            existing["current_step"] = "create_experiment"
+            existing["current_status"] = "metadata_created"
+
+            existing["last_updated_at"] = datetime.now(timezone.utc)
+            upsert_snapshot(existing)
+
         return {
             "experiment_id": experiment_id,
             "snapshot": existing,
@@ -508,9 +532,7 @@ def save_design_parameters(experiment_id: uuid.UUID,
     #  COMMIT DESIGN INPUTS (Phase 2 → Phase 3 contract)
     snapshot["design_inputs"] = payload
 
-    
-
-        # ---- STATE MACHINE ENFORCEMENT (Phase 2 → Phase 3) ----
+    # ---- STATE MACHINE ENFORCEMENT (Phase 2 → Phase 3) ----
     snapshot["current_phase"] = 3
     snapshot["current_step"] = "phase3_feasibility"
     snapshot["current_status"] = "phase3_in_progress"
