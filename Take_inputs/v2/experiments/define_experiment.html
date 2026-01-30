@@ -270,13 +270,14 @@
     : "https://pvalueproject-new.onrender.com";
 
 
+  
+let resolvedExperimentId = null;
 /* =========================================================
    BOOTSTRAP
 ========================================================= */
 requestAnimationFrame(() => {
   setTimeout(initDefineExperiment, 0);
 });
-
 
 
 
@@ -301,6 +302,97 @@ async function initDefineExperiment() {
   afterExperimentIdReady(experimentId);
   
 }
+
+const defineForm = document.getElementById("define-form");
+
+defineForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const experimentId =
+    resolvedExperimentId ||
+    new URLSearchParams(window.location.search).get("id") ||
+    sessionStorage.getItem("pending_experiment_id");
+
+  if (!experimentId) {
+    alert("Experiment is still initializing. Please try again.");
+    return;
+  }
+
+  console.log('🔵 PHASE 2: Submit handler started', { 
+    experimentId, 
+    timestamp: Date.now() 
+  });
+
+  sessionStorage.setItem(
+    `definition_contract_${experimentId}`,
+    JSON.stringify({
+      metric_type: document.getElementById("metric_type").value
+    })
+  );
+
+  const savePhase2 = (async () => {
+    try {
+      const checkRes = await window.authFetch(
+        `${API_BASE}/v2/experiments/${experimentId}/snapshot/full`
+      );
+
+      if (!checkRes.ok) {
+        const phase1Data = DraftStore.load(experimentId)?.phase1 || {};
+
+        await window.authFetch(`${API_BASE}/v2/experiments/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            experiment_id: experimentId,
+            name: phase1Data.name || "Untitled Experiment",
+            team: phase1Data.team || null,
+            goal: phase1Data.goal || null
+          })
+        });
+      }
+
+      await window.authFetch(
+        `${API_BASE}/v2/experiments/${experimentId}/definition`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            hypothesis: {
+              statement: document.getElementById("hypothesis").value,
+              direction: document.getElementById("hypothesis_direction").value
+            },
+            primary_metric: {
+              name: document.getElementById("primary_metric_name").value,
+              type: document.getElementById("metric_type").value,
+              direction: document.getElementById("metric_direction").value
+            },
+            secondary_metrics: [],
+            guardrails: [],
+            variants: [
+              { id: "control", description: "Control" },
+              { id: "variant_a", description: "Variant A" }
+            ],
+            experiment_type: "ab",
+            traffic_split_type: "equal"
+          })
+        }
+      );
+
+      DraftStore.clearPhase(experimentId, "phase2");
+    } catch (err) {
+      console.error("❌ PHASE 2: Save failed:", err);
+    }
+  })();
+
+  await Promise.race([
+    savePhase2,
+    new Promise(r => setTimeout(r, 2000))
+  ]);
+
+  sessionStorage.setItem("workflow_active", "1");
+  window.location.href = `design_parameters.html?id=${experimentId}`;
+});
+
 
 /* =========================================================
    STRICT EXPERIMENT ID RESOLUTION (SINGLE ENTRY)
@@ -329,6 +421,7 @@ async function resolveExperimentIdStrict(experimentId, isPending) {
    POST-ID INITIALIZATION (SINGLE, SAFE)
 ========================================================= */
 function afterExperimentIdReady(experimentId) {
+  resolvedExperimentId = experimentId;
   // ================================
   // PHASE 2 DRAFT HYDRATION (CLIENT) - INSTANT
   // ================================
@@ -462,119 +555,7 @@ function afterExperimentIdReady(experimentId) {
   }
 
   /* ---------- SUBMIT ---------- */
-  const form = document.getElementById("define-form");
-  if (!form) return;
 
-  form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  // ============================================
-  // 🔬 INSTRUMENTED FOR DEBUGGING
-  // ============================================
-  console.log('🔵 PHASE 2: Submit handler started', { 
-    experimentId, 
-    timestamp: Date.now() 
-  });
-
-  //  Forward contract for Phase 2 → Phase 3
-  sessionStorage.setItem(
-    `definition_contract_${experimentId}`,
-    JSON.stringify({
-      metric_type: document.getElementById("metric_type").value
-    })
-  );
-
-  const savePhase2Start = Date.now();
-
-  //  START SAVE IMMEDIATELY (not in setTimeout)
-  const savePhase2 = (async () => {
-    try {
-      console.log('🟢 PHASE 2: Save promise started');
-      
-      // Check if Phase 1 exists
-      const checkRes = await window.authFetch(
-        `${API_BASE}/v2/experiments/${experimentId}/snapshot/full`
-      );
-      
-      console.log('🟢 PHASE 2: Phase 1 check complete', { ok: checkRes.ok });
-      
-      if (!checkRes.ok) {
-        console.log('🟡 PHASE 2: Phase 1 missing, creating now');
-        
-        // Phase 1 doesn't exist → create it NOW
-        const phase1Data = DraftStore.load(experimentId)?.phase1 || {};
-        
-        await window.authFetch(`${API_BASE}/v2/experiments/`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            experiment_id: experimentId,
-            name: phase1Data.name || "Untitled Experiment",
-            team: phase1Data.team || null,
-            goal: phase1Data.goal || null
-          })
-        });
-        
-        console.log('🟡 PHASE 2: Phase 1 created');
-      }
-
-      console.log('🟢 PHASE 2: About to save definition');
-
-      // Save Phase 2
-      await window.authFetch(
-        `${API_BASE}/v2/experiments/${experimentId}/definition`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            hypothesis: {
-              statement: document.getElementById("hypothesis").value,
-              direction: document.getElementById("hypothesis_direction").value
-            },
-            primary_metric: {
-              name: document.getElementById("primary_metric_name").value,
-              type: document.getElementById("metric_type").value,
-              direction: document.getElementById("metric_direction").value
-            },
-            secondary_metrics: [],
-            guardrails: [],
-            variants: [
-              { id: "control", description: "Control" },
-              { id: "variant_a", description: "Variant A" }
-            ],
-            experiment_type: "ab",
-            traffic_split_type: "equal"
-          })
-        }
-      );
-
-      console.log('✅ PHASE 2: Definition saved successfully');
-
-      // Clear draft after successful save
-      DraftStore.clearPhase(experimentId, "phase2");
-      
-      console.log('✅ PHASE 2: Draft cleared');
-    } catch (err) {
-      console.error("❌ PHASE 2: Save failed:", err);
-    }
-  })();
-
-  console.log('🔵 PHASE 2: Waiting for 150ms race...');
-
-  //  WAIT 150ms for request to START (not complete)
-  await Promise.race([
-    savePhase2,
-    new Promise(r => setTimeout(r, 150))
-  ]);
-
-  const savePhase2Duration = Date.now() - savePhase2Start;
-  console.log('🔵 PHASE 2: Race completed after', savePhase2Duration, 'ms');
-  console.log('🔵 PHASE 2: About to navigate');
-
-  //  NOW navigate (request is in-flight)
-  sessionStorage.setItem("workflow_active", "1");
-  window.location.href = `design_parameters.html?id=${experimentId}`;
-});
 }
 
 </script>
