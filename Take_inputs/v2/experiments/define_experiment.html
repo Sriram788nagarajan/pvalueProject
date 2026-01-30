@@ -332,13 +332,10 @@ defineForm.addEventListener("submit", async (e) => {
 
     async function savePhase2() {
     try {
-      const checkRes = await window.authFetch(
-        `${API_BASE}/v2/experiments/${experimentId}/snapshot/full`
-      );
+      // Ensure experiment exists (pure client-side check)
+      const phase1Data = DraftStore.load(experimentId)?.phase1;
 
-      if (!checkRes.ok) {
-        const phase1Data = DraftStore.load(experimentId)?.phase1 || {};
-
+      if (phase1Data) {
         await window.authFetch(`${API_BASE}/v2/experiments/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
