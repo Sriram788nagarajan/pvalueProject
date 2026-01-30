@@ -364,6 +364,15 @@ def save_definition(experiment_id: uuid.UUID,
     require_experiment_owner(snapshot, user_id)
     forbid_if_completed(snapshot)
 
+    # ----------------------------
+    # HARD GUARD: Phase 1 metadata must exist
+    # ----------------------------
+    if snapshot.get("name") is None:
+        raise HTTPException(
+            status_code=409,
+            detail="Experiment metadata not saved yet. Please complete Phase 1."
+        )
+
     # Optional guard (future): prevent edits after lock
     if snapshot.get("locked_version") is not None:
         raise HTTPException(status_code=400, detail="Experiment design is locked")
