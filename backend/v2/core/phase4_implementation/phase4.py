@@ -127,6 +127,8 @@ def finalize_phase4(
     return event, snapshot
 
 
+
+
 def finalize_phase4_with_analysis(
     *,
     snapshot,
@@ -149,6 +151,7 @@ def finalize_phase4_with_analysis(
 
     snapshot["current_phase"] = 5
     snapshot["current_step"] = "phase5_inference"
+    snapshot["current_view"] = "phase5_inference"  
     snapshot["current_status"] = "analysis_pending"
     snapshot["last_updated_at"] = now
 

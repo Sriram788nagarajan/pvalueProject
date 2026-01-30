@@ -21,6 +21,7 @@ def apply_phase4_decision_selected(
 ):
     snapshot["current_phase"] = 4
     snapshot["current_step"] = "phase4_decision_selected"
+    snapshot["current_view"] = "phase4"  # ← ADD THIS LINE
 
     # Persist chosen path (reversible until finalization)
     snapshot["phase4_path"] = decision
@@ -32,6 +33,8 @@ def apply_phase4_decision_selected(
 
     snapshot["last_updated_at"] = occurred_at
     return snapshot
+
+
 
 def apply_phase4_finalization(
     snapshot: Dict[str, Any],
@@ -52,8 +55,9 @@ def apply_phase4_finalization(
     snapshot["current_status"] = "completed"
     snapshot["current_phase"] = 4
     snapshot["current_step"] = "phase4_completed"
+    snapshot["current_view"] = "phase4"  # ← ADD THIS LINE
 
-    # 🔑 Phase 4 business decision (namespaced)
+    #  Phase 4 business decision (namespaced)
     snapshot["phase4_decision"] = {
         "decision": final_decision,
         "notes": notes,
@@ -65,4 +69,3 @@ def apply_phase4_finalization(
 
     snapshot["last_updated_at"] = occurred_at
     return snapshot
-
