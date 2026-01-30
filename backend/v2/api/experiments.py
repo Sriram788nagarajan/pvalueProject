@@ -169,6 +169,7 @@ def apply_commitment_to_snapshot(snapshot: dict, new_status: str, occurred_at):
         snapshot["locked_version"] = 1
         snapshot["current_phase"] = 3
         snapshot["current_step"] = "phase3_decision"
+        snapshot["current_view"] = "phase3_decision"  
 
     # Redesign resets flow
     if new_status == "redesign_requested":
@@ -176,11 +177,10 @@ def apply_commitment_to_snapshot(snapshot: dict, new_status: str, occurred_at):
         snapshot["decision"] = None
         snapshot["current_phase"] = 1
         snapshot["current_step"] = "create_experiment"
+        snapshot["current_view"] = "create_experiment"  
 
     snapshot["last_updated_at"] = datetime.now(timezone.utc)
     return snapshot
-
-
 
 
 
