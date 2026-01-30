@@ -1708,12 +1708,13 @@ def run_phase5_inference(
         payload=event_payload,
     )
 
-    # ----------------------------
+     # ----------------------------
     # Persist atomically (EVENT + SNAPSHOT)
     # ----------------------------
     snapshot["current_status"] = "analysis_completed"
     snapshot["current_phase"] = 5
     snapshot["current_step"] = "analysis_completed"
+    snapshot["current_view"] = "phase5_inference"  
     snapshot["last_updated_at"] = datetime.now(timezone.utc)
 
     # ----------------------------
