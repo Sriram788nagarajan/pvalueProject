@@ -486,6 +486,7 @@
 
   // PERSIST FIRST (BLOCKING)
   (async () => {
+   console.time('POST /v2/experiments/');
     try {
       await authFetch(`${API_BASE}/v2/experiments/`, {
         method: "POST",
@@ -497,6 +498,7 @@
           goal
         })
       });
+    console.timeEnd('POST /v2/experiments/');
 
       // SUCCESS - navigate
       sessionStorage.setItem("workflow_active", "1");
@@ -504,6 +506,7 @@
 
     } catch (err) {
       // FAILURE - restore UI
+      console.timeEnd('POST /v2/experiments/');
       console.error("Experiment creation failed:", err);
       submitBtn.disabled = false;
       submitBtn.textContent = originalText;
