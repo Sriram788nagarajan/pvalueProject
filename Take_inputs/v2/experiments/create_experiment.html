@@ -438,19 +438,15 @@
 
  experimentId = new URLSearchParams(window.location.search).get("id");
 
-  // NEW EXPERIMENT FLOW: Always generate fresh UUID when mode=create
+  // NEW EXPERIMENT FLOW: Generate UUID client-side (instant)
   const mode = new URLSearchParams(window.location.search).get("mode");
   if (mode === "create" && !experimentId) {
-  // Clear stale session data
-  sessionStorage.removeItem("pending_experiment_id");
-  
-  // Allocate experiment ID from backend (FAST)
-  const res = await authFetch(`${API_BASE}/v2/experiments/allocate`, {
-    method: "POST"
-  });
-  const data = await res.json();
-  experimentId = data.experiment_id;
-  sessionStorage.setItem("pending_experiment_id", experimentId);
+    // Clear stale session data
+    sessionStorage.removeItem("pending_experiment_id");
+    
+    // Generate UUID client-side (0ms latency)
+    experimentId = crypto.randomUUID();
+    sessionStorage.setItem("pending_experiment_id", experimentId);
   }
 
   // RESUME FLOW: Use existing ID
@@ -484,11 +480,10 @@
 
 // Navigate immediately (0 latency)
 sessionStorage.setItem("workflow_active", "1");
-// Navigate immediately (0 latency)
-sessionStorage.setItem("workflow_active", "1");
+window.location.href = `define_experiment.html?id=${experimentId}`;
 
+// Background persistence (fire-and-forget)
 requestAnimationFrame(() => {
-  // Background persistence — guaranteed to run
   authFetch(`${API_BASE}/v2/experiments/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -502,9 +497,6 @@ requestAnimationFrame(() => {
     // Silent by design — resume flow will recover
   });
 });
-
-// Trigger navigation LAST
-window.location.href = `define_experiment.html?id=${experimentId}`;
 
  
 

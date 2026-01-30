@@ -339,35 +339,7 @@ class DefinitionDraftUpdate(BaseModel):
 
 
 
-@router.post("/allocate")
-def allocate_experiment(current_user = Depends(get_current_user)):
-    user_id = get_user_id_from_jwt(current_user)
-    experiment_id = uuid.uuid4()
 
-    with get_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                INSERT INTO experiment_snapshots (
-                    experiment_id,
-                    user_id,
-                    allocation_source,
-                    created_at,
-                    last_updated_at
-                )
-                VALUES (%s, %s, %s, now(), now())
-                """,
-                (
-                    str(experiment_id),
-                    str(user_id),
-                    "ui_create",
-                ),
-            )
-        conn.commit()
-
-    return {
-        "experiment_id": experiment_id
-    }
 
 @router.post("/{experiment_id}/definition")
 def save_definition(experiment_id: uuid.UUID,

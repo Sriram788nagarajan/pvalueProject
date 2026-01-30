@@ -465,7 +465,7 @@ function afterExperimentIdReady(experimentId) {
   const form = document.getElementById("define-form");
   if (!form) return;
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     //  Forward contract for Phase 2 → Phase 3
@@ -481,41 +481,63 @@ function afterExperimentIdReady(experimentId) {
     window.location.href = `design_parameters.html?id=${experimentId}`;
 
     //  Background persistence (fire-and-forget)
-    setTimeout(() => {
-      window.authFetch(
-        `${API_BASE}/v2/experiments/${experimentId}/definition`,
-
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            hypothesis: {
-              statement: document.getElementById("hypothesis").value,
-              direction: document.getElementById("hypothesis_direction").value
-            },
-            primary_metric: {
-              name: document.getElementById("primary_metric_name").value,
-              type: document.getElementById("metric_type").value,
-              direction: document.getElementById("metric_direction").value
-            },
-            secondary_metrics: [],
-            guardrails: [],
-            variants: [
-              { id: "control", description: "Control" },
-              { id: "variant_a", description: "Variant A" }
-            ],
-            experiment_type: "ab",
-            traffic_split_type: "equal"
-          })
+    setTimeout(async () => {
+      try {
+        // ✅ RESILIENCE: Check if Phase 1 exists
+        const checkRes = await window.authFetch(
+          `${API_BASE}/v2/experiments/${experimentId}/snapshot/full`
+        );
+        
+        if (!checkRes.ok) {
+          // Phase 1 doesn't exist → create it NOW
+          const phase1Data = DraftStore.load(experimentId)?.phase1 || {};
+          
+          await window.authFetch(`${API_BASE}/v2/experiments/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              experiment_id: experimentId,
+              name: phase1Data.name || "Untitled Experiment",
+              team: phase1Data.team || null,
+              goal: phase1Data.goal || null
+            })
+          });
         }
-      )
-      .then(() => {
-        //  Phase 2 successfully persisted — clear local draft
+
+        // Now save Phase 2
+        await window.authFetch(
+          `${API_BASE}/v2/experiments/${experimentId}/definition`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              hypothesis: {
+                statement: document.getElementById("hypothesis").value,
+                direction: document.getElementById("hypothesis_direction").value
+              },
+              primary_metric: {
+                name: document.getElementById("primary_metric_name").value,
+                type: document.getElementById("metric_type").value,
+                direction: document.getElementById("metric_direction").value
+              },
+              secondary_metrics: [],
+              guardrails: [],
+              variants: [
+                { id: "control", description: "Control" },
+                { id: "variant_a", description: "Variant A" }
+              ],
+              experiment_type: "ab",
+              traffic_split_type: "equal"
+            })
+          }
+        );
+
+        // Phase 2 successfully persisted — clear local draft
         DraftStore.clearPhase(experimentId, "phase2");
-      })
-      .catch(() => {
-        // intentionally silent — recovered on resume
-      });
+      } catch (err) {
+        // Silent by design — will retry on next phase
+        console.error("Background save failed:", err);
+      }
     }, 0);
   });
 }
