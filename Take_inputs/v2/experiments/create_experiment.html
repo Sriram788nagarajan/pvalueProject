@@ -424,7 +424,7 @@
   // FORM SUBMIT (CONTINUE BUTTON)
   // ============================================
   
- document.getElementById("create-form").addEventListener("submit", (e) => {
+ document.getElementById("create-form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const name = document.getElementById("name").value.trim();
@@ -436,7 +436,7 @@
   const team = document.getElementById("team").value || null;
   const goal = document.getElementById("goal").value || null;
 
-  let experimentId = new URLSearchParams(window.location.search).get("id");
+ experimentId = new URLSearchParams(window.location.search).get("id");
 
   // NEW EXPERIMENT FLOW: Always generate fresh UUID when mode=create
   const mode = new URLSearchParams(window.location.search).get("mode");
@@ -444,8 +444,12 @@
   // Clear stale session data
   sessionStorage.removeItem("pending_experiment_id");
   
-  // Generate fresh UUID
-  experimentId = crypto.randomUUID();
+  // Allocate experiment ID from backend (FAST)
+  const res = await authFetch(`${API_BASE}/v2/experiments/allocate`, {
+    method: "POST"
+  });
+  const data = await res.json();
+  experimentId = data.experiment_id;
   sessionStorage.setItem("pending_experiment_id", experimentId);
   }
 
@@ -474,47 +478,37 @@
   }));
 
   DraftStore.clearPhase("pending_experiment", "phase1");
+
+
 }
 
-  // Show loading state
-  const submitBtn = document.querySelector('.primary-btn');
-  const originalText = submitBtn.textContent;
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Creating...";
-  submitBtn.style.opacity = "0.6";
-  document.body.style.cursor = "wait";
+// Navigate immediately (0 latency)
+sessionStorage.setItem("workflow_active", "1");
+// Navigate immediately (0 latency)
+sessionStorage.setItem("workflow_active", "1");
 
-  // PERSIST FIRST (BLOCKING)
-  (async () => {
-   console.time('POST /v2/experiments/');
-    try {
-      await authFetch(`${API_BASE}/v2/experiments/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          experiment_id: experimentId,
-          name,
-          team,
-          goal
-        })
-      });
-    console.timeEnd('POST /v2/experiments/');
+requestAnimationFrame(() => {
+  // Background persistence — guaranteed to run
+  authFetch(`${API_BASE}/v2/experiments/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      experiment_id: experimentId,
+      name,
+      team,
+      goal
+    })
+  }).catch(() => {
+    // Silent by design — resume flow will recover
+  });
+});
 
-      // SUCCESS - navigate
-      sessionStorage.setItem("workflow_active", "1");
-      window.location.href = `define_experiment.html?id=${experimentId}`;
+// Trigger navigation LAST
+window.location.href = `define_experiment.html?id=${experimentId}`;
 
-    } catch (err) {
-      // FAILURE - restore UI
-      console.timeEnd('POST /v2/experiments/');
-      console.error("Experiment creation failed:", err);
-      submitBtn.disabled = false;
-      submitBtn.textContent = originalText;
-      submitBtn.style.opacity = "1";
-      document.body.style.cursor = "default";
-      alert("Failed to create experiment. Please try again.");
-    }
-  })();
+ 
+
+  
 });
 
   // ============================================
