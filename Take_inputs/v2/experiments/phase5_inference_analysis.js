@@ -466,34 +466,32 @@ function wireRunAnalysis() {
       return;
     }
 
-    //  fire-and-forget inference (DO NOT await)
-    fetchWithAuth(
+    // Run inference and wait for result (single blocking point)
+    const res = await fetchWithAuth(
       `/v2/experiments/${experimentId}/phase5/inference`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       }
-    ).catch(err => {
-      console.error("Phase 5 inference failed:", err);
-    });
+    );
 
-    //  immediate UI response
-    btn.textContent = "Analysis running…";
-    btn.disabled = true;
+    const rawResult = await res.json();
+    const apiResult = normalizeInferenceResponse(rawResult);
 
-    //  show next sections immediately
+    // Render results immediately
+    renderReadableResult(apiResult);
+
+    // Show UI sections
     document.getElementById("results-section").style.display = "block";
     document.getElementById("completion-banner").style.display = "block";
     document.getElementById("finish-section").style.display = "block";
 
-    //  ensure finish button is wired exactly once
+    // Lock inputs + wire finish
+    disableInferenceInputs();
     wireFinishExperiment();
 
-    //  disable inference inputs immediately
-    disableInferenceInputs();
-
-    // stop here — results will hydrate from snapshot later
+    // Done
     return;
 
 

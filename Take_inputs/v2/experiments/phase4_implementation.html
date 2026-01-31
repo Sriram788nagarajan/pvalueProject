@@ -961,10 +961,10 @@ function toggleGuidance() {
 
 
   function confirmYesAnalyze() {
-  //  mark workflow immediately
+  // ✅ mark workflow immediately
   sessionStorage.setItem("workflow_active", "1");
 
-  //  fire-and-forget backend commit (DO NOT await)
+  // ✅ fire-and-forget backend commit (DO NOT await)
   fetchWithAuth(
     `/v2/experiments/${experimentId}/phase4/finalize-with-analysis`,
     { method: "POST" }
@@ -972,7 +972,7 @@ function toggleGuidance() {
     console.error("Finalize with analysis failed", err);
   });
 
-  //  instant navigation (no waiting)
+  // ✅ instant navigation (no waiting)
   window.location.href =
     `/Take_inputs/v2/experiments/phase5_inference_analysis.html?id=${experimentId}`;
 }
