@@ -466,54 +466,37 @@ function wireRunAnalysis() {
       return;
     }
 
-    const res = await fetchWithAuth(
+    //  fire-and-forget inference (DO NOT await)
+    fetchWithAuth(
       `/v2/experiments/${experimentId}/phase5/inference`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       }
-    );
+    ).catch(err => {
+      console.error("Phase 5 inference failed:", err);
+    });
 
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.detail || "Inference failed");
-    }
+    //  immediate UI response
+    btn.textContent = "Analysis running…";
+    btn.disabled = true;
 
-    const raw = await res.json();
-    inferenceResult = normalizeInferenceResponse(raw);
-
-    //  REQUIRED by phase5_inference_results_renderer.js
-    inferenceResult.summary = {
-      metric_type: experimentSnapshot.metric_type,
-      control_value:
-        experimentSnapshot.design_inputs?.baseline?.value ?? null,
-    };
-
-    //  ADD MISSING METADATA (matches hydration path logic)
-    inferenceResult.metadata = {
-      alpha: experimentSnapshot.design_inputs.alpha,
-      confidence: 1 - experimentSnapshot.design_inputs.alpha,
-      comparisons: 1,
-    };
-
-    renderReadableResult(inferenceResult);
-
-    localStorage.removeItem(`phase5_draft_${experimentId}`);
-
-    /* -----------------------------------------
-    Reveal Phase 5 UI sections
-    ----------------------------------------- */
+    //  show next sections immediately
     document.getElementById("results-section").style.display = "block";
     document.getElementById("completion-banner").style.display = "block";
     document.getElementById("finish-section").style.display = "block";
+
+    //  ensure finish button is wired exactly once
     wireFinishExperiment();
 
-    btn.textContent = "Analysis completed";
-    btn.disabled = true;
-    
+    //  disable inference inputs immediately
+    disableInferenceInputs();
 
-    console.log("Phase 5 inference persisted and rendered:", inferenceResult);
+    // stop here — results will hydrate from snapshot later
+    return;
+
+
   });
 }
 
@@ -584,7 +567,7 @@ function wireFinishExperiment() {
   };
 }
 
-async function handleFinalDecisionConfirmed() {
+function handleFinalDecisionConfirmed() {
   const experimentId =
     new URLSearchParams(window.location.search).get("id") ||
     sessionStorage.getItem("experiment_id");
@@ -592,7 +575,8 @@ async function handleFinalDecisionConfirmed() {
   const notes =
     document.getElementById("phase5Notes").value || null;
 
-  await fetchWithAuth(
+  // fire-and-forget completion
+  fetchWithAuth(
     `/v2/experiments/${experimentId}/phase5/complete`,
     {
       method: "POST",
@@ -602,8 +586,11 @@ async function handleFinalDecisionConfirmed() {
         notes,
       }),
     }
-  );
+  ).catch(err => {
+    console.error("Finish experiment failed:", err);
+  });
 
+  // instant UI update
   document.getElementById("finish-section").style.display = "none";
   document.getElementById("completion-message").style.display = "block";
   document.getElementById("next-steps-section").style.display = "block";
