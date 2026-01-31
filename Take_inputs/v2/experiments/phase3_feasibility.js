@@ -211,9 +211,14 @@
     if (!backBtn) return;
 
     backBtn.addEventListener("click", () => {
-      // Go back to Design Parameters (Phase 2)
-      window.location.href = `design_parameters.html?id=${experimentId}`;
-    });
+    // SAFETY: Reset Phase 3 flags before navigation
+    __phase3Executing = false;
+    __phase3Completed = false;
+    __snapshotCache = null;
+    
+    // Go back to Design Parameters (Phase 2)
+    window.location.href = `design_parameters.html?id=${experimentId}`;
+  });
   });
 
 
@@ -422,11 +427,17 @@ if (!finalSnapshot || !finalSnapshot.phase3_results) {
     );
 
     if (missing.length > 0) {
-      console.warn("Phase 3 incomplete, retrying in 300ms:", missing);
-      setTimeout(() => hydrateFromSnapshot(), 300);
-      return;
-    }
-
+    console.warn("Phase 3 incomplete (DB replication lag), retrying in 300ms:", missing);
+    
+    //  CRITICAL: Reset executing flag BEFORE retry
+    __phase3Executing = false;
+    
+    // Clear cache to force fresh fetch on retry
+    __snapshotCache = null;
+    
+    setTimeout(() => hydrateFromSnapshot(), 300);
+    return;
+  }
 // -----------------------------
 // Phase 3 – Stage 3 (RENDER)
 // -----------------------------
