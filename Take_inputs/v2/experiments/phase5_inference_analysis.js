@@ -477,9 +477,25 @@ function wireRunAnalysis() {
     );
 
     const rawResult = await res.json();
-    const apiResult = normalizeInferenceResponse(rawResult);
+    const normalized = normalizeInferenceResponse(rawResult);
 
-    // Render results immediately
+    //  Normalize to renderer contract (same as hydration path)
+    const apiResult = {
+      results: normalized.results,
+      warnings: normalized.warnings || [],
+      metadata: {
+        alpha: experimentSnapshot.design_inputs.alpha,
+        confidence: 1 - experimentSnapshot.design_inputs.alpha,
+        comparisons: 1,
+      },
+      summary: {
+        metric_type: experimentSnapshot.metric_type,
+        control_value:
+          experimentSnapshot.design_inputs?.baseline?.value ?? null,
+      },
+    };
+
+    // Render results
     renderReadableResult(apiResult);
 
     // Show UI sections
