@@ -18,6 +18,8 @@
 
   let detectabilityVerdict = null;
   let sampleTimeVerdict = null;
+  let __phase3Executing = false;
+  let __phase3Completed = false;
 
   // IMMEDIATE SHELL RENDER (before DOMContentLoaded)
   renderShell();
@@ -245,6 +247,18 @@
 
 
   async function hydratePhase3(snapshot) {
+  // Prevent duplicate execution
+  if (__phase3Completed) {
+    console.log("Phase 3 already completed");
+    return;
+  }
+  
+  if (__phase3Executing) {
+    console.log(" Phase 3 already executing");
+    return;
+  }
+  
+  __phase3Executing = true;
     const phase3Results = snapshot.phase3_results || {};
     const lockedVersion = snapshot.locked_version;
     const mwe = snapshot.design_inputs?.target_mde;
@@ -375,19 +389,26 @@
 
 
 
-    //  VERIFY SNAPSHOT COMPLETENESS BEFORE UNLOCKING UI
-    const res = await authFetch(
-      `${API_BASE}/v2/experiments/${experimentId}/snapshot/full`
-    );
+    // Use cache first, only refetch if needed
+let finalSnapshot = __snapshotCache;
 
-    if (!res.ok) {
-      console.error("Failed to refetch final snapshot");
-      return;
-    }
+if (!finalSnapshot || !finalSnapshot.phase3_results) {
+  console.log("Refetching snapshot for completeness check");
+  const res = await authFetch(
+    `${API_BASE}/v2/experiments/${experimentId}/snapshot/full`
+  );
 
-    const finalSnapshot = await res.json();
+  if (!res.ok) {
+    console.error("Failed to refetch final snapshot");
+    __phase3Executing = false;
+    return;
+  }
 
-    __snapshotCache = finalSnapshot;
+  finalSnapshot = await res.json();
+  __snapshotCache = finalSnapshot;
+} else {
+  console.log("Using cached snapshot");
+}
 
     const requiredPillars = [
       "detectability",
@@ -458,15 +479,13 @@ if (results.risk_disclosure?.result) {
 // -----------------------------
 renderOverallFeasibility();
 hidePhase3Loading();
-
 if (lockedVersion !== null) {
   disableCommitButtons();
 }
 
-  
-
-
-
+// Mark Phase 3 as complete
+__phase3Completed = true;
+__phase3Executing = false;
 
   }
 
