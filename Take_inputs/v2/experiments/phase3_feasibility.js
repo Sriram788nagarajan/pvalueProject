@@ -302,74 +302,76 @@
     }
 
     // -----------------------------
-    // Phase 3 – Stage 1 (independent)
+    // Phase 3 – Stage 1 (PARALLEL - independent pillars)
     // -----------------------------
-    const stage1 = [];
+    const stage1Promises = [];
 
-    // Detectability
-    stage1.push(
-      (async () => {
-        if (!phase3Results.detectability) {
-          await phase3Fetch(
-            `${API_BASE}/v2/experiments/${experimentId}/phase3/feasibility/detectability`,
-            { method: "POST" }
-          );
-        }
-      })()
-    );
+    // Detectability (independent)
+    if (!phase3Results.detectability) {
+      stage1Promises.push(
+        phase3Fetch(
+          `${API_BASE}/v2/experiments/${experimentId}/phase3/feasibility/detectability`,
+          { method: "POST" }
+        )
+      );
+    }
 
-    // Sample time
-    stage1.push(
-      (async () => {
-        if (!phase3Results.sample_time) {
-          await phase3Fetch(
-            `${API_BASE}/v2/experiments/${experimentId}/phase3/feasibility/sample-time`,
-            { method: "POST" }
-          );
-        }
-      })()
-    );
+    // Sample time (independent)
+    if (!phase3Results.sample_time) {
+      stage1Promises.push(
+        phase3Fetch(
+          `${API_BASE}/v2/experiments/${experimentId}/phase3/feasibility/sample-time`,
+          { method: "POST" }
+        )
+      );
+    }
 
-    // Power grid (pure visualization)
-    stage1.push(
-      (async () => {
-        if (!phase3Results.power_grid) {
-          await phase3Fetch(
-            `${API_BASE}/v2/experiments/${experimentId}/phase3/feasibility/power-grid`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                effect_values: [0.00125, 0.0025, 0.00375, 0.005, 0.00625, 0.0075, 0.01]
-              })
-            }
-          );
-        }
-      })()
-    );
+    // Power grid (independent - pure visualization)
+    if (!phase3Results.power_grid) {
+      stage1Promises.push(
+        phase3Fetch(
+          `${API_BASE}/v2/experiments/${experimentId}/phase3/feasibility/power-grid`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              effect_values: [0.00125, 0.0025, 0.00375, 0.005, 0.00625, 0.0075, 0.01]
+            })
+          }
+        )
+      );
+    }
 
-    // Wait for detectability + sample_time to exist
-    await Promise.all(stage1);
+    //  OPTIMIZATION: Wait for ALL Stage 1 pillars in parallel
+    await Promise.all(stage1Promises);
 
     // -----------------------------
-// Phase 3 – Stage 2 (dependent)
-// -----------------------------
+    // Phase 3 – Stage 2 (PARALLEL - dependent pillars)
+    // -----------------------------
+    const stage2Promises = [];
 
-// Decision robustness (depends on detectability)
-if (!phase3Results.decision_robustness) {
-  await phase3Fetch(
-    `${API_BASE}/v2/experiments/${experimentId}/phase3/feasibility/decision-robustness`,
-    { method: "POST" }
-  );
-}
+    // Decision robustness (depends on detectability being in DB)
+    if (!phase3Results.decision_robustness) {
+      stage2Promises.push(
+        phase3Fetch(
+          `${API_BASE}/v2/experiments/${experimentId}/phase3/feasibility/decision-robustness`,
+          { method: "POST" }
+        )
+      );
+    }
 
-// Risk disclosure (depends on detectability + sample_time)
-if (!phase3Results.risk_disclosure) {
-  await phase3Fetch(
-    `${API_BASE}/v2/experiments/${experimentId}/phase3/feasibility/risk-disclosure`,
-    { method: "POST" }
-  );
-}
+    // Risk disclosure (depends on detectability + sample_time being in DB)
+    if (!phase3Results.risk_disclosure) {
+      stage2Promises.push(
+        phase3Fetch(
+          `${API_BASE}/v2/experiments/${experimentId}/phase3/feasibility/risk-disclosure`,
+          { method: "POST" }
+        )
+      );
+    }
+
+    //  OPTIMIZATION: Wait for ALL Stage 2 pillars in parallel
+    await Promise.all(stage2Promises);
 
 
 
