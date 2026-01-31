@@ -251,22 +251,31 @@
   }
 
 
-  async function hydratePhase3(snapshot) {
+ async function hydratePhase3(snapshot) {
   // Prevent duplicate execution
   if (__phase3Completed) {
-    console.log("Phase 3 already completed");
+    console.log(" Phase 3 already completed");
     return;
   }
   
   if (__phase3Executing) {
-    console.log(" Phase 3 already executing");
+    console.log("Phase 3 already executing");
     return;
   }
   
   __phase3Executing = true;
-    const phase3Results = snapshot.phase3_results || {};
-    const lockedVersion = snapshot.locked_version;
-    const mwe = snapshot.design_inputs?.target_mde;
+  
+  //  CRITICAL FIX: Always fetch FRESH snapshot to avoid stale data on retry
+  console.log("🔄Fetching fresh snapshot for Phase 3 execution");
+  // Clear cache to force fresh fetch
+  __snapshotCache = null;
+  const freshSnapshot = await getSnapshotCached(experimentId);
+  const phase3Results = freshSnapshot.phase3_results || {};
+  const lockedVersion = freshSnapshot.locked_version;
+  const mwe = freshSnapshot.design_inputs?.target_mde;
+  
+  // Use fresh snapshot for all subsequent operations
+  snapshot = freshSnapshot;
 
      // ==============================
     // FAST PATH — render only
