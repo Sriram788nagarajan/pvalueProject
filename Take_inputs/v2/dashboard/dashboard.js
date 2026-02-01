@@ -10,6 +10,44 @@ window.activeTab = "all";
 const DEFAULT_VISIBLE_COUNT = 5;
 const expandedSections = new Set();
 
+/* =========================
+   Dashboard transition message (pure UI)
+   ========================= */
+
+const transitionEl = document.getElementById("dashboard-transition-message");
+const transitionTextEl = document.getElementById("dashboard-transition-text");
+
+let transitionTimer1 = null;
+let transitionTimer2 = null;
+
+function showTransitionMessage() {
+  if (!transitionEl || !transitionTextEl) return;
+
+  transitionTextEl.textContent = "Taking you to your experiment…";
+  transitionEl.classList.remove("hidden");
+
+  transitionTimer1 = setTimeout(() => {
+    transitionTextEl.textContent =
+      "Still working… this is taking longer than usual.";
+  }, 5000);
+
+  transitionTimer2 = setTimeout(() => {
+    transitionTextEl.textContent =
+      "You can keep waiting or refresh the dashboard and try again.";
+  }, 10000);
+}
+
+function clearTransitionMessage() {
+  if (!transitionEl) return;
+
+  transitionEl.classList.add("hidden");
+
+  if (transitionTimer1) clearTimeout(transitionTimer1);
+  if (transitionTimer2) clearTimeout(transitionTimer2);
+
+  transitionTimer1 = null;
+  transitionTimer2 = null;
+}
 
 
 // Map backend status_badge to frontend category for CSS classes
@@ -210,14 +248,16 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
 
 window.openExperiment = async function (experimentId) {
   try {
-    document.body.style.cursor = 'wait';
-    
+    document.body.style.cursor = "wait";
+    showTransitionMessage(); 
+
     const res = await authFetch(
-        `${API_BASE}/v2/orchestration/enter/${experimentId}`
-      );
+      `${API_BASE}/v2/orchestration/enter/${experimentId}`
+    );
 
     if (!res.ok) {
-      document.body.style.cursor = 'default';
+      document.body.style.cursor = "default";
+      clearTransitionMessage(); 
       console.error("Failed to enter experiment via orchestration");
       return;
     }
@@ -227,11 +267,13 @@ window.openExperiment = async function (experimentId) {
 
     sessionStorage.setItem("workflow_active", "1");
 
+    // Navigation success → page unloads → message disappears naturally
     window.location.replace(
       `/Take_inputs/v2/experiments/${resolved_view}.html?id=${experimentId}`
     );
   } catch (err) {
-    document.body.style.cursor = 'default';
+    document.body.style.cursor = "default";
+    clearTransitionMessage(); 
     console.error("Orchestration entry failed:", err);
   }
 };

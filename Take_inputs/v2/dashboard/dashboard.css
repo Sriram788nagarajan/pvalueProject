@@ -797,3 +797,38 @@
   background: #eef2f7;
   color: #0f172a;
 }
+
+/* =========================
+   Dashboard transition message
+   ========================= */
+
+.dashboard-transition {
+  position: fixed;
+  top: 64px; /* height of navbar */
+  left: 240px; /* width of sidebar */
+  right: 0;
+
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(241, 245, 249, 0.92);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+
+  font-size: 13px;          /* intentionally small */
+  font-weight: 500;
+  color: #334155;
+
+  z-index: 20;              /* above dashboard, below navbar */
+  pointer-events: none;    /* never blocks interaction */
+
+  animation: dashboardPulse 0.8s ease-in-out infinite;
+}
+
+/* Subtle pulse: very small amplitude */
+@keyframes dashboardPulse {
+  0%   { opacity: 0.85; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.85; }
+}
