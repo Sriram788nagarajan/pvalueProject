@@ -529,27 +529,68 @@
   display: flex;
   justify-content: center;
   gap: 14px;
+  margin-top: 18px;
   flex-wrap: wrap;
 }
 
 .next-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   min-width: 180px;
   padding: 12px 18px;
+
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
+
   border-radius: 10px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 
+/* Primary */
 .next-btn-primary {
   background: linear-gradient(135deg, #2563eb, #4f46e5);
   color: #ffffff;
+  border: none;
+
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
 }
 
+.next-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.45);
+}
+
+/* Secondary */
 .next-btn-secondary {
   background: #f8fafc;
   color: #1f2937;
   border: 1px solid #cbd5e1;
+
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+}
+
+.next-btn-secondary:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+/* Mobile parity */
+@media (max-width: 640px) {
+  .next-steps-actions {
+    flex-direction: column;
+  }
+
+  .next-btn {
+    width: 100%;
+    max-width: 320px;
+  }
 }
 
 /* Animations */
@@ -840,12 +881,7 @@
       Go to Home
     </a>
 
-    <a
-      href="/Take_inputs/v2/experiments/create_experiment.html"
-      class="next-btn next-btn-secondary"
-    >
-      Create New Experiment
-    </a>
+  
   </div>
 </div>
 
