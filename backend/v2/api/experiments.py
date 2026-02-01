@@ -376,11 +376,7 @@ def save_definition(experiment_id: uuid.UUID,
     if snapshot.get("locked_version") is not None:
         raise HTTPException(status_code=400, detail="Experiment design is locked")
     
-    if snapshot.get("current_step") != "create_experiment":
-        raise HTTPException(
-            status_code=400,
-            detail="Definition can only be saved once from Create Experiment"
-        )
+    
 
     # 2) Build event
     event = build_definition_saved_event(

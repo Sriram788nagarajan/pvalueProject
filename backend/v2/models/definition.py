@@ -29,3 +29,4 @@ class DefinitionSavedRequest(BaseModel):
 
     experiment_type: Literal["ab", "multivariate"] = "ab"
     traffic_split_type: Literal["equal", "custom"] = "equal"
+    client_request_id: str

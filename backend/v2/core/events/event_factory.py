@@ -53,9 +53,9 @@ def build_definition_saved_event(
         "severity": "info",
         "occurred_at": datetime.now(timezone.utc),
         "schema_version": 1,
+        "client_request_id": payload.get("client_request_id"),
         "payload": payload,
     }
-
 
 def build_design_parameters_saved_event(*, experiment_id, user_id, payload):
     return {

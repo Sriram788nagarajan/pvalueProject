@@ -330,67 +330,59 @@ defineForm.addEventListener("submit", async (e) => {
     })
   );
 
-    async function savePhase2() {
-    try {
-      // Ensure experiment exists (pure client-side check)
-      const phase1Data = DraftStore.load(experimentId)?.phase1;
+  // ================================
+  // PHASE 2 — NON-BLOCKING SAVE
+  // ================================
+  const definitionPayload = {
+    hypothesis: {
+      statement: document.getElementById("hypothesis").value,
+      direction: document.getElementById("hypothesis_direction").value
+    },
+    primary_metric: {
+      name: document.getElementById("primary_metric_name").value,
+      type: document.getElementById("metric_type").value,
+      direction: document.getElementById("metric_direction").value
+    },
+    secondary_metrics: [],
+    guardrails: [],
+    variants: [
+      { id: "control", description: "Control" },
+      { id: "variant_a", description: "Variant A" }
+    ],
+    experiment_type: "ab",
+    traffic_split_type: "equal",
 
-      if (phase1Data) {
-        await window.authFetch(`${API_BASE}/v2/experiments/`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            experiment_id: experimentId,
-            name: phase1Data.name || "Untitled Experiment",
-            team: phase1Data.team || null,
-            goal: phase1Data.goal || null
-          })
-        });
-      }
+    //  idempotency
+    client_request_id: crypto.randomUUID()
+  };
 
-      await window.authFetch(
-        `${API_BASE}/v2/experiments/${experimentId}/definition`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            hypothesis: {
-              statement: document.getElementById("hypothesis").value,
-              direction: document.getElementById("hypothesis_direction").value
-            },
-            primary_metric: {
-              name: document.getElementById("primary_metric_name").value,
-              type: document.getElementById("metric_type").value,
-              direction: document.getElementById("metric_direction").value
-            },
-            secondary_metrics: [],
-            guardrails: [],
-            variants: [
-              { id: "control", description: "Control" },
-              { id: "variant_a", description: "Variant A" }
-            ],
-            experiment_type: "ab",
-            traffic_split_type: "equal"
-          })
-        }
-      );
+  // Persist locally (retry safety)
+  sessionStorage.setItem(
+    `pending_definition_${experimentId}`,
+    JSON.stringify(definitionPayload)
+  );
 
-      DraftStore.clearPhase(experimentId, "phase2");
-    } catch (err) {
-      console.error("❌ PHASE 2: Save failed:", err);
-    }
-  }
+  // Navigation-safe async send
+  navigator.sendBeacon(
+    `${API_BASE}/v2/experiments/${experimentId}/definition`,
+    new Blob(
+      [JSON.stringify(definitionPayload)],
+      { type: "application/json" }
+    )
+  );
+
+
+
 
 
 
  
 
   sessionStorage.setItem("workflow_active", "1");
-  // Fire-and-forget: dispatch request immediately
-  await savePhase2();
+  
 
   // Navigate immediately (no await, no delay)
-  sessionStorage.setItem("workflow_active", "1");
+  
   window.location.href = `design_parameters.html?id=${experimentId}`;
 });
 
@@ -423,6 +415,30 @@ async function resolveExperimentIdStrict(experimentId, isPending) {
 ========================================================= */
 function afterExperimentIdReady(experimentId) {
   resolvedExperimentId = experimentId;
+
+    // ================================
+    // PHASE 2 RETRY ON PAGE LOAD
+    // ================================
+    const pendingKey = `pending_definition_${experimentId}`;
+    const pending = sessionStorage.getItem(pendingKey);
+
+    if (pending) {
+      fetch(`${API_BASE}/v2/experiments/${experimentId}/definition`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: pending,
+        keepalive: true
+      })
+      .then(res => {
+        if (res.ok) {
+          sessionStorage.removeItem(pendingKey);
+        }
+      })
+      .catch(() => {
+        // Silent — retry will happen again on next navigation
+      });
+    }
+
   // ================================
   // PHASE 2 DRAFT HYDRATION (CLIENT) - INSTANT
   // ================================
