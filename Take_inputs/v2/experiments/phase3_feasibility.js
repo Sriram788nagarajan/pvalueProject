@@ -21,6 +21,11 @@
   let __phase3Executing = false;
   let __phase3Completed = false;
 
+  function showFinalizingScreen() {
+    const el = document.getElementById("phase3-finalizing");
+    if (el) el.style.display = "flex";
+  }
+
   // IMMEDIATE SHELL RENDER (before DOMContentLoaded)
   renderShell();
 
@@ -611,22 +616,27 @@ __phase3Executing = false;
       "Once accepted, this experiment design will be permanently locked and cannot be edited. " +
       "You will proceed to final analysis and decision-making. Do you want to continue?",
     confirmLabel: "Accept & Lock",
+
     onConfirm: async () => {
       const id = getExperimentId();
 
+      //  SHOW TRANSITION IMMEDIATELY
+      showFinalizingScreen();
+
+      //  COMMIT
       const res = await authFetch(
-      `${API_BASE}/v2/experiments/${id}/phase3/commit/accept`,
-      { method: "POST" }
-    );
+        `${API_BASE}/v2/experiments/${id}/phase3/commit/accept`,
+        { method: "POST" }
+      );
 
-  if (!res.ok) {
-    alert("Phase 3 analysis is not complete yet. Please wait.");
-    return;
-  }
+      if (!res.ok) {
+          document.getElementById("phase3-finalizing").style.display = "none";
+          alert("Phase 3 analysis is not complete yet. Please wait.");
+          return;
+        }
 
-  window.location.replace(`phase3_decision.html?id=${id}`);
-
-
+      //  NAVIGATE AFTER SUCCESS
+      window.location.replace(`phase3_decision.html?id=${id}`);
     }
   });
 }
@@ -639,19 +649,26 @@ async function handleBlock() {
       "Blocking this experiment will permanently close and archive it. " +
       "This action cannot be undone. Are you sure you want to proceed?",
     confirmLabel: "Block Experiment",
+
     onConfirm: async () => {
       const id = getExperimentId();
 
+      //  SHOW TRANSITION IMMEDIATELY
+      showFinalizingScreen();
+
+      //  COMMIT
       const res = await authFetch(
         `${API_BASE}/v2/experiments/${id}/phase3/commit/block`,
         { method: "POST" }
       );
 
       if (!res.ok) {
+        document.getElementById("phase3-finalizing").style.display = "none";
         alert("Failed to block experiment. Please try again.");
         return;
       }
 
+      //  NAVIGATE AFTER SUCCESS
       window.location.replace(`phase3_decision.html?id=${id}`);
     }
   });

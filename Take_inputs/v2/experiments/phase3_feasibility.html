@@ -485,6 +485,49 @@
   cursor: not-allowed;
 }
 
+/* ===============================
+   Phase 3 Finalizing Animation
+=============================== */
+
+#phase3-finalizing .container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+#phase3-finalizing .bar {
+  background-color: rgb(33, 44, 64);
+  min-width: 100%;
+  min-height: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+#phase3-finalizing .bar::after,
+#phase3-finalizing .bar::before {
+  content: "";
+  min-height: 8px;
+  position: absolute;
+  background: #D0D5DD;
+  transform: translateX(-100%);
+  animation: phase3-finalize-animate 2s infinite;
+}
+
+#phase3-finalizing .bar::before {
+  animation-delay: 1s;
+}
+
+@keyframes phase3-finalize-animate {
+  0% {
+    transform: translateX(-150%);
+    min-width: 100px;
+  }
+  100% {
+    transform: translateX(300%);
+    min-width: 400px;
+  }
+}
 
 
   </style>
@@ -494,6 +537,39 @@
 
 <!-- SHARED NAVBAR -->
 <div id="navbar-root"></div>
+
+  <!-- ===============================
+      PHASE 3 FINALIZING TRANSITION
+  =============================== -->
+  <div id="phase3-finalizing" style="
+    position: fixed;
+    inset: 0;
+    background: #ffffff;
+    z-index: 20000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  ">
+    <button
+      type="button"
+      disabled
+      style="
+        padding: 16px 80px;
+        border: 0;
+        border-radius: 8px;
+        background: #344054;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        cursor: default;
+      "
+    >
+      <div class="container">
+        <div class="bar"></div>
+      </div>
+      Finalizing Decision…
+    </button>
+  </div>
 
   <div id="phase3-loading" class="phase3-loading-overlay">
     <div class="phase3-loader-stack">
