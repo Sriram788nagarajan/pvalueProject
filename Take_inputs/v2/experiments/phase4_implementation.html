@@ -461,6 +461,108 @@
   margin-bottom: 0;
 }
 
+/* =========================
+   COMPLETION CARD (Phase 5 parity)
+   ========================= */
+
+.completion-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 48px 32px;
+  text-align: center;
+  box-shadow:
+    0 20px 40px rgba(15, 23, 42, 0.08),
+    0 6px 18px rgba(15, 23, 42, 0.06);
+  animation: completionFadeUp 0.6s ease-out both;
+}
+
+.completion-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #22c55e, #16a34a, #4ade80);
+}
+
+.completion-inner {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.completion-icon {
+  font-size: 42px;
+  margin-bottom: 14px;
+  animation: popIn 0.5s ease-out both;
+}
+
+.completion-title {
+  margin: 0 0 10px 0;
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.completion-subtitle {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: #475569;
+}
+
+/* =========================
+   NEXT STEPS (Phase 5 parity)
+   ========================= */
+
+.next-steps-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 22px;
+}
+
+.next-steps-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.next-btn {
+  min-width: 180px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 10px;
+}
+
+.next-btn-primary {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  color: #ffffff;
+}
+
+.next-btn-secondary {
+  background: #f8fafc;
+  color: #1f2937;
+  border: 1px solid #cbd5e1;
+}
+
+/* Animations */
+@keyframes completionFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1); }
+}
+
 
   </style>
 </head>
@@ -708,27 +810,44 @@
     </div>
   </div>
 
-  <!-- ========================= -->
-  <!-- COMPLETION MESSAGE -->
-  <!-- ========================= -->
-  <div class="card" id="completion-message-phase4" style="display:none; text-align:center;">
-    <h2 style="margin-bottom:8px;">🎉 Experiment Completed</h2>
-    <p class="locked-note">
+ <div class="card completion-card" id="completion-message-phase4" style="display:none;">
+  <div class="completion-inner">
+    <div class="completion-icon">🎉</div>
+
+    <h2 class="completion-title">Experiment Completed</h2>
+
+    <p class="completion-subtitle">
       This experiment is now closed and all results are permanently locked.
     </p>
   </div>
+</div>
 
-  <div class="card" id="next-steps-section-phase4" style="display:none;">
-    <h3>Next Steps</h3>
+<div class="card" id="next-steps-section-phase4" style="display:none;">
+  <h3 class="next-steps-title">What would you like to do next?</h3>
 
-    <div class="nav-links">
-      <a href="/Take_inputs/v2/dashboard/dashboard.html">Go to Dashboard</a>
-      <a href="/index.html">Go to Home</a>
-      <a href="/Take_inputs/v2/experiments/create_experiment.html">
-        Create New Experiment
-      </a>
-    </div>
+  <div class="next-steps-actions">
+    <a
+      href="/Take_inputs/v2/dashboard/dashboard.html"
+      class="next-btn next-btn-primary"
+    >
+      Go to Dashboard
+    </a>
+
+    <a
+      href="/"
+      class="next-btn next-btn-secondary"
+    >
+      Go to Home
+    </a>
+
+    <a
+      href="/Take_inputs/v2/experiments/create_experiment.html"
+      class="next-btn next-btn-secondary"
+    >
+      Create New Experiment
+    </a>
   </div>
+</div>
 
   
 
@@ -908,30 +1027,31 @@ document.addEventListener("change", e => {
 });
 
 
-document.getElementById("confirmPhase4DecisionBtn").onclick = async () => {
+document.getElementById("confirmPhase4DecisionBtn").onclick = () => {
   closeDecisionModal();
 
   const notes =
     document.getElementById("phase4Notes").value || null;
 
-  await fetchWithAuth(`/v2/experiments/${experimentId}/phase4/finalize`, {
+  // FIRE-AND-FORGET (NO await — matches Phase 5)
+  fetchWithAuth(`/v2/experiments/${experimentId}/phase4/finalize`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       decision: selectedPhase4Decision,
       notes,
     }),
+  }).catch(err => {
+    console.error("Phase 4 finalize failed:", err);
   });
 
-  // Hide Finish Experiment section
+  // INSTANT UI UPDATE
   document.getElementById("finish-section-phase4").style.display = "none";
-
-  // Show completion UI (Phase 5 parity)
   document.getElementById("completion-message-phase4").style.display = "block";
   document.getElementById("next-steps-section-phase4").style.display = "block";
 
   lockUI();
-}
+};
 
 
   function goBackToChoice() {
