@@ -61,6 +61,13 @@
         line-height: 1.4;
       }
     </style>
+
+<!-- GA4 LOADER (shared) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0S008YMM6L"></script>
+
+<!-- GA4 SHARED INITIALIZATION -->
+<script src="/Take_inputs/shared/analytics/ga4.js"></script>
+
 </head>
 <body class="workflow-page">
 
@@ -252,6 +259,17 @@
   let experimentId = params.get("id");
 
   const isResumeMode = Boolean(experimentId && experimentId !== 'null' && experimentId !== 'undefined');
+
+  // ================================
+  // GA4 — WORKFLOW PAGE VIEW
+  // ================================
+  if (typeof gtag === "function") {
+    gtag("event", "workflow_page_viewed", {
+      page_name: "create_experiment.html",
+      workflow_step: "create_experiment",
+      resume_mode: isResumeMode
+    });
+  }
 
   // Clear old pending_experiment data BEFORE hydration when creating new experiment
   if (mode === "create" && !experimentId) {
@@ -479,7 +497,7 @@
 }
 
 // ============================================
-// 🔬 INSTRUMENTED FOR DEBUGGING
+//  INSTRUMENTED FOR DEBUGGING
 // ============================================
 console.log('🔵 PHASE 1: About to navigate', { 
   experimentId, 
@@ -487,6 +505,21 @@ console.log('🔵 PHASE 1: About to navigate', {
 });
 
 sessionStorage.setItem("workflow_active", "1");
+
+  // ================================
+  // GA4 — PHASE 1 COMPLETED
+  // ================================
+  if (typeof gtag === "function") {
+    gtag("event", "workflow_phase_completed", {
+      page_name: "create_experiment.html",
+      workflow_step: "create_experiment",
+      phase_index: 1,
+      experiment_id: experimentId,
+      mode: mode || "unknown"
+    });
+  }
+
+
 window.location.href = `define_experiment.html?id=${experimentId}`;
 
 console.log('🔵 PHASE 1: Navigation triggered (this may not print)');

@@ -70,6 +70,13 @@
     
     
   </style>
+
+<!-- GA4 LOADER (shared) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0S008YMM6L"></script>
+
+<!-- GA4 SHARED INITIALIZATION -->
+<script src="/Take_inputs/shared/analytics/ga4.js"></script>
+
 </head>
 <body class="workflow-page">
 
@@ -293,6 +300,17 @@ async function initDefineExperiment() {
   let experimentId = params.get("id");
   const isPending = true;
 
+    // ================================
+    // GA4 — WORKFLOW PAGE VIEW (PHASE 2)
+    // ================================
+    if (typeof gtag === "function") {
+      gtag("event", "workflow_page_viewed", {
+        page_name: "define_experiment.html",
+        workflow_step: "define_experiment",
+        phase_index: 2
+      });
+    }
+
   try {
     experimentId = await resolveExperimentIdStrict(experimentId, isPending);
   } catch {
@@ -380,6 +398,17 @@ defineForm.addEventListener("submit", async (e) => {
 
   sessionStorage.setItem("workflow_active", "1");
   
+    // ================================
+    // GA4 — PHASE 2 COMPLETED
+    // ================================
+    if (typeof gtag === "function") {
+      gtag("event", "workflow_phase_completed", {
+        page_name: "define_experiment.html",
+        workflow_step: "define_experiment",
+        phase_index: 2,
+        experiment_id: experimentId
+      });
+    }
 
   // Navigate immediately (no await, no delay)
   

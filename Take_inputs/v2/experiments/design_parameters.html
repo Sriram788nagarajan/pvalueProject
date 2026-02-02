@@ -114,6 +114,13 @@
 
   </style>
 
+
+<!-- GA4 LOADER (shared) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-0S008YMM6L"></script>
+
+<!-- GA4 SHARED INITIALIZATION -->
+<script src="/Take_inputs/shared/analytics/ga4.js"></script>
+
 </head>
 
 <body class="workflow-page">
@@ -376,6 +383,18 @@
 
   const params = new URLSearchParams(window.location.search);
   const experimentId = params.get("id");
+
+  // ================================
+  // GA4 — WORKFLOW PAGE VIEW (PHASE 3)
+  // ================================
+  if (typeof gtag === "function") {
+    gtag("event", "workflow_page_viewed", {
+      page_name: "design_parameters.html",
+      workflow_step: "design_parameters",
+      phase_index: 3,
+      experiment_id: experimentId
+    });
+  }
 
   // ================================
   // PHASE 2 RETRY (EVENTUAL CONSISTENCY)
@@ -702,6 +721,18 @@ async function initDesignParametersPage() {
   // ==============================
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    // ================================
+    // GA4 — CONTINUE BUTTON CLICK
+    // ================================
+    if (typeof gtag === "function") {
+      gtag("event", "workflow_button_clicked", {
+        page_name: "design_parameters.html",
+        workflow_step: "design_parameters",
+        button_name: "continue",
+        experiment_id: experimentId
+      });
+    }
 
     // HARD GUARD: Phase 2 must be durable
     if (sessionStorage.getItem(`pending_definition_${experimentId}`)) {
