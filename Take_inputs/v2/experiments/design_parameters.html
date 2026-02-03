@@ -418,7 +418,7 @@
 
     if (res.ok) {
       sessionStorage.removeItem(key);
-      console.log("✅ Definition synced successfully");
+      console.log(" Definition synced successfully");
     } else if (res.status === 400) {
       // Experiment is locked - clear stale pending data
       sessionStorage.removeItem(key);
@@ -747,6 +747,12 @@ async function initDesignParametersPage() {
     const isReadOnly = submitBtn.dataset.readonly === "true";
     if (!isReadOnly && sessionStorage.getItem(`pending_definition_${experimentId}`)) {
       alert("Saving previous step. Please wait a moment.");
+      return;
+    }
+
+    if (isReadOnly) {
+      // Experiment is already committed, go to decision page
+      window.location.href = `phase3_decision.html?id=${experimentId}`;
       return;
     }
 
