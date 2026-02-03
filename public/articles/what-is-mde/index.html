@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>What Is Minimum Detectable Effect (MDE)?</title>
+  <meta name="description" content="Minimum Detectable Effect (MDE) is the smallest true difference between variants that an A/B test is statistically powered to detect at a given confidence level and power." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Math rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Your site CSS -->
+  <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+
+  <main class="article-container">
+    <h1>What Is Minimum Detectable Effect (MDE)?</h1>
+<h2>TL;DR / Official Explanation</h2>
+<blockquote>
+<p><strong>Minimum Detectable Effect (MDE)</strong> is the smallest true difference between experimental variants that an A/B test is statistically powered to detect at a specified significance level and power.<br>
+It is a planning metric determined before an experiment starts and depends on sample size, metric variance, confidence level, and desired power.<br>
+A smaller MDE requires more data to detect reliably.<br>
+MDE does not describe observed results and should not be interpreted as the expected or minimum observed lift.</p>
+</blockquote>
+<hr>
+<h2>Why This Matters in Real Experiments</h2>
+<p>Most A/B tests fail not because nothing changed, but because the experiment was <strong>never capable of detecting the change</strong> that actually occurred.</p>
+<p>If your experiment’s MDE is larger than the real effect you care about, the test is effectively blind. This leads to false conclusions, wasted traffic, and repeated “no result” experiments that quietly erode trust in experimentation.</p>
+<p>Understanding MDE forces you to confront a hard constraint: <strong>what effects are realistically detectable given your data</strong>.</p>
+<hr>
+<h2>Simple Intuition (Explained for a 10-Year-Old)</h2>
+<p>Imagine trying to hear a whisper in a noisy room. If the whisper is too quiet, you won’t hear it no matter how carefully you listen. The whisper has to be loud enough compared to the noise for you to notice it.</p>
+<p>MDE is how loud the whisper must be before your experiment can hear it.</p>
+<hr>
+<h2>Visual Mental Model</h2>
+<p>Think of two overlapping hills representing the outcomes of your control and variant. When the hills are very close together, it’s hard to tell them apart. As the distance between them increases, it becomes easier to confidently say they are different.</p>
+<hr>
+<h2>Formal Definition</h2>
+<p>In hypothesis testing, the Minimum Detectable Effect is the smallest effect size such that the statistical test achieves a predefined power (1 - \beta) at a given significance level (\alpha), assuming the effect is real.</p>
+<p>It represents the detection threshold imposed by sampling variability and test design, not the magnitude of observed outcomes.</p>
+<hr>
+<h2>Core Formula</h2>
+<pre><code class="language-text">MDE = (z_crit + z_{1−β}) × SE
+</code></pre>
+<p><strong>Where:</strong></p>
+<ul>
+<li><code>z_crit</code> = critical value for the chosen significance level</li>
+<li><code>z_{1−β}</code> = z-score corresponding to desired power</li>
+<li><code>SE</code> = standard error of the metric</li>
+</ul>
+<p><strong>Assumptions:</strong></p>
+<ul>
+<li>Correct test selection</li>
+<li>Reasonable normal approximation</li>
+<li>Variance estimates are realistic</li>
+</ul>
+<hr>
+<h2>Worked Example (With Numbers)</h2>
+<h3>Problem Setup</h3>
+<p>You are running a conversion rate experiment on a landing page.</p>
+<h3>Inputs</h3>
+<ul>
+<li>Baseline conversion rate = 10%</li>
+<li>Sample size per variant = 20,000 users</li>
+<li>Significance level = 5% (two-tailed)</li>
+<li>Power = 80%</li>
+</ul>
+<h3>Calculation</h3>
+<p>For a binary metric, the standard error is driven by the baseline rate and sample size. Plugging values into the MDE formula yields an MDE of approximately <strong>1.2 percentage points</strong>.</p>
+<h3>Interpretation</h3>
+<p>Your experiment can reliably detect changes of <strong>±1.2% or larger</strong>. Any true improvement smaller than that is likely to go undetected, even if it exists.</p>
+<hr>
+<h2>How to Use This in Practice</h2>
+<p>Use MDE to decide <strong>whether an experiment is worth running at all</strong>.</p>
+<p>If the smallest effect you care about is smaller than your MDE, the experiment cannot answer your question. You must either accept a larger detectable effect, collect more data, or reconsider the experiment entirely.</p>
+<p>MDE is a constraint, not a goal.</p>
+<hr>
+<h2>Common Mistakes and Misconceptions</h2>
+<ul>
+<li><strong>Confusing MDE with observed lift:</strong> MDE is about detectability, not results.</li>
+<li><strong>Choosing unrealistically small MDEs:</strong> This leads to infeasible sample size requirements.</li>
+<li><strong>Ignoring variance assumptions:</strong> Underestimated variance produces misleadingly small MDEs.</li>
+<li><strong>Reinterpreting MDE after results are seen:</strong> MDE must be fixed before the experiment starts.</li>
+</ul>
+<hr>
+<h2>When You Should Use a Calculator</h2>
+<p>In practice, calculating MDE requires combining sample size, variance, confidence level, and power correctly. This is why MDE calculators are typically used during experiment planning to ensure assumptions are internally consistent.</p>
+<hr>
+<h2>Frequently Asked Questions</h2>
+<h3>Is MDE the same as lift?</h3>
+<p>No. Lift is an observed outcome. MDE is a planning threshold that defines what effects are detectable.</p>
+<h3>Can MDE change after an experiment starts?</h3>
+<p>No. Changing MDE mid-experiment invalidates the original statistical guarantees.</p>
+<h3>Is a smaller MDE always better?</h3>
+<p>Not necessarily. Smaller MDEs require more data and longer experiments, which may not be practical.</p>
+<h3>Why do many experiments have large MDEs?</h3>
+<p>Because traffic, variance, or time constraints limit how much data can be collected.</p>
+<hr>
+<h2>Related Concepts</h2>
+<ul>
+<li>Statistical Power in A/B Testing</li>
+<li>Relationship Between Sample Size and Power</li>
+<li>Why Small A/B Tests Fail</li>
+<li>How to Calculate Minimum Detectable Effect</li>
+</ul>
+
+  </main>
+
+</body>
+</html>
