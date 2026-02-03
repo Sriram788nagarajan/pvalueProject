@@ -15,17 +15,9 @@
   <style>
 
     /* ================================
-      PHASE 5 HEADER + BACK BUTTON
+      PHASE 5 BACK BUTTON
     ================================ */
-    .phase5-header {
-      position: relative;
-      margin-bottom: 28px;
-    }
-
     .phase5-back-btn {
-      position: absolute;
-      left: 0;
-      top: 2px;
       padding: 8px 16px;
       font-size: 14px;
       background: #dc2626;
@@ -34,6 +26,8 @@
       border-radius: 6px;
       cursor: pointer;
       font-weight: 500;
+      margin-bottom: 16px;
+      display: inline-block;
     }
 
     .phase5-back-btn:hover {
@@ -1086,17 +1080,15 @@
 
 <div class="workflow-content">
 
-  <div class="phase5-header">
-    <button
-      id="phase5-back-btn"
-      type="button"
-      class="phase5-back-btn"
-    >
-      ◄ Back
-    </button>
-  </div>
+  <button
+    id="phase5-back-btn"
+    type="button"
+    class="phase5-back-btn"
+  >
+    ◄ Back
+  </button>
 
-  <!-- Inference calculator (exact clone of inference.html layout) -->
+  
   <div class="phase5-inference-wrapper">
     <div id="phase5-inference-root" class="phase5-inference-container"></div>
   </div>
