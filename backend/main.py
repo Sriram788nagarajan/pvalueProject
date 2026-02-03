@@ -70,23 +70,20 @@ app.mount(
 
 PUBLIC_DIR = Path(__file__).parent.parent / "public"
 
-# -----------------------
-# Serve Learn hub explicitly
-# -----------------------
 
-@app.get("/learn")
-@app.get("/learn/")
-def serve_learn_page():
-    html_path = Path(__file__).parent.parent / "public" / "learn" / "index.html"
-    return FileResponse(html_path)
+
 
 if not PUBLIC_DIR.exists():
     print(f"❌ ERROR: Public directory not found at {PUBLIC_DIR}")
 else:
     print(f"✅ Public directory found at {PUBLIC_DIR}")
 
+# -----------------------
+# Serve public frontend explicitly under /public
+# -----------------------
+
 app.mount(
-    "/",
+    "/public",
     StaticFiles(directory=str(PUBLIC_DIR), html=True),
     name="public",
 )
