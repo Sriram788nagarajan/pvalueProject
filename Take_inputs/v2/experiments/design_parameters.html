@@ -402,28 +402,32 @@
   // PHASE 2 RETRY (EVENTUAL CONSISTENCY)
   // ================================
   async function retryPendingDefinition(experimentId) {
-    const key = `pending_definition_${experimentId}`;
-    const pending = sessionStorage.getItem(key);
-    if (!pending) return;
+  const key = `pending_definition_${experimentId}`;
+  const pending = sessionStorage.getItem(key);
+  if (!pending) return;
 
-    try {
-      const res = await authFetch(
-        `${API_BASE}/v2/experiments/${experimentId}/definition`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: pending
-        }
-      );
-
-      if (res.ok) {
-        sessionStorage.removeItem(key);
-        console.log(" Definition synced successfully");
+  try {
+    const res = await authFetch(
+      `${API_BASE}/v2/experiments/${experimentId}/definition`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: pending
       }
-    } catch (err) {
-      console.warn(" Definition still syncing");
+    );
+
+    if (res.ok) {
+      sessionStorage.removeItem(key);
+      console.log("✅ Definition synced successfully");
+    } else if (res.status === 400) {
+      // Experiment is locked - clear stale pending data
+      sessionStorage.removeItem(key);
+      console.log("🔒 Cleared stale pending_definition (experiment locked)");
     }
+  } catch (err) {
+    console.warn("⏳ Definition still syncing");
   }
+}
 
   let __snapshotReady = false;
 
@@ -724,6 +728,9 @@ async function initDesignParametersPage() {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    //  Define submitBtn FIRST
+    const submitBtn = e.submitter || document.querySelector('.primary-btn');
+
     // ================================
     // GA4 — CONTINUE BUTTON CLICK
     // ================================
@@ -736,17 +743,14 @@ async function initDesignParametersPage() {
       });
     }
 
-    // HARD GUARD: Phase 2 must be durable
-    if (sessionStorage.getItem(`pending_definition_${experimentId}`)) {
+    // HARD GUARD: Phase 2 must be durable (skip in read-only mode)
+    const isReadOnly = submitBtn.dataset.readonly === "true";
+    if (!isReadOnly && sessionStorage.getItem(`pending_definition_${experimentId}`)) {
       alert("Saving previous step. Please wait a moment.");
       return;
     }
 
     __isSubmitting = true;
-
-      
-
-    const submitBtn = e.submitter || document.querySelector('.primary-btn');
     const originalText = submitBtn.textContent;
 
     submitBtn.disabled = true;
@@ -757,7 +761,7 @@ async function initDesignParametersPage() {
 
     try {
 
-      // 🔥 SHOW PHASE 2 LOADER IMMEDIATELY
+      //  SHOW PHASE 2 LOADER IMMEDIATELY
 const phase2Overlay = document.getElementById("phase2-loading");
 if (phase2Overlay) phase2Overlay.classList.remove("hidden");
 
