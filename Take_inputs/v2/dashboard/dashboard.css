@@ -693,8 +693,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
 
-  /* Smart font scaling */
-  font-size: clamp(11px, 1.8vw, 13px);
+  /* Default font size (overridden by JS for long emails) */
+  font-size: 13px;
   line-height: 1.2;
 }
 

@@ -155,7 +155,17 @@
     } else {
       const el = document.getElementById("sidebar-user-email");
       if (el) {
-        el.textContent = session.user.email;
+        const email = session.user.email;
+        el.textContent = email;
+        
+        // Dynamic font sizing based on email length
+        if (email.length > 25) {
+          el.style.fontSize = '10px';
+        } else if (email.length > 20) {
+          el.style.fontSize = '11px';
+        } else {
+          el.style.fontSize = '13px';
+        }
       }
     }
   })();
