@@ -141,6 +141,12 @@
   position: relative;
 }
 
+.nav-dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .primary-cta {
   background: linear-gradient(135deg, #2563eb, #4f46e5);
   color: #ffffff;

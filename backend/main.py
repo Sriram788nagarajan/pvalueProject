@@ -64,6 +64,23 @@ app.mount(
     name="static",
 )
 
+# -----------------------
+# Serve public frontend (Learn, Articles, Homepage)
+# -----------------------
+
+PUBLIC_DIR = Path(__file__).parent.parent / "public"
+
+if not PUBLIC_DIR.exists():
+    print(f"❌ ERROR: Public directory not found at {PUBLIC_DIR}")
+else:
+    print(f"✅ Public directory found at {PUBLIC_DIR}")
+
+app.mount(
+    "/",
+    StaticFiles(directory=str(PUBLIC_DIR), html=True),
+    name="public",
+)
+
 
 
 app.add_middleware(
