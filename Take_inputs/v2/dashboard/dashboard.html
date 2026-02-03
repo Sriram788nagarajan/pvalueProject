@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="robots" content="noindex, nofollow">
+  
   <title>Experiments Dashboard</title>
 
    <!-- CRITICAL: Preconnect to API -->
@@ -182,8 +184,7 @@
       sessionStorage.setItem("workflow_active", "1");
       sessionStorage.removeItem("pending_experiment_id");
 
-      window.location.href =
-        "/Take_inputs/v2/experiments/create_experiment.html?mode=create";
+      window.location.href = "/ab-test-workflow";
     });
   };
 

@@ -1,4 +1,26 @@
 User-agent: *
+# -----------------------------
+# Public, indexable content
+# -----------------------------
 Allow: /
+Allow: /ab-test-workflow/
 
+# -----------------------------
+# Private application surfaces
+# -----------------------------
+Disallow: /Take_inputs/
+Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /*?id=
+Disallow: /*?mode=
+
+# -----------------------------
+# Prevent crawling of internal HTML workflows
+# -----------------------------
+Disallow: /*/experiments/
+Disallow: /*/experiments/*.html
+
+# -----------------------------
+# Sitemap
+# -----------------------------
 Sitemap: https://pvalue.net/sitemap.xml

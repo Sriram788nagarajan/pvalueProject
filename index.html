@@ -503,8 +503,7 @@
 
   window.handleCreateExperimentClick = () =>
     requireAuthThen(() => {
-      window.location.href =
-        "Take_inputs/v2/experiments/create_experiment.html?mode=create";
+      window.location.href = "/ab-test-workflow";
     });
 
   window.handleDashboardClick = () =>

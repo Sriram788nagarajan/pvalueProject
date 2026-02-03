@@ -53,18 +53,36 @@ function applyNavbarRules() {
 // =========================
 
 function wireNavbarActions() {
-  // Dashboard
+  // =========================
+  // DASHBOARD
+  // =========================
   document
-    .querySelectorAll('[data-action="dashboard"], #nav-dashboard-btn')
+    .querySelectorAll('#nav-dashboard-btn')
     .forEach(el =>
       el.addEventListener("click", () => {
         if (window.handleDashboardClick) {
           window.handleDashboardClick();
+        } else {
+          // Fallback: always works
+          window.location.href = "/Take_inputs/v2/dashboard/dashboard.html";
         }
       })
     );
 
-  // Create Experiment
+  // =========================
+  // WORKFLOW LANDING
+  // =========================
+  document
+    .querySelectorAll('[data-action="workflow"]')
+    .forEach(el =>
+      el.addEventListener("click", () => {
+        window.location.href = "/ab-test-workflow/";
+      })
+    );
+
+  // =========================
+  // CREATE EXPERIMENT
+  // =========================
   document
     .getElementById("nav-create-exp-btn")
     ?.addEventListener("click", () => {
@@ -73,7 +91,9 @@ function wireNavbarActions() {
       }
     });
 
-  // Scroll links
+  // =========================
+  // SCROLL LINKS
+  // =========================
   document.querySelectorAll("[data-scroll]").forEach(el => {
     const target = el.dataset.scroll;
     el.addEventListener("click", () => navigateToSection(target));

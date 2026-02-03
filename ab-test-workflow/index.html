@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <title>A/B Test Workflow — Design, Validate & Analyze Experiments | pvalue.net</title>
+
+  <meta
+    name="description"
+    content="A step-by-step A/B testing workflow to design statistically valid experiments, check feasibility, and analyze results with confidence. Built for product teams, founders, and analysts."
+  >
+
+  <!-- Explicit indexing & rich preview -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+
+  <!-- Canonical authority -->
+  <link rel="canonical" href="https://pvalue.net/ab-test-workflow/" />
+
+  <link rel="stylesheet" href="/common.css">
+  <link rel="stylesheet" href="/Take_inputs/v2/auth/authModal.css">
+
+  <!-- Product landing visuals (NEW) -->
+  <link rel="stylesheet" href="./landing.css">
+
+
+  <!-- Structured data for search engines & AI -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "pvalue.net A/B Test Workflow",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "description": "A guided A/B testing workflow that helps teams design statistically sound experiments, validate feasibility, and analyze results end-to-end.",
+    "url": "https://pvalue.net/ab-test-workflow/",
+    "publisher": {
+      "@type": "Organization",
+      "name": "pvalue.net",
+      "url": "https://pvalue.net"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- NAVBAR (shared with homepage) -->
+  <div id="navbar-root"></div>
+
+  <!-- =========================
+       HERO
+       ========================= -->
+  <section class="product-hero reveal">
+    <div class="hero-inner hero-grid">
+
+        <!-- LEFT: TEXT -->
+        <div class="hero-copy">
+            <span class="hero-badge">A/B Testing Workflow</span>
+
+            <h1>
+            Design experiments.<br>
+            Validate feasibility.<br>
+            Make confident decisions.
+            </h1>
+
+            <p class="hero-subtitle">
+            A guided, statistically rigorous A/B testing workflow —
+            from hypothesis design to final inference.
+            </p>
+
+            <div class="hero-cta">
+            <button class="primary-cta"
+                onclick="window.location.href='/Take_inputs/v2/experiments/create_experiment.html?mode=create'">
+                Start A/B Test Workflow
+            </button>
+
+            
+            </div>
+        </div>
+
+        <!-- RIGHT: VIDEO -->
+        <div class="hero-video-wrap reveal">
+            <div class="hero-video-frame">
+            <video
+                id="workflow-demo-video"
+                muted
+                playsinline
+                preload="metadata"
+            >
+                <source src="./assets/workflow-demo.mp4" type="video/mp4">
+            </video>
+            </div>
+        </div>
+
+        </div>
+
+    <!-- Decorative layers -->
+    <div class="hero-gradient"></div>
+    <div class="hero-orb orb-1"></div>
+    <div class="hero-orb orb-2"></div>
+  </section>
+
+  <!-- =========================
+       VALUE SECTIONS
+       ========================= -->
+  <section class="product-section reveal">
+    <h2>Why this workflow exists</h2>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>Prevent false confidence</h3>
+        <p>
+          Feasibility checks stop underpowered experiments
+          before they waste time and traffic.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <h3>Force statistical discipline</h3>
+        <p>
+          Hypotheses, metrics, and assumptions are locked
+          before results are visible.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <h3>Decision-ready outputs</h3>
+        <p>
+          Results are translated into actionable,
+          risk-aware recommendations.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       WORKFLOW PREVIEW
+       ========================= -->
+  <section class="workflow-preview reveal" id="workflow-flow">
+    <h2>The end-to-end experimentation flow</h2>
+
+    <div class="workflow-steps">
+      <div class="step-card" data-step="0">Design experiment</div>
+      <div class="step-card" data-step="1">Validate feasibility</div>
+      <div class="step-card" data-step="2">Lock design</div>
+      <div class="step-card" data-step="3">Analyze results</div>
+      <div class="step-card" data-step="4">Commit decision</div>
+    </div>
+  </section>
+
+  <!-- =========================
+       FINAL CTA
+       ========================= -->
+  <section class="final-cta reveal">
+    <h2>
+      Stop guessing.<br>
+      Move to statistically sound decisions.
+    </h2>
+
+  
+  </section>
+
+  <!-- =========================
+       SCRIPTS
+       ========================= -->
+
+  <script src="/Take_inputs/shared/navbar/navbar.js"></script>
+
+  <script type="module">
+    import { initAuthUI } from "/Take_inputs/v2/auth/authModal.js";
+    initAuthUI();
+
+    // Scroll reveal (same pattern as homepage)
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+  </script>
+
+
+<script>
+  const video = document.getElementById("workflow-demo-video");
+
+  if (video) {
+    const videoObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+            videoObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.4 }
+    );
+
+    videoObserver.observe(video);
+  }
+</script>
+
+<script>
+(function () {
+  const section = document.getElementById("workflow-flow");
+  const steps = Array.from(section.querySelectorAll(".step-card"));
+  const total = steps.length;
+
+  if (!section || total === 0) return;
+
+  let index = 0;
+  let interval = null;
+
+  const radiusX = 340;   
+  const radiusY = 160;   
+  const radiusZ = 220;   
+
+  function render() {
+    steps.forEach((step, i) => {
+      const offset = (i - index + total) % total;
+      const angle = (offset / total) * Math.PI * 2;
+
+      const x = Math.sin(angle) * radiusX;
+      const y = Math.cos(angle) * radiusY - 20;  
+      const z = Math.cos(angle) * radiusZ;
+
+      const isFront = z > 0;  
+      const depthFactor = (z + radiusZ) / (radiusZ * 2);
+      const scale = isFront ? 0.75 + (depthFactor * 0.35) : 0.55 + (depthFactor * 0.25);
+      const opacity = isFront ? 0.65 + (depthFactor * 0.35) : 0.25 + (depthFactor * 0.25);
+
+      const rotateY = x * 0.08;  
+      const rotateX = y * 0.05;
+
+      const isActive = offset === 0;
+      step.classList.toggle("active", isActive);
+
+      if (!isActive) {  
+        step.style.transform = `
+          translate(-50%, -50%)
+          translateX(${x}px)
+          translateY(${y}px)
+          translateZ(${z}px)
+          scale(${scale})
+          rotateY(${rotateY}deg)
+          rotateX(${rotateX}deg)
+        `;
+        step.style.opacity = opacity;
+        step.style.zIndex = Math.round(z + 100);
+      } else {
+        step.style.opacity = '';
+        step.style.zIndex = '';
+      }
+    });
+  }
+
+  function start() {
+    if (interval) return;
+    render();
+    interval = setInterval(() => {
+      index = (index + 1) % total;
+      render();
+    }, 1200);  
+  }
+
+  function stop() {
+    clearInterval(interval);
+    interval = null;
+  }
+
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        entry.isIntersecting ? start() : stop();
+      });
+    },
+    { threshold: 0.3 }  
+  );
+
+  observer.observe(section);
+})();
+</script>
+
+</body>
+</html>

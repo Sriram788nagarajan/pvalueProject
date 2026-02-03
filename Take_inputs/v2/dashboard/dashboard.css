@@ -682,10 +682,20 @@
   flex-direction: column;
 }
 
+
 .user-email {
-  font-size: 13px;
   font-weight: 600;
   color: #0f172a;
+
+  /* Layout safety */
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* Smart font scaling */
+  font-size: clamp(11px, 1.8vw, 13px);
+  line-height: 1.2;
 }
 
 .user-status {
