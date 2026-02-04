@@ -168,15 +168,17 @@
 ========================= */
 
 .article-hero-media {
-  max-width: 1100px;
-  margin: -40px auto 48px;
+  max-width: 1200px;
+  margin: 48px auto 56px;
   padding: 0 24px;
 }
 
 .article-hero-media img {
   width: 100%;
+  aspect-ratio: 3 / 2;
   height: auto;
   border-radius: 18px;
+  object-fit: cover;   
 
   box-shadow:
     0 18px 40px rgba(0, 0, 0, 0.12),
@@ -189,7 +191,7 @@
 
 .article-meta {
   max-width: 820px;
-  margin: 0 auto 72px;
+  margin: 0 auto 20px;
   padding: 0 24px;
 }
 
@@ -210,14 +212,26 @@
 .article-share a,
 .article-share .copy-link {
   text-decoration: none;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+
+  /* Visual emphasis */
+  background: linear-gradient(
+    180deg,
+    #ffffff,
+    #f8fafc
+  );
+  border: 1px solid #dbeafe;
+
   border-radius: 999px;
-  padding: 6px 14px;
+  padding: 8px 16px;
 
   font-size: 13px;
+  font-weight: 600;
   color: #2563eb;
+
   cursor: pointer;
+
+  box-shadow:
+    0 4px 12px rgba(37, 99, 235, 0.12);
 
   transition:
     background 0.2s ease,
@@ -227,7 +241,14 @@
 
 .article-share a:hover,
 .article-share .copy-link:hover {
-  background: #f8fafc;
+  background: linear-gradient(
+    180deg,
+    #ffffff,
+    #eef2ff
+  );
+
   transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+
+  box-shadow:
+    0 8px 20px rgba(37, 99, 235, 0.18);
 }
