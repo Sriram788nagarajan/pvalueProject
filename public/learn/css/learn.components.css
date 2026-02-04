@@ -1,0 +1,174 @@
+.learn-hero h1 {
+  font-size: clamp(44px, 6vw, 64px);
+  line-height: 1.05;
+  margin: 18px 0 22px;
+}
+
+.hero-subtitle {
+  max-width: 720px;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.hero-proof {
+  margin-top: 24px;
+  padding-left: 18px;
+  color: #475569;
+}
+
+.category-card {
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  border-radius: 22px;
+  padding: 32px;
+  border: 1px solid #e5e7eb;
+  box-shadow:
+    0 24px 48px rgba(15, 23, 42, 0.12),
+    0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.category-card img {
+  width: 100%;
+  border-radius: 14px;
+  margin-bottom: 20px;
+}
+
+.category-card h2 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.category-card ul {
+  margin-top: 16px;
+  padding-left: 18px;
+}
+
+.category-card li {
+  margin-bottom: 8px;
+}
+
+/* =========================
+   CATEGORY CARD — FINAL
+========================= */
+
+.card-illustration {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  margin-bottom: 24px;
+}
+
+.category-card h2 {
+  font-size: 22px;
+  line-height: 1.25;
+  margin-bottom: 10px;
+}
+
+.category-card p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #475569;
+  margin-bottom: 18px;
+}
+
+/* Link list */
+.card-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card-links li {
+  margin-bottom: 8px;
+}
+
+.card-links a {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.card-links a:hover {
+  text-decoration: underline;
+}
+
+.card-links .muted {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.learn-icons img {
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* =========================
+   SCROLL ANIMATIONS
+========================= */
+
+/* Initial hidden states */
+.category-card {
+  opacity: 0;
+  transition: none;
+}
+
+.category-card:nth-child(1) {
+  transform: translateY(-100px);
+}
+
+.category-card:nth-child(2) {
+  transform: translateY(100px);
+}
+
+.category-card:nth-child(3) {
+  transform: translateX(100px);
+}
+
+/* Card 1: Falls from top with bounce */
+.category-card:nth-child(1).animate-in {
+  animation: fallDown 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+/* Card 2: Climbs from bottom with bounce (delayed) */
+.category-card:nth-child(2).animate-in {
+  animation: climbUp 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.2s forwards;
+}
+
+/* Card 3: Slides from right with bounce (more delayed) */
+.category-card:nth-child(3).animate-in {
+  animation: slideFromRight 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s forwards;
+}
+
+/* Keyframe animations */
+@keyframes fallDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes climbUp {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

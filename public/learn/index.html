@@ -2,99 +2,175 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Learn A/B Testing & Experimentation | pvalue.net</title>
 
-  <meta name="description"
-    content="Learn A/B testing, experiment design, statistical power, MDE, validation, and decision-making with a structured, first-principles approach." />
+  <title>Learn A/B Testing, Statistics & Decision-Making | pvalue.net</title>
 
+  <meta
+    name="description"
+    content="First-principles explanations of experimentation, statistical power, detectability, inference, and decision-making for real product teams."
+  />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Global site styles -->
   <link rel="stylesheet" href="/common.css" />
-  <link rel="stylesheet" href="/public/learn/learn.css" />
+
+  <!-- Learn hub styles (ORDER MATTERS) -->
+  <link rel="stylesheet" href="/public/learn/css/learn.layout.css" />
+  <link rel="stylesheet" href="/public/learn/css/learn.theme.css" />
+  <link rel="stylesheet" href="/public/learn/css/learn.components.css" />
 </head>
 
 <body>
 
-<div id="navbar-root"></div>
+  <div id="navbar-root"></div>
 
-<main class="learn-hub">
+  <main class="learn">
 
-  <!-- =========================
-       LEARN HERO
-       ========================= -->
-  <section class="learn-hero reveal">
-    <div class="learn-hero-inner">
-      <span class="hero-badge">Learning Hub</span>
+    <!-- =========================
+         HERO
+    ========================= -->
+    <section class="learn-hero">
+      <div class="learn-hero-inner">
 
-      <h1>
-        Learn A/B Testing<br>
-        & Experimentation
-      </h1>
+        <div class="hero-eyebrow">Learning Hub</div>
 
-      <p class="learn-subtitle">
-        First-principles explanations of experiment design,
-        statistical power, detectability, analysis,
-        and decision-making.
-      </p>
-    </div>
+        <h1>
+          Experimentation, Statistics<br />
+          & Decision-Making
+        </h1>
 
-    <!-- Decorative layers (same language as product landing) -->
-    <div class="hero-gradient"></div>
-    <div class="hero-orb orb-1"></div>
-    <div class="hero-orb orb-2"></div>
-  </section>
+        <p class="hero-subtitle">
+          First-principles explanations of experimentation, statistical power,
+          detectability, inference, and decision-making — built for real product teams.
+        </p>
 
-  <!-- =========================
-       LEARN DOMAIN
-       ========================= -->
-  <section class="learn-domain reveal">
-
-    <div class="domain-header">
-      <h2>Experimentation</h2>
-      <p>
-        Core concepts required to design statistically valid
-        experiments and interpret results responsibly.
-      </p>
-    </div>
-
-    <div class="category-grid">
-
-      <div class="category-card">
-        <h3>Sample Size, Power & Detectability</h3>
-
-        <a class="article-card" href="/public/articles/what-is-mde/">
-          <div class="article-title">
-            What Is Minimum Detectable Effect (MDE)?
-          </div>
-          <div class="article-meta">
-            Planning · Detectability · Power
-          </div>
-        </a>
+        <ul class="hero-proof">
+          <li>Used by product, growth and data teams</li>
+          <li>Built alongside real experimentation tools</li>
+        </ul>
 
       </div>
+    </section>
 
-    </div>
+    <!-- =========================
+         BREADCRUMB (SEO)
+    ========================= -->
+    <nav class="learn-breadcrumb">
+      <a href="/learn">/learn</a> <span>›</span> <span>learn</span>
+    </nav>
 
-  </section>
+    <!-- =========================
+         CATEGORY GRID
+    ========================= -->
+    <section class="learn-categories">
 
-</main>
+      <div class="category-grid">
 
-<script src="/Take_inputs/shared/navbar/navbar.js"></script>
+        <!-- CARD 1 -->
+        <article class="category-card">
+          <img
+           src="assets/illustrations/experimentation.png"
+            alt="Experimentation foundations"
+            class="card-illustration"
+          />
 
-<script>
+          <h2>Experimentation Foundations</h2>
+
+          <p>
+            Core principles for designing valid experiments and interpreting
+            results responsibly.
+          </p>
+
+          <ul class="card-links">
+            <li><a href="#">What Is A/B Testing?</a></li>
+            <li><a href="#">Hypotheses & Metrics</a></li>
+            <li><a href="#">Valid Experiment Design</a></li>
+            <li class="muted">Guardrails & Bias <span>Coming soon</span></li>
+          </ul>
+        </article>
+
+        <!-- CARD 2 -->
+        <article class="category-card">
+          <img
+            src="/public/learn/assets/illustrations/detectability.png"
+            alt="Sample size and detectability"
+            class="card-illustration"
+          />
+
+          <h2>Sample Size, Power & Detectability</h2>
+
+          <p>
+            What effects your experiments can detect — and why most tests fail silently.
+          </p>
+
+          <ul class="card-links">
+            <li>
+              <a href="/public/articles/what-is-mde/">
+                What Is Minimum Detectable Effect (MDE)?
+              </a>
+            </li>
+            <li><a href="#">Sample Size vs Power</a></li>
+            <li><a href="#">Why Underpowered Tests Fail</a></li>
+            <li><a href="#">Planning vs Inference</a></li>
+          </ul>
+        </article>
+
+        <!-- CARD 3 -->
+        <article class="category-card">
+          <img
+            src="/public/learn/assets/illustrations/inference.png"
+            alt="Statistical inference"
+            class="card-illustration"
+          />
+
+          <h2>Statistical Inference</h2>
+
+          <p>From data to uncertainty.</p>
+
+          <ul class="card-links">
+            <li><a href="#">P-values explained</a></li>
+            <li><a href="#">Confidence intervals</a></li>
+            <li><a href="#">Type I / Type II errors</a></li>
+            <li class="muted">Multiple testing <span>Coming soon</span></li>
+          </ul>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- =========================
+         WHAT YOU’LL LEARN
+    ========================= -->
+    <section class="learn-summary">
+
+      <h2>What you’ll learn here</h2>
+
+      <p>
+        This learning hub covers the statistical foundations of A/B testing,
+        including sample size planning, power analysis, detectability,
+        experiment design, and decision-making under uncertainty.
+      </p>
+
+      <p>
+        All content is written to align with real-world experimentation —
+        not academic theory or dashboard-driven heuristics.
+      </p>
+
+      <div class="learn-icons">
+        <img src="/public/learn/assets/icons/atom.svg" alt="" />
+        <img src="/public/learn/assets/icons/chart.svg" alt="" />
+        <img src="/public/learn/assets/icons/flask.svg" alt="" />
+        <img src="/public/learn/assets/icons/network.svg" alt="" />
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="/Take_inputs/shared/navbar/navbar.js"></script>
   
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("in-view");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.15 }
-  );
-
-  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
-</script>
+  <script src="/public/learn/js/scroll-animations.js"></script>
 
 </body>
 </html>

@@ -1,0 +1,87 @@
+.learn {
+  background: #f8fafc;
+}
+
+.learn-hero {
+  padding: 0px 24px 20px;
+  min-height: 65vh;
+  display: flex;
+  align-items: center;
+}
+
+.learn-hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.learn-breadcrumb {
+  max-width: 1100px;
+  margin: 32px auto 0;
+  padding: 0 24px;
+  font-size: 13px;
+}
+
+.learn-categories {
+  padding: 96px 24px;
+}
+
+.category-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.learn-summary {
+  max-width: 900px;
+  margin: 120px auto ;
+  padding: 0 24px 300px;
+  text-align: center;
+}
+
+.learn-icons {
+  margin-top: 48px;
+  display: flex;
+  justify-content: center;
+  gap: 48px;
+}
+
+@media (max-width: 1024px) {
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-illustration {
+    height: 160px;
+  }
+}
+
+/* =========================
+   LEARN SUMMARY ICONS (FIX)
+========================= */
+
+.learn-icons {
+  margin-top: 56px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 56px;
+}
+
+.learn-icons img {
+  width: 56px;
+  height: 56px;
+  opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+  .learn-icons {
+    gap: 32px;
+  }
+
+  .learn-icons img {
+    width: 44px;
+    height: 44px;
+  }
+}
