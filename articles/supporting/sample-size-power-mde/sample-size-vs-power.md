@@ -259,8 +259,8 @@ Minimum Detectable Effect (MDE) is the bridge between sample size and power.
 MDE answers: "Given my sample size, variance, and desired power, what effects can I actually detect?"
 
 
-To understand this constraint in detail, see
-👉 What Is Minimum Detectable Effect (MDE)?
+To understand this constraint in detail, see  
+👉 [What Is Minimum Detectable Effect (MDE)?](/public/articles/what-is-mde/)
 
 
 ## Frequently Asked Questions
