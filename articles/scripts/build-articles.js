@@ -14,7 +14,7 @@ const md = new MarkdownIt({
 
 // Source markdown article
 const ARTICLE_SRC =
-  "articles/supporting/sample-size-power-mde/sample-size-vs-power.md";
+  "articles/supporting/sample-size-power-mde/why-underpowered-tests-fail.md";
 
 // Shared HTML layout
 const LAYOUT_PATH =
@@ -22,7 +22,7 @@ const LAYOUT_PATH =
 
 // Output directory (final static HTML)
 const OUTPUT_DIR =
-  "public/articles/sample-size-vs-power";
+  "public/articles/why-underpowered-tests-fail";
 
 // ===== BUILD FUNCTION =====
 

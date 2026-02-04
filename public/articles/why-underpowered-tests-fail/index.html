@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Why Underpowered A/B Tests Fail</title>
+  <meta name="description" content="Underpowered A/B tests fail not because nothing changed, but because they lack the statistical power to detect real effects. Learn why this happens, how to recognize it, and how to avoid it." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+  <script>
+  window.MathJax = {
+    tex: {
+      displayMath: [['$$', '$$']],
+      inlineMath: [['$', '$']],
+      processEscapes: true
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  };
+</script>
+
+  <!-- Math rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Base site styles -->
+  <link rel="stylesheet" href="/common.css" />
+
+  <!-- Shared article styles -->
+  <link rel="stylesheet" href="/public/articles/style.css" />
+</head>
+
+<body class="article-page">
+
+  <!-- Shared navbar -->
+  <div id="navbar-root"></div>
+
+  <!-- =========================
+      ARTICLE HERO
+  ========================= -->
+  <header class="article-hero">
+    <div class="article-hero-inner">
+      <h1>Why Underpowered A/B Tests Fail</h1>
+      <p class="article-description">
+        Underpowered A/B tests fail not because nothing changed, but because they lack the statistical power to detect real effects. Learn why this happens, how to recognize it, and how to avoid it.
+      </p>
+    </div>
+  </header>
+
+  <!-- =========================
+      ARTICLE HERO IMAGE
+  ========================= -->
+  <section class="article-hero-media">
+    <img
+      src="/public/articles/images/article-hero.png"
+      alt="Article visual illustration"
+    />
+  </section>
+
+  <!-- =========================
+      ARTICLE META / SHARE
+  ========================= -->
+  <section class="article-meta">
+    <div class="article-share">
+      <span class="share-label">Share</span>
+
+      <a
+        href="https://twitter.com/intent/tweet?url=https://pvalue.net/articles/what-is-mde/"
+        target="_blank"
+        rel="noopener"
+      >
+        Twitter
+      </a>
+
+      <a
+        href="https://www.linkedin.com/sharing/share-offsite/?url=https://pvalue.net/articles/what-is-mde/"
+        target="_blank"
+        rel="noopener"
+      >
+        LinkedIn
+      </a>
+
+      <button
+        onclick="navigator.clipboard.writeText(window.location.href)"
+        class="copy-link"
+      >
+        Copy link
+      </button>
+    </div>
+  </section>
+
+  <!-- =========================
+       ARTICLE CONTENT
+       ========================= -->
+  <main class="article-content">
+    <h2>Executive Summary</h2>
+<blockquote>
+<p><strong>Underpowered tests fail because they are statistically incapable of detecting the effects they are meant to measure.</strong><br>
+A non-significant result does not mean “no impact” — it often means the experiment lacked sufficient power.<br>
+Underpowered experiments waste traffic, time, and trust by producing inconclusive results that are misinterpreted as evidence.<br>
+Understanding why tests are underpowered is essential for designing experiments that can actually answer questions.</p>
+</blockquote>
+<hr>
+<h2>What Does “Underpowered” Mean?</h2>
+<p>An experiment is <strong>underpowered</strong> when it has a low probability of detecting a real effect of interest, even if that effect truly exists.</p>
+<p>Formally, this means:
+[
+\text{Power} = P(\text{Detect effect} \mid \text{Effect is real})
+]
+is too low for the decision being made.</p>
+<p>A test with 40% power will miss real effects <strong>60% of the time</strong>.</p>
+<hr>
+<h2>Why Underpowered Tests Are So Common</h2>
+<p>Most A/B tests are underpowered by default.</p>
+<p>Common reasons include:</p>
+<ul>
+<li>Overestimating expected effect size</li>
+<li>Underestimating metric variance</li>
+<li>Limited traffic or short test durations</li>
+<li>Treating sample size as a goal rather than a constraint</li>
+<li>Running many experiments without feasibility checks</li>
+</ul>
+<p>The result is a large number of experiments that <em>look valid</em> but cannot produce meaningful conclusions.</p>
+<hr>
+<h2>Intuition: Listening for a Whisper</h2>
+<p>Imagine trying to hear a whisper in a noisy room.</p>
+<p>If the whisper is too quiet relative to the background noise, you won’t hear it — no matter how carefully you listen.</p>
+<p>An underpowered experiment is doing exactly that:<br>
+trying to detect a signal that is too small relative to noise.</p>
+<hr>
+<h2>Mental Model: Overlapping Distributions</h2>
+<p>Visualize the outcome distributions of the control and variant.</p>
+<ul>
+<li>
+<p>With <strong>low power</strong>:</p>
+<ul>
+<li>Distributions are wide</li>
+<li>They overlap heavily</li>
+<li>Real differences are indistinguishable from noise</li>
+</ul>
+</li>
+<li>
+<p>With <strong>adequate power</strong>:</p>
+<ul>
+<li>Distributions narrow</li>
+<li>Overlap decreases</li>
+<li>Real effects become detectable</li>
+</ul>
+</li>
+</ul>
+<p>Power determines how separated these distributions must be before you can reliably tell them apart.</p>
+<hr>
+<h2>The Statistical Mechanism Behind Failure</h2>
+<p>In hypothesis testing, detection depends on the inequality:</p>
+<pre><code class="language-text">Effect size ≥ (z_crit + z_{1−β}) × SE
+</code></pre>
+<p>If this inequality is not satisfied, the test cannot reliably detect the effect.</p>
+<p>Underpowered tests fail because:
+- The effect size is too small
+- The standard error is too large
+- Or both.</p>
+<h2>What Makes a Test Underpowered?</h2>
+<h2>1. Small Effect Sizes</h2>
+<p>Most real-world product changes have modest effects.</p>
+<p>If the true effect is smaller than what the test is powered to detect, the result will almost always be non-significant.</p>
+<h2>2. High Variance Metrics</h2>
+<p>Noisy metrics increase the standard error.</p>
+<p>Higher standard error raises the detection threshold, making effects harder to detect even with large samples.</p>
+<h2>3. Insufficient Sample Size</h2>
+<p>Sample size reduces noise, but only gradually.</p>
+<p>Doubling sample size does not double power — it produces diminishing returns.</p>
+<h2>4. Unrealistic Planning Assumptions</h2>
+<p>Underpowered tests often assume:
+- Optimistic lift
+- Stable variance
+- Ideal user behavior
+- When reality deviates from assumptions, power collapses.</p>
+<h2>Worked Example: A Silent Failure</h2>
+<h2>Scenario</h2>
+<p>You run an A/B test on a landing page conversion rate.</p>
+<h2>Inputs</h2>
+<pre><code>- Baseline conversion rate: 10%
+- True lift: +0.5 percentage points
+- Sample size per variant: 5,000 users
+- Significance level: 5% (two-tailed)
+</code></pre>
+<h2>Step 1: Standard Error</h2>
+<p>For a binary metric, the standard error is:</p>
+<p>$
+SE = \sqrt{p(1 - p)\left(\frac{1}{n_1} + \frac{1}{n_2}\right)}
+$</p>
+<p>Using equal sample sizes:</p>
+<p>$
+SE \approx \sqrt{0.1 \times 0.9 \times \frac{2}{10000}} \approx 0.0042
+$</p>
+<h2>Step 2: Detection Threshold</h2>
+<p>For 80% power:</p>
+<p>zcrit​+z1−β​≈1.96+0.84=2.80</p>
+<p>Minimum detectable effect:</p>
+<p>MDE≈2.80×0.006≈0.0168</p>
+<h2>Interpretation</h2>
+<pre><code>- The experiment can only detect effects of ~1.7 percentage points or larger
+- The true effect is 0.5 percentage points
+- The test is guaranteed to fail, even though the effect is real
+- The expected outcome is a non-significant result.
+</code></pre>
+<h2>Why “No Result” Is Often Misinterpreted?</h2>
+<p>Underpowered tests frequently produce:
+- High p-values
+- Wide confidence intervals
+- No clear winner</p>
+<p>These outcomes are often interpreted as: “The change didn’t work.”</p>
+<p>Statistically, the correct interpretation is: “The experiment could not detect the effect.”</p>
+<p>These are very different conclusions!!</p>
+<h2>Why Underpowered Tests Are Dangerous?</h2>
+<p>Underpowered experiments cause harm by:
+- Masking real improvements
+- Creating false confidence in the status quo
+- Wasting traffic and time
+- Training teams to distrust experimentation</p>
+<p>A failed test is not neutral — it shapes future decisions.</p>
+<h2>How to Avoid Underpowered Tests?</h2>
+<p>Before running any experiment:
+1. Define the smallest effect worth detecting
+2. Choose confidence level and desired power
+3. Estimate variance realistically
+4. Compute feasibility (sample size or MDE)</p>
+<p>If feasibility fails, do not run the test.</p>
+<h2>How This Relates to Sample Size and Power?</h2>
+<p>Underpowered tests are a direct consequence of misunderstanding the relationship between sample size and power.</p>
+<p>To understand this relationship in detail, see
+👉<a href="/public/articles/sample-size-vs-power/">Sample Size vs Power in A/B Testing</a></p>
+<h2>How This Relates to MDE?</h2>
+<p>Minimum Detectable Effect (MDE) makes underpowering explicit.</p>
+<p>MDE answers: “What effects can this experiment realistically detect?”</p>
+<p>If the effect you care about is smaller than the MDE, the test will fail by design.</p>
+<p>To understand MDE in depth, see
+👉 <a href="/public/articles/what-is-mde/">What Is Minimum Detectable Effect (MDE)?</a></p>
+<h2>Frequently Asked Questions</h2>
+<h2>Does increasing test duration fix underpowered tests?</h2>
+<p>Only if it increases sample size enough to meaningfully reduce standard error.</p>
+<h2>Can I detect small effects with low power?</h2>
+<p>Occasionally, by chance — but not reliably.</p>
+<h2>Are underpowered tests worse than no tests?</h2>
+<p>Often yes. They produce misleading evidence that appears rigorous but is not.</p>
+
+  </main>
+
+  <!-- Navbar loader -->
+  <script src="/Take_inputs/shared/navbar/navbar.js"></script>
+
+</body>
+</html>
