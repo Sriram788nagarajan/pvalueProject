@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{title}}</title>
+  <meta name="description" content="{{description}}" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Math rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <!-- Base site styles -->
+  <link rel="stylesheet" href="/common.css" />
+
+  <!-- Shared article styles -->
+  <link rel="stylesheet" href="/public/articles/style.css" />
+</head>
+
+<body class="article-page">
+
+  <!-- Shared navbar -->
+  <div id="navbar-root"></div>
+
+  <!-- =========================
+      ARTICLE HERO
+  ========================= -->
+  <header class="article-hero">
+    <div class="article-hero-inner reveal">
+      <h1>{{title}}</h1>
+      <p class="article-description">
+        {{description}}
+      </p>
+    </div>
+  </header>
+
+  <!-- =========================
+      ARTICLE HERO IMAGE
+  ========================= -->
+  <section class="article-hero-media reveal">
+    <img
+      src="/public/articles/images/article-hero.png"
+      alt="Article visual illustration"
+    />
+  </section>
+
+  <!-- =========================
+      ARTICLE META / SHARE
+  ========================= -->
+  <section class="article-meta reveal">
+    <div class="article-share">
+      <span class="share-label">Share</span>
+
+      <a
+        href="https://twitter.com/intent/tweet?url=https://pvalue.net/articles/what-is-mde/"
+        target="_blank"
+        rel="noopener"
+      >
+        Twitter
+      </a>
+
+      <a
+        href="https://www.linkedin.com/sharing/share-offsite/?url=https://pvalue.net/articles/what-is-mde/"
+        target="_blank"
+        rel="noopener"
+      >
+        LinkedIn
+      </a>
+
+      <button
+        onclick="navigator.clipboard.writeText(window.location.href)"
+        class="copy-link"
+      >
+        Copy link
+      </button>
+    </div>
+  </section>
+
+  <!-- =========================
+       ARTICLE CONTENT
+       ========================= -->
+  <main class="article-content">
+    {{content}}
+  </main>
+
+  <!-- Navbar loader -->
+  <script src="/Take_inputs/shared/navbar/navbar.js"></script>
+
+</body>
+</html>
