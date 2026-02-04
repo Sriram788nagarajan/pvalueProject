@@ -35,8 +35,7 @@
        ARTICLE CONTENT
        ========================= -->
   <main class="article-content">
-    <h1>What Is Minimum Detectable Effect (MDE)?</h1>
-<h2>TL;DR / Official Explanation</h2>
+    <h2>Executive Summary</h2>
 <blockquote>
 <p><strong>Minimum Detectable Effect (MDE)</strong> is the smallest true difference between experimental variants that an A/B test is statistically powered to detect at a specified significance level and power.<br>
 It is a planning metric determined before an experiment starts and depends on sample size, metric variance, confidence level, and desired power.<br>
@@ -49,11 +48,11 @@ MDE does not describe observed results and should not be interpreted as the expe
 <p>If your experiment’s MDE is larger than the real effect you care about, the test is effectively blind. This leads to false conclusions, wasted traffic, and repeated “no result” experiments that quietly erode trust in experimentation.</p>
 <p>Understanding MDE forces you to confront a hard constraint: <strong>what effects are realistically detectable given your data</strong>.</p>
 <hr>
-<h2>Simple Intuition (Explained for a 10-Year-Old)</h2>
+<h2>Simple Intuition</h2>
 <p>Imagine trying to hear a whisper in a noisy room. If the whisper is too quiet, you won’t hear it no matter how carefully you listen. The whisper has to be loud enough compared to the noise for you to notice it.</p>
 <p>MDE is how loud the whisper must be before your experiment can hear it.</p>
 <hr>
-<h2>Visual Mental Model</h2>
+<h2>Mental Model</h2>
 <p>Think of two overlapping hills representing the outcomes of your control and variant. When the hills are very close together, it’s hard to tell them apart. As the distance between them increases, it becomes easier to confidently say they are different.</p>
 <hr>
 <h2>Formal Definition</h2>
@@ -117,13 +116,6 @@ MDE does not describe observed results and should not be interpreted as the expe
 <h3>Why do many experiments have large MDEs?</h3>
 <p>Because traffic, variance, or time constraints limit how much data can be collected.</p>
 <hr>
-<h2>Related Concepts</h2>
-<ul>
-<li>Statistical Power in A/B Testing</li>
-<li>Relationship Between Sample Size and Power</li>
-<li>Why Small A/B Tests Fail</li>
-<li>How to Calculate Minimum Detectable Effect</li>
-</ul>
 
   </main>
 
